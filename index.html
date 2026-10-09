@@ -32,6 +32,12 @@
            cursor:pointer; box-shadow:var(--card-shadow); transition:transform .2s ease; }
   #giftBtn:hover{ transform:scale(1.1) rotate(-8deg); }
   #giftBtn:active{ transform:scale(.95); }
+  #totop{ position:fixed; left:1.2rem; bottom:1.1rem; width:54px; height:54px; border-radius:50%;
+       border:1px solid var(--soft); background:#fff; font-size:1.5rem; color:#3d3229; cursor:pointer;
+       box-shadow:var(--card-shadow); opacity:0; pointer-events:none; transform:translateY(12px);
+       transition:opacity .45s ease, transform .45s ease; z-index:60; }
+  #totop.show{ opacity:1; pointer-events:auto; transform:none; }
+  #totop.show:hover{ transform:translateY(-3px); }
   body{ font-family:Georgia,'Times New Roman',serif; background:var(--paper); color:var(--ink); }
   .wrap{ max-width:1100px; margin:0 auto; padding:0 1.5rem; }
   header.hero{ text-align:center; padding:3rem 1.5rem 2rem; max-width:720px; margin:0 auto; }
@@ -324,6 +330,7 @@
   <span>Made with love, one page at a time.</span>
   <button id="giftBtn" aria-label="A little gift" title="A little surprise is coming&hellip;">&#x1F381;</button>
 </footer>
+<button id="totop" aria-label="Back to top" title="Back to top">&uarr;</button>
 
 <div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button id="close" aria-label="Close viewer">&times;</button>
@@ -428,6 +435,9 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
     el.appendChild(d);
   });
 });
+const totop=document.getElementById('totop');
+addEventListener('scroll', ()=>{ totop.classList.toggle('show', scrollY>600); }, {passive:true});
+totop.onclick=()=>window.scrollTo({top:0, behavior:'smooth'});
 const logoToggle=document.getElementById('logoToggle'), logoDrawer=document.getElementById('logoDrawer');
 logoToggle.onclick=()=>{
   const open=logoDrawer.classList.toggle('open');
