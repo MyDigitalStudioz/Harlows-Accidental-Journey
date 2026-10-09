@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harlow's Accidental Journey — Finished Spreads</title>
+<meta name="description" content="A picture book by Lois Farrell. Browse the finished spreads of Harlow's Accidental Journey.">
+<meta property="og:title" content="Harlow's Accidental Journey — Finished Spreads">
+<meta property="og:description" content="A picture book by Lois Farrell. Click through the finished spreads.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="spreads/p02-mustang.jpg">
+<style>
+  :root{
+    --paper:#faf6ee; --ink:#3d3229; --accent:#b3541e; --soft:#e9dfcc;
+    --card-shadow:0 6px 24px rgba(61,50,41,.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:Georgia,'Times New Roman',serif; background:var(--paper); color:var(--ink);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  }
+  header{ text-align:center; padding:3rem 1.5rem 1rem; max-width:720px; }
+  header h1{ font-size:clamp(1.8rem,5vw,2.8rem); letter-spacing:.02em; }
+  header h1 em{ color:var(--accent); font-style:italic; }
+  header p{ margin-top:.6rem; font-size:1.05rem; opacity:.85; }
+  header .rule{ width:64px; height:3px; background:var(--accent); margin:1.2rem auto 0; border-radius:2px; }
+  main{ width:100%; max-width:1100px; padding:1.5rem 1.5rem 4rem; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.4rem; }
+  .card{
+    background:#fff; border:1px solid var(--soft); border-radius:12px; overflow:hidden;
+    box-shadow:var(--card-shadow); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover{ transform:translateY(-4px); box-shadow:0 12px 32px rgba(61,50,41,.2); }
+  .card img{ width:100%; aspect-ratio:2/1; object-fit:cover; display:block; }
+  .card .cap{ padding:.8rem 1rem 1rem; display:flex; justify-content:space-between; align-items:baseline; }
+  .card .cap b{ font-size:1.02rem; }
+  .card .cap span{ font-size:.85rem; opacity:.6; font-style:italic; }
+  footer{ padding:0 1.5rem 2.5rem; text-align:center; font-size:.9rem; opacity:.65; font-style:italic; }
+
+  /* Lightbox */
+  #lb{ position:fixed; inset:0; background:rgba(24,18,12,.94); display:none;
+       align-items:center; justify-content:center; z-index:50; }
+  #lb.open{ display:flex; }
+  #lb figure{ max-width:min(1200px,94vw); text-align:center; }
+  #lb img{ max-width:100%; max-height:78vh; border-radius:8px; box-shadow:0 20px 60px rgba(0,0,0,.5); }
+  #lb figcaption{ color:#f5efe2; margin-top:.9rem; font-size:1.05rem; }
+  #lb figcaption .n{ opacity:.6; font-size:.9rem; margin-left:.6rem; }
+  .nav{ position:absolute; top:50%; transform:translateY(-50%); background:rgba(250,246,238,.12);
+        border:1px solid rgba(250,246,238,.35); color:#faf6ee; font-size:2rem; width:52px; height:52px;
+        border-radius:50%; cursor:pointer; line-height:1; }
+  .nav:hover{ background:rgba(250,246,238,.28); }
+  #prev{ left:18px; } #next{ right:18px; }
+  #close{ position:absolute; top:16px; right:20px; background:none; border:none; color:#faf6ee;
+          font-size:2.2rem; cursor:pointer; opacity:.8; }
+  #close:hover{ opacity:1; }
+  @media (max-width:600px){ .nav{ width:44px; height:44px; font-size:1.6rem; } #prev{left:8px;} #next{right:8px;} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Harlow's <em>Accidental</em> Journey</h1>
+  <p>A picture book by Lois Farrell &mdash; finished spreads, fresh off the easel.</p>
+  <div class="rule"></div>
+</header>
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+<footer>Six of twenty-four spreads complete. Click any spread to view it full-screen.</footer>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Spread viewer">
+  <button id="close" aria-label="Close">&times;</button>
+  <button class="nav" id="prev" aria-label="Previous spread">&#8249;</button>
+  <figure>
+    <img id="lbimg" src="" alt="">
+    <figcaption><span id="lbcap"></span><span class="n" id="lbnum"></span></figcaption>
+  </figure>
+  <button class="nav" id="next" aria-label="Next spread">&#8250;</button>
+</div>
+
+<script>
+const spreads=[
+  {src:"spreads/p01-harlow.jpg",     title:"Harlow at Home"},
+  {src:"spreads/p02-mustang.jpg",    title:"The Silver Blue Mustang"},
+  {src:"spreads/p03-marketplace.jpg",title:"The Farmers Market"},
+  {src:"spreads/p04-sweet-pea.jpg",  title:"Sweet Pea's Muddy Puddle"},
+  {src:"spreads/p05-pond.jpg",       title:"Mama Fiona's Pond"},
+  {src:"spreads/p06-donkeys.jpg",    title:"Molly, Albie &amp; Dallas"}
+];
+const grid=document.getElementById('grid');
+spreads.forEach((s,i)=>{
+  const d=document.createElement('div'); d.className='card'; d.tabIndex=0;
+  d.setAttribute('role','button'); d.setAttribute('aria-label','View '+s.title);
+  d.innerHTML='<img src="'+s.src+'" alt="Page '+(i+1)+' — '+s.title+'" loading="lazy">'+
+    '<div class="cap"><b>'+s.title+'</b><span>Page '+(i+1)+'</span></div>';
+  d.onclick=()=>openLb(i);
+  d.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(i);} };
+  grid.appendChild(d);
+});
+const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum');
+let cur=0;
+function openLb(i){ cur=(i+spreads.length)%spreads.length;
+  lbimg.src=spreads[cur].src; lbimg.alt='Page '+(cur+1)+' — '+spreads[cur].title;
+  lbcap.innerHTML='Page '+(cur+1)+' — '+spreads[cur].title;
+  lbnum.textContent=(cur+1)+' / '+spreads.length;
+  lb.classList.add('open'); document.body.style.overflow='hidden'; }
+function closeLb(){ lb.classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('close').onclick=closeLb;
+document.getElementById('prev').onclick=e=>{e.stopPropagation();openLb(cur-1);};
+document.getElementById('next').onclick=e=>{e.stopPropagation();openLb(cur+1);};
+lb.onclick=e=>{ if(e.target===lb) closeLb(); };
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLb();
+  if(e.key==='ArrowLeft')openLb(cur-1);
+  if(e.key==='ArrowRight')openLb(cur+1);
+});
+</script>
+</body>
+</html>
