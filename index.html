@@ -62,6 +62,11 @@
           background:#faf6ee; border:none; color:#3d3229; font-size:1.35rem; cursor:pointer;
           box-shadow:0 3px 12px rgba(0,0,0,.4); line-height:1; }
   #close:hover{ background:#fff; }
+  #fs{ position:absolute; top:12px; left:12px; width:40px; height:40px; border-radius:50%;
+       background:#faf6ee; border:none; color:#3d3229; font-size:1.2rem; cursor:pointer;
+       box-shadow:0 3px 12px rgba(0,0,0,.4); line-height:1; }
+  #fs:hover{ background:#fff; }
+  @media (max-width:640px){ #fs{ width:36px; height:36px; top:8px; left:8px; font-size:1.05rem; } }
   @media (max-width:640px){
     .nav{ width:42px; height:42px; font-size:1.45rem; }
     #prev{ left:6px; } #next{ right:6px; }
@@ -125,34 +130,43 @@
 <section class="alt" style="padding-top:2.5rem;">
   <div class="wrap">
     <h2>Documents</h2>
-    <p class="hint">Tap a button to download and read.</p>
+    <p class="hint">View right in your browser, or download to keep.</p>
     <div class="pair">
       <div class="card" style="cursor:default;">
         <div class="cap" style="flex-direction:column;align-items:flex-start;gap:.6rem;">
-          <b style="font-size:1.15rem;">Mom's Story Manuscript</b>
-          <span style="white-space:normal;">The complete book text by Lois Farrell &mdash; every spread's story, start to finish.</span>
-          <a href="docs/moms-story-manuscript.pdf" download="Harlows-Accidental-Journey-Story-Manuscript.pdf"
-             style="display:inline-block;background:#b3541e;color:#fff;text-decoration:none;font-style:normal;
-                    padding:.7rem 1.6rem;border-radius:30px;font-size:1.05rem;margin-top:.3rem;">Download PDF</a>
+          <b style="font-size:1.15rem;">Mom's Latest Storyline</b>
+          <span style="white-space:normal;">Harlow's Accidental Journey &mdash; storyline rev.8 (Oct 8, 2026), Mom's newest version.</span>
+          <span style="display:flex;gap:.7rem;flex-wrap:wrap;">
+            <a href="docs/moms-latest-storyline.pdf" target="_blank" rel="noopener"
+               style="display:inline-block;background:#b3541e;color:#fff;text-decoration:none;font-style:normal;
+                      padding:.7rem 1.6rem;border-radius:30px;font-size:1.05rem;">View PDF</a>
+            <a href="docs/moms-latest-storyline.pdf" download="Harlows-Accidental-Journey-Storyline-rev8.pdf"
+               style="display:inline-block;background:#fff;color:#b3541e;text-decoration:none;font-style:normal;
+                      border:2px solid #b3541e;padding:.6rem 1.4rem;border-radius:30px;font-size:1.05rem;">Download</a>
+          </span>
         </div>
       </div>
       <div class="card" style="cursor:default;">
         <div class="cap" style="flex-direction:column;align-items:flex-start;gap:.6rem;">
-          <b style="font-size:1.15rem;">Production Playbook</b>
-          <span style="white-space:normal;">Our master art-direction guide &mdash; characters, continuity, and the full system.</span>
-          <a href="docs/production-playbook.pdf" download="Picture-Book-Production-Playbook.pdf"
-             style="display:inline-block;background:#b3541e;color:#fff;text-decoration:none;font-style:normal;
-                    padding:.7rem 1.6rem;border-radius:30px;font-size:1.05rem;margin-top:.3rem;">Download PDF</a>
+          <b style="font-size:1.15rem;">Harlow's Big Adventure Storyline</b>
+          <span style="white-space:normal;">The earlier Big Adventure draft &mdash; storyline rev.4 (Oct 6, 2026).</span>
+          <span style="display:flex;gap:.7rem;flex-wrap:wrap;">
+            <a href="docs/big-adventure-storyline.pdf" target="_blank" rel="noopener"
+               style="display:inline-block;background:#b3541e;color:#fff;text-decoration:none;font-style:normal;
+                      padding:.7rem 1.6rem;border-radius:30px;font-size:1.05rem;">View PDF</a>
+            <a href="docs/big-adventure-storyline.pdf" download="Harlows-Big-Adventure-Storyline-rev4.pdf"
+               style="display:inline-block;background:#fff;color:#b3541e;text-decoration:none;font-style:normal;
+                      border:2px solid #b3541e;padding:.6rem 1.4rem;border-radius:30px;font-size:1.05rem;">Download</a>
+          </span>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </div></section>
 
 <footer style="padding-top:2rem;">Made with love, one spread at a time.</footer>
 
 <div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button id="close" aria-label="Close viewer">&times;</button>
+  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
   <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
   <figure>
     <img id="lbimg" src="" alt="">
@@ -227,6 +241,11 @@ document.getElementById('close').onclick=closeLb;
 document.getElementById('prev').onclick=e=>{e.stopPropagation();step(-1);};
 document.getElementById('next').onclick=e=>{e.stopPropagation();step(1);};
 lb.onclick=e=>{ if(e.target===lb) closeLb(); };
+document.getElementById('fs').onclick=e=>{ e.stopPropagation();
+  const el=document.getElementById('lb');
+  if(document.fullscreenElement){ document.exitFullscreen(); }
+  else if(el.requestFullscreen){ el.requestFullscreen(); }
+  else if(el.webkitRequestFullscreen){ el.webkitRequestFullscreen(); } };
 document.addEventListener('keydown',e=>{
   if(!lb.classList.contains('open'))return;
   if(e.key==='Escape')closeLb();
