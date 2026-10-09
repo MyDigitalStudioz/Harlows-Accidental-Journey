@@ -51,20 +51,21 @@
   #lb figcaption{ color:#f5efe2; margin-top:.9rem; font-size:1.15rem; }
   #lb figcaption .n{ display:block; font-size:1rem; opacity:.65; margin-top:.25rem; }
   .nav{ position:absolute; top:50%; transform:translateY(-50%);
-        width:76px; height:76px; border-radius:50%; cursor:pointer;
-        background:#faf6ee; border:none; color:#3d3229; font-size:2.6rem; font-weight:bold;
-        box-shadow:0 4px 18px rgba(0,0,0,.45); line-height:1; padding-bottom:6px; }
+        width:56px; height:56px; border-radius:50%; cursor:pointer;
+        background:#faf6ee; border:none; color:#3d3229; font-size:2rem; font-weight:bold;
+        box-shadow:0 4px 18px rgba(0,0,0,.45); line-height:1; padding-bottom:4px; }
   .nav:hover{ background:#fff; transform:translateY(-50%) scale(1.06); }
   .nav:active{ transform:translateY(-50%) scale(.97); }
-  #prev{ left:22px; } #next{ right:22px; }
-  #close{ position:absolute; top:18px; right:22px; width:60px; height:60px; border-radius:50%;
-          background:#faf6ee; border:none; color:#3d3229; font-size:2rem; cursor:pointer;
+  .nav.hidden{ display:none; }
+  #prev{ left:14px; } #next{ right:14px; }
+  #close{ position:absolute; top:14px; right:14px; width:46px; height:46px; border-radius:50%;
+          background:#faf6ee; border:none; color:#3d3229; font-size:1.6rem; cursor:pointer;
           box-shadow:0 4px 18px rgba(0,0,0,.45); line-height:1; }
   #close:hover{ background:#fff; }
   @media (max-width:640px){
-    .nav{ width:60px; height:60px; font-size:2rem; }
-    #prev{ left:10px; } #next{ right:10px; }
-    #close{ width:52px; height:52px; top:12px; right:12px; }
+    .nav{ width:48px; height:48px; font-size:1.7rem; }
+    #prev{ left:8px; } #next{ right:8px; }
+    #close{ width:42px; height:42px; top:10px; right:10px; font-size:1.4rem; }
   }
 </style>
 </head>
@@ -185,7 +186,11 @@ let gkey='spreads', cur=0;
 function openLb(key,i){ gkey=key; const items=galleries[key]; cur=(i+items.length)%items.length;
   lbimg.src=items[cur].src; lbimg.alt=items[cur].title;
   lbcap.textContent=items[cur].title+' — '+items[cur].sub;
-  lbnum.textContent='Image '+(cur+1)+' of '+items.length+' — tap the arrows to browse';
+  const single=items.length===1;
+  document.getElementById('prev').classList.toggle('hidden',single);
+  document.getElementById('next').classList.toggle('hidden',single);
+  lbnum.textContent=single ? 'Tap × to close'
+    : 'Image '+(cur+1)+' of '+items.length+' — tap the arrows to browse';
   lb.classList.add('open'); document.body.style.overflow='hidden'; }
 function closeLb(){ lb.classList.remove('open'); document.body.style.overflow=''; }
 function step(d){ openLb(gkey,cur+d); }
