@@ -15,6 +15,23 @@
     --card-shadow:0 6px 24px rgba(61,50,41,.14);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
+  html{ scroll-behavior:smooth; }
+  section{ scroll-margin-top:60px; }
+  .topnav{ position:sticky; top:0; z-index:50; background:rgba(250,246,238,.94);
+           -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+           border-bottom:1px solid var(--soft); }
+  .topnav .links{ max-width:1100px; margin:0 auto; padding:.7rem 1.5rem; display:flex;
+           gap:1.5rem; justify-content:center; overflow-x:auto; }
+  .topnav a{ color:var(--ink); text-decoration:none; font-size:.95rem; font-style:italic;
+           white-space:nowrap; }
+  .topnav a:hover{ color:var(--accent); }
+  .sitefoot{ position:relative; display:flex; align-items:center; justify-content:center;
+           padding:2rem 1.5rem 2.5rem; font-style:italic; opacity:.9; }
+  #giftBtn{ position:absolute; right:1.2rem; bottom:1.1rem; width:54px; height:54px;
+           border-radius:50%; border:1px solid var(--soft); background:#fff; font-size:1.55rem;
+           cursor:pointer; box-shadow:var(--card-shadow); transition:transform .2s ease; }
+  #giftBtn:hover{ transform:scale(1.1) rotate(-8deg); }
+  #giftBtn:active{ transform:scale(.95); }
   body{ font-family:Georgia,'Times New Roman',serif; background:var(--paper); color:var(--ink); }
   .wrap{ max-width:1100px; margin:0 auto; padding:0 1.5rem; }
   header.hero{ text-align:center; padding:3rem 1.5rem 2rem; max-width:720px; margin:0 auto; }
@@ -155,6 +172,16 @@
 </head>
 <body>
 
+<nav class="topnav" aria-label="Page sections">
+  <div class="links">
+    <a href="#spreads">Spreads</a>
+    <a href="#covers">Covers</a>
+    <a href="#welcome">Welcome</a>
+    <a href="#title-treatments">Mock-ups</a>
+    <a href="#documents">Documents</a>
+  </div>
+</nav>
+
 <header class="hero">
   <h1>Harlow's <em>Accidental</em> Journey</h1>
   <p>A picture book by Lois Farrell &mdash; artwork review collection.</p>
@@ -217,7 +244,7 @@
 
 <footer>More artwork lands here as it's finalized.</footer>
 
-<section class="alt" style="padding-top:2.5rem;">
+<section class="alt" id="documents" style="padding-top:2.5rem;">
   <div class="wrap">
     <h2>Documents</h2>
     <p class="hint">View right in your browser, or download to keep.</p>
@@ -256,7 +283,10 @@
   </div>
 </section>
 
-<footer style="padding-top:2rem;">Made with love, one spread at a time.</footer>
+<footer class="sitefoot">
+  <span>Made with love, one page at a time.</span>
+  <button id="giftBtn" aria-label="A little gift" title="A little surprise is coming&hellip;">&#x1F381;</button>
+</footer>
 
 <div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button id="close" aria-label="Close viewer">&times;</button>
