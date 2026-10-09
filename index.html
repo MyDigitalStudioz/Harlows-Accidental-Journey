@@ -56,6 +56,20 @@
   #textpanel .copy{ font-size:1.06rem; line-height:1.7; margin:0; }
   #textpanel .tclose{ position:absolute; top:8px; right:12px; background:none; border:none;
                       font-size:1.5rem; cursor:pointer; color:#3d3229; line-height:1; }
+  .carousel{ display:flex; align-items:center; gap:.7rem; }
+  .ctrack{ display:flex; gap:1.2rem; overflow-x:auto; flex:1; padding:.3rem .1rem;
+           scroll-snap-type:x mandatory; scrollbar-width:none; }
+  .ctrack::-webkit-scrollbar{ display:none; }
+  .ctrack .card{ flex:0 0 calc((100% - 2.4rem)/3); scroll-snap-align:start; }
+  .carrow{ flex:none; width:46px; height:46px; border-radius:50%; background:#fff; border:none;
+           color:#3d3229; font-size:1.7rem; font-weight:bold; cursor:pointer;
+           box-shadow:0 3px 10px rgba(0,0,0,.18); line-height:1; padding-bottom:4px; }
+  .carrow:hover:not(:disabled){ background:#b3541e; color:#fff; }
+  .carrow:disabled{ opacity:.25; cursor:default; }
+  @media (max-width:640px){
+    .ctrack .card{ flex-basis:80%; }
+    .carrow{ width:42px; height:42px; font-size:1.5rem; }
+  }
   @media (max-width:640px){
     #readtext{ top:10px; left:10px; font-size:.85rem; padding:.45rem .95rem; }
     #textpanel .tcard{ padding:1.3rem 1.2rem; }
@@ -144,8 +158,12 @@
 <section class="alt" id="title-treatments">
   <div class="wrap">
     <h2>Logo &amp; Title Treatments</h2>
-    <p class="hint">Favorite title treatments for the book's wordmark. Tap any image to view it big.</p>
-    <div class="grid" data-gallery="logos"></div>
+    <p class="hint">Eight title treatments &mdash; use the arrows to browse. Tap any image to view it big.</p>
+    <div class="carousel">
+      <button class="carrow" id="ttPrev" aria-label="Previous treatments">&#8249;</button>
+      <div class="ctrack" data-gallery="logos"></div>
+      <button class="carrow" id="ttNext" aria-label="Next treatments">&#8250;</button>
+    </div>
   </div>
 </section>
 
@@ -245,9 +263,14 @@ const galleries={
     {src:"welcome/v3-follow-the-paws.jpg", title:"Follow the Paws", sub:"Version 3"}
   ],
   logos:[
-    {src:"logos/logo-1-tail.webp",    title:"Title Treatment 1", sub:"Tail motif"},
-    {src:"logos/logo-2-road.webp",    title:"Title Treatment 2", sub:"Road motif"},
-    {src:"logos/logo-3-cat-top.webp", title:"Title Treatment 3", sub:"Cat-top motif"}
+    {src:"logos/tt-1.jpg", title:"Title Treatment 1", sub:"Winding road to city"},
+    {src:"logos/tt-2.jpg", title:"Title Treatment 2", sub:"Bubbly rounded, tail underline"},
+    {src:"logos/tt-3.jpg", title:"Title Treatment 3", sub:"Classic serif, leaf flourish"},
+    {src:"logos/tt-4.jpg", title:"Title Treatment 4", sub:"Brush script, road underline"},
+    {src:"logos/tt-5.jpg", title:"Title Treatment 5", sub:"Bold red, truck on road"},
+    {src:"logos/tt-6.jpg", title:"Title Treatment 6", sub:"Brush script, tail-J flourish"},
+    {src:"logos/tt-7.jpg", title:"Title Treatment 7", sub:"Brush script, red Accidental"},
+    {src:"logos/tt-8.jpg", title:"Title Treatment 8", sub:"Tall serif, sunset gradient"}
   ]
 };
 
@@ -277,6 +300,16 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
     el.appendChild(d);
   });
 });
+const ttrack=document.querySelector('.ctrack');
+function ttStep(d){ const c=ttrack.querySelector('.card');
+  if(c) ttrack.scrollBy({left:d*(c.offsetWidth+19),behavior:'smooth'}); }
+document.getElementById('ttPrev').onclick=()=>ttStep(-1);
+document.getElementById('ttNext').onclick=()=>ttStep(1);
+function ttEnds(){ const max=ttrack.scrollWidth-ttrack.clientWidth-4;
+  document.getElementById('ttPrev').disabled=ttrack.scrollLeft<=4;
+  document.getElementById('ttNext').disabled=ttrack.scrollLeft>=max; }
+ttrack.addEventListener('scroll',ttEnds,{passive:true});
+window.addEventListener('resize',ttEnds); ttEnds();
 const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
       lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum');
 let gkey='spreads', cur=0;
