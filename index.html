@@ -32,12 +32,13 @@
            cursor:pointer; box-shadow:var(--card-shadow); transition:transform .2s ease; }
   #giftBtn:hover{ transform:scale(1.1) rotate(-8deg); }
   #giftBtn:active{ transform:scale(.95); }
-  #totop{ position:fixed; left:1.2rem; bottom:1.1rem; width:54px; height:54px; border-radius:50%;
-       border:1px solid var(--soft); background:#fff; font-size:1.5rem; color:#3d3229; cursor:pointer;
-       box-shadow:var(--card-shadow); opacity:0; pointer-events:none; transform:translateY(12px);
-       transition:opacity .45s ease, transform .45s ease; z-index:60; }
-  #totop.show{ opacity:1; pointer-events:auto; transform:none; }
-  #totop.show:hover{ transform:translateY(-3px); }
+  #totop{ position:fixed; left:1.2rem; bottom:1.1rem; width:54px; height:54px; border-radius:14px;
+       border:none; background:#3d3229; color:#faf6ee; font-size:1.35rem; line-height:1; cursor:pointer;
+       box-shadow:0 4px 16px rgba(0,0,0,.28); opacity:0; pointer-events:none;
+       transform:translateX(-90px); transition:opacity .45s ease, transform .5s cubic-bezier(.22,.8,.28,1);
+       z-index:60; }
+  #totop.show{ opacity:1; pointer-events:auto; transform:translateX(0); }
+  #totop.show:hover{ background:#544334; }
   body{ font-family:Georgia,'Times New Roman',serif; background:var(--paper); color:var(--ink); }
   .wrap{ max-width:1100px; margin:0 auto; padding:0 1.5rem; }
   header.hero{ text-align:center; padding:3rem 1.5rem 2rem; max-width:720px; margin:0 auto; }
@@ -194,6 +195,15 @@
   .logodots button{ width:9px; height:9px; border-radius:50%; border:none; background:#d8cbb6;
        cursor:pointer; padding:0; }
   .logodots button.on{ background:#b3541e; }
+  .castbar{ display:flex; align-items:center; gap:1rem; margin:.4rem 0 1.4rem; }
+  #castSearch{ flex:1; max-width:340px; padding:.65rem 1.15rem; border-radius:25px;
+       border:1px solid var(--soft); background:#fff; font-family:inherit; font-size:1rem;
+       color:var(--ink); }
+  #castSearch:focus{ outline:2px solid var(--accent); }
+  #castCount{ font-style:italic; opacity:.6; font-size:.92rem; white-space:nowrap; }
+  .grid.castgrid{ grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); }
+  .castempty{ text-align:center; font-style:italic; opacity:.65; padding:2rem 0; }
+  .hidden{ display:none !important; }
   @media (max-width:640px){ .logotrack .card{ flex-basis:calc(50% - 1rem); margin:0 .5rem; } }
   #lb.zoomed{ padding:0; }
   #lbfig:fullscreen, #lb.zoomed #lbfig{ width:100vw; height:100vh; max-width:100vw; background:#000;
@@ -231,6 +241,7 @@
     <a href="#covers">Covers</a>
     <a href="#welcome">Welcome</a>
     <a href="#title-treatments">Mock-ups</a>
+    <a href="#cast">Cast</a>
     <a href="#documents">Documents</a>
   </div>
 </nav>
@@ -296,7 +307,7 @@
       <button class="revealbtn" id="logoToggle" aria-expanded="false" aria-controls="logoDrawer">Reveal logos &#9662;</button>
       <div class="logodrawer" id="logoDrawer">
         <div class="drawerinner">
-          <p class="hint">The eight title treatments on their own &mdash; use the arrows to browse. Tap any logo to view it big.</p>
+          <p class="hint">The title treatments on their own &mdash; use the arrows to browse. Tap any logo to view it big.</p>
           <div class="logocarousel">
             <button class="lcarrow" id="logoPrev" aria-label="Previous logos">&#8249;</button>
             <div class="logoview"><div class="logoclip"><div class="logotrack" data-gallery="logosraw"></div></div></div>
@@ -306,6 +317,19 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="cast">
+  <div class="wrap">
+    <h2>Meet the Cast</h2>
+    <p class="hint">Every approved character &mdash; tap any portrait to view it big.</p>
+    <div class="castbar">
+      <input id="castSearch" type="search" placeholder="Find a character&hellip;" aria-label="Search characters">
+      <span id="castCount" aria-live="polite"></span>
+    </div>
+    <div class="grid castgrid" data-gallery="characters" id="castGrid"></div>
+    <p class="castempty hidden" id="castEmpty">No characters match &mdash; try another name.</p>
   </div>
 </section>
 
@@ -352,7 +376,7 @@
   <span>Made with love, one page at a time.</span>
   <button id="giftBtn" aria-label="A little gift" title="A little surprise is coming&hellip;">&#x1F381;</button>
 </footer>
-<button id="totop" aria-label="Back to top" title="Back to top">&uarr;</button>
+<button id="totop" aria-label="Back to top" title="Back to top">&#x2303;</button>
 
 <div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button id="close" aria-label="Close viewer">&times;</button>
@@ -419,6 +443,49 @@ const galleries={
     {src:"covers/mock-7.jpg", title:"Logo 7", sub:"Tall serif, sunset gradient"},
     {src:"covers/mock-8.jpg", title:"Logo 8", sub:"Winding road to city"}
   ],
+  characters:[
+    {src:"characters/albie.png", title:"Albie", sub:"Character portrait"},
+    {src:"characters/babs.png", title:"Babs", sub:"Character portrait"},
+    {src:"characters/cash.png", title:"Cash", sub:"Character portrait"},
+    {src:"characters/chester.png", title:"Chester", sub:"Character portrait"},
+    {src:"characters/chippy.png", title:"Chippy", sub:"Character portrait"},
+    {src:"characters/chowder.png", title:"Chowder", sub:"Character portrait"},
+    {src:"characters/dallas.png", title:"Dallas", sub:"Character portrait"},
+    {src:"characters/ducklings.png", title:"Ducklings", sub:"Character portrait"},
+    {src:"characters/dynamite.png", title:"Dynamite", sub:"Character portrait"},
+    {src:"characters/edward.png", title:"Edward", sub:"Character portrait"},
+    {src:"characters/endeavor.png", title:"Endeavor", sub:"Character portrait"},
+    {src:"characters/finnegan.png", title:"Finnegan", sub:"Character portrait"},
+    {src:"characters/french-fry.png", title:"French Fry", sub:"Character portrait"},
+    {src:"characters/gideon.png", title:"Gideon", sub:"Character portrait"},
+    {src:"characters/harlow-hero.png", title:"Harlow", sub:"Character portrait"},
+    {src:"characters/helga.png", title:"Helga", sub:"Character portrait"},
+    {src:"characters/hibernator.png", title:"Hibernator", sub:"Character portrait"},
+    {src:"characters/jasmine.png", title:"Jasmine", sub:"Character portrait"},
+    {src:"characters/jon-boy.png", title:"Jon Boy", sub:"Character portrait"},
+    {src:"characters/jon-boy-fullbody.png", title:"Jon Boy (full body)", sub:"Character portrait"},
+    {src:"characters/lois-mom.png", title:"Lois", sub:"Character portrait"},
+    {src:"characters/lois-mom-fullbody.png", title:"Lois (full body)", sub:"Character portrait"},
+    {src:"characters/mama-fiona.png", title:"Mama Fiona", sub:"Character portrait"},
+    {src:"characters/mittens-older.png", title:"Mittens", sub:"Character portrait"},
+    {src:"characters/molly.png", title:"Molly", sub:"Character portrait"},
+    {src:"characters/monkey.png", title:"Monkey", sub:"Character portrait"},
+    {src:"characters/mustang.png", title:"Mustang", sub:"Character portrait"},
+    {src:"characters/mustang-front.png", title:"Mustang (front)", sub:"Character portrait"},
+    {src:"characters/nero.png", title:"Nero", sub:"Character portrait"},
+    {src:"characters/nicolas.png", title:"Nicolas", sub:"Character portrait"},
+    {src:"characters/norman.png", title:"Norman", sub:"Character portrait"},
+    {src:"characters/otis.png", title:"Otis", sub:"Character portrait"},
+    {src:"characters/paco.png", title:"Paco", sub:"Character portrait"},
+    {src:"characters/pebbles.png", title:"Pebbles", sub:"Character portrait"},
+    {src:"characters/penelope-fullbody.png", title:"Penelope (full body)", sub:"Character portrait"},
+    {src:"characters/philly.png", title:"Philly", sub:"Character portrait"},
+    {src:"characters/red-truck.png", title:"Red Truck", sub:"Character portrait"},
+    {src:"characters/red-truck-front.png", title:"Red Truck (front)", sub:"Character portrait"},
+    {src:"characters/sweet-pea.png", title:"Sweet Pea", sub:"Character portrait"},
+    {src:"characters/teddy-new.png", title:"Teddy", sub:"Character portrait"},
+    {src:"characters/tiger.png", title:"Tiger", sub:"Character portrait"}
+  ],
   logosraw:[
     {src:"logos/tt-1.jpg", title:"Logo 1", sub:"Bold red, truck on road"},
     {src:"logos/tt-2.jpg", title:"Logo 2", sub:"Brush script, tail-J flourish"},
@@ -450,6 +517,7 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
   items.forEach((s,i)=>{
     const d=document.createElement('div'); d.className='card'; d.tabIndex=0;
     d.setAttribute('role','button'); d.setAttribute('aria-label','View larger: '+s.title);
+    d.dataset.name=s.title.toLowerCase();
     d.innerHTML='<img src="'+s.src+'" alt="'+s.title+'" loading="lazy">'+
       '<div class="cap"><b>'+s.title+'</b><span>'+s.sub+'</span></div>';
     d.onclick=()=>openLb(el.dataset.gallery,i);
@@ -460,6 +528,21 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
 const totop=document.getElementById('totop');
 addEventListener('scroll', ()=>{ totop.classList.toggle('show', scrollY>600); }, {passive:true});
 totop.onclick=()=>window.scrollTo({top:0, behavior:'smooth'});
+const castSearch=document.getElementById('castSearch'), castCount=document.getElementById('castCount'),
+      castEmpty=document.getElementById('castEmpty'), castGrid=document.getElementById('castGrid');
+function castFilter(){
+  const q=castSearch.value.trim().toLowerCase();
+  let shown=0;
+  castGrid.querySelectorAll('.card').forEach(c=>{
+    const hit=!q||c.dataset.name.includes(q);
+    c.style.display=hit?'':'none';
+    if(hit)shown++;
+  });
+  castCount.textContent=shown+' of '+galleries.characters.length;
+  castEmpty.classList.toggle('hidden', shown>0);
+}
+castSearch.addEventListener('input', castFilter);
+castFilter();
 const logoToggle=document.getElementById('logoToggle'), logoDrawer=document.getElementById('logoDrawer');
 logoToggle.onclick=()=>{
   const open=logoDrawer.classList.toggle('open');
