@@ -178,14 +178,17 @@
   .logodrawer.open{ grid-template-rows:1fr; }
   .drawerinner{ overflow:hidden; min-height:0; }
   .logodrawer .hint{ margin:1.2rem 0 1rem; }
-  .logocarousel{ display:flex; align-items:center; gap:.6rem; margin-top:1.2rem; }
-  .logoview{ overflow:hidden; flex:1; min-width:0; }
+  .logocarousel{ position:relative; margin-top:1.2rem; }
+  .logoview{ overflow:hidden; padding:8px 24px 28px; }
   .logotrack{ display:flex; transition:transform .45s ease; }
   .logotrack .card{ flex:0 0 calc(25% - 1.2rem); margin:0 .6rem; box-sizing:border-box; }
-  .lcarrow{ flex:0 0 auto; width:46px; height:46px; border-radius:50%; border:1px solid var(--soft);
-       background:#fff; color:#3d3229; font-size:1.6rem; line-height:1; padding-bottom:4px;
-       cursor:pointer; box-shadow:var(--card-shadow); }
-  .lcarrow:hover{ background:#faf6ee; }
+  .lcarrow{ position:absolute; top:calc(50% - 10px); transform:translateY(-50%); z-index:2;
+       width:46px; height:46px; border-radius:50%; border:1px solid var(--soft);
+       background:rgba(255,255,255,.92); color:#3d3229; font-size:1.6rem; line-height:1;
+       padding-bottom:4px; cursor:pointer; box-shadow:var(--card-shadow); }
+  #logoPrev{ left:2px; }
+  #logoNext{ right:2px; }
+  .lcarrow:hover{ background:#fff; }
   .logodots{ display:flex; gap:.55rem; justify-content:center; margin-top:1.1rem; }
   .logodots button{ width:9px; height:9px; border-radius:50%; border:none; background:#d8cbb6;
        cursor:pointer; padding:0; }
