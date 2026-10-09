@@ -178,6 +178,19 @@
   .logodrawer.open{ grid-template-rows:1fr; }
   .drawerinner{ overflow:hidden; min-height:0; }
   .logodrawer .hint{ margin:1.2rem 0 1rem; }
+  .logocarousel{ display:flex; align-items:center; gap:.6rem; margin-top:1.2rem; }
+  .logoview{ overflow:hidden; flex:1; min-width:0; }
+  .logotrack{ display:flex; transition:transform .45s ease; }
+  .logotrack .card{ flex:0 0 calc(25% - 1.2rem); margin:0 .6rem; box-sizing:border-box; }
+  .lcarrow{ flex:0 0 auto; width:46px; height:46px; border-radius:50%; border:1px solid var(--soft);
+       background:#fff; color:#3d3229; font-size:1.6rem; line-height:1; padding-bottom:4px;
+       cursor:pointer; box-shadow:var(--card-shadow); }
+  .lcarrow:hover{ background:#faf6ee; }
+  .logodots{ display:flex; gap:.55rem; justify-content:center; margin-top:1.1rem; }
+  .logodots button{ width:9px; height:9px; border-radius:50%; border:none; background:#d8cbb6;
+       cursor:pointer; padding:0; }
+  .logodots button.on{ background:#b3541e; }
+  @media (max-width:640px){ .logotrack .card{ flex-basis:calc(50% - 1rem); margin:0 .5rem; } }
   #lb.zoomed{ padding:0; }
   #lbfig:fullscreen, #lb.zoomed #lbfig{ width:100vw; height:100vh; max-width:100vw; background:#000;
            position:relative; margin:0; }
@@ -279,8 +292,13 @@
       <button class="revealbtn" id="logoToggle" aria-expanded="false" aria-controls="logoDrawer">Reveal logos &#9662;</button>
       <div class="logodrawer" id="logoDrawer">
         <div class="drawerinner">
-          <p class="hint">The eight title treatments on their own &mdash; tap any logo to view it big.</p>
-          <div class="grid portrait" data-gallery="logosraw"></div>
+          <p class="hint">The eight title treatments on their own &mdash; use the arrows to browse. Tap any logo to view it big.</p>
+          <div class="logocarousel">
+            <button class="lcarrow" id="logoPrev" aria-label="Previous logos">&#8249;</button>
+            <div class="logoview"><div class="logotrack" data-gallery="logosraw"></div></div>
+            <button class="lcarrow" id="logoNext" aria-label="Next logos">&#8250;</button>
+          </div>
+          <div class="logodots" id="logoDots"></div>
         </div>
       </div>
     </div>
@@ -444,6 +462,33 @@ logoToggle.onclick=()=>{
   logoToggle.setAttribute('aria-expanded', open);
   logoToggle.innerHTML=open ? 'Hide logos &#9652;' : 'Reveal logos &#9662;';
 };
+const logoTrack=document.querySelector('.logotrack'),
+      logoPrev=document.getElementById('logoPrev'),
+      logoNext=document.getElementById('logoNext'),
+      logoDots=document.getElementById('logoDots');
+let logoPage=0;
+function logoPerView(){ return matchMedia('(max-width:640px)').matches ? 2 : 4; }
+function logoPages(){ return Math.ceil(galleries.logosraw.length/logoPerView()); }
+function buildDots(){
+  logoDots.innerHTML='';
+  for(let i=0;i<logoPages();i++){
+    const b=document.createElement('button');
+    b.setAttribute('aria-label','Go to logos page '+(i+1));
+    if(i===logoPage) b.classList.add('on');
+    b.onclick=()=>logoGo(i);
+    logoDots.appendChild(b);
+  }
+}
+function logoGo(p){
+  const n=logoPages();
+  logoPage=((p%n)+n)%n;
+  logoTrack.style.transform='translateX(-'+(logoPage*100)+'%)';
+  buildDots();
+}
+logoPrev.onclick=()=>logoGo(logoPage-1);
+logoNext.onclick=()=>logoGo(logoPage+1);
+addEventListener('resize', ()=>logoGo(logoPage));
+buildDots();
 const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
       lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum'),
       lbfig=document.getElementById('lbfig');
