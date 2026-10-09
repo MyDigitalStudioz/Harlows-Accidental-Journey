@@ -468,9 +468,9 @@ const galleries={
     {src:"characters/hibernator.png", title:"Hibernator", sub:"Character portrait"},
     {src:"characters/jasmine.png", title:"Jasmine", sub:"Character portrait"},
     {src:"characters/jon-boy.png", title:"Jon Boy", sub:"Character portrait"},
-    {src:"characters/jon-boy-fullbody.png", title:"Jon Boy (full body)", sub:"Character portrait"},
+    {pos:"top", src:"characters/jon-boy-fullbody.png", title:"Jon Boy (full body)", sub:"Character portrait"},
     {src:"characters/lois-mom.png", title:"Lois", sub:"Character portrait"},
-    {src:"characters/lois-mom-fullbody.png", title:"Lois (full body)", sub:"Character portrait"},
+    {pos:"top", src:"characters/lois-mom-fullbody.png", title:"Lois (full body)", sub:"Character portrait"},
     {src:"characters/mama-fiona.png", title:"Mama Fiona", sub:"Character portrait"},
     {src:"characters/mittens-older.png", title:"Mittens", sub:"Character portrait"},
     {src:"characters/molly.png", title:"Molly", sub:"Character portrait"},
@@ -483,7 +483,7 @@ const galleries={
     {src:"characters/otis.png", title:"Otis", sub:"Character portrait"},
     {src:"characters/paco.png", title:"Paco", sub:"Character portrait"},
     {src:"characters/pebbles.png", title:"Pebbles", sub:"Character portrait"},
-    {src:"characters/penelope-fullbody.png", title:"Penelope (full body)", sub:"Character portrait"},
+    {pos:"top", src:"characters/penelope-fullbody.png", title:"Penelope (full body)", sub:"Character portrait"},
     {src:"characters/philly.png", title:"Philly", sub:"Character portrait"},
     {src:"characters/red-truck.png", title:"Red Truck", sub:"Character portrait"},
     {src:"characters/red-truck-front.png", title:"Red Truck (front)", sub:"Character portrait"},
@@ -525,6 +525,7 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
     d.dataset.name=s.title.toLowerCase();
     d.innerHTML='<img src="'+s.src+'" alt="'+s.title+'" loading="lazy">'+
       '<div class="cap"><b>'+s.title+'</b><span>'+s.sub+'</span></div>';
+    if(s.pos) d.querySelector('img').style.objectPosition=s.pos;
     d.onclick=()=>openLb(el.dataset.gallery,i);
     d.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(el.dataset.gallery,i);} };
     el.appendChild(d);
