@@ -35,7 +35,7 @@
          box-shadow:var(--card-shadow); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease; }
   .card:hover{ box-shadow:0 12px 32px rgba(61,50,41,.2); }
   .card img{ width:100%; height:auto; display:block; transition:transform .3s ease; }
-  .card:hover img{ transform:scale(1.045); }
+  .card:hover img{ transform:scale(1.03); }
   .card .cap{ padding:.8rem 1rem 1rem; display:flex; justify-content:space-between; align-items:baseline; gap:.5rem; }
   .card .cap b{ font-size:1rem; }
   .card .cap span{ font-size:.85rem; opacity:.6; font-style:italic; white-space:nowrap; }
@@ -57,19 +57,59 @@
   #textpanel .copy{ font-size:1.06rem; line-height:1.7; margin:0; }
   #textpanel .tclose{ position:absolute; top:8px; right:12px; background:none; border:none;
                       font-size:1.5rem; cursor:pointer; color:#3d3229; line-height:1; }
-  .carousel{ display:flex; align-items:center; gap:.7rem; }
-  .ctrack{ display:flex; gap:1.2rem; overflow-x:auto; flex:1; padding:.3rem .1rem;
-           scroll-snap-type:x mandatory; scrollbar-width:none; }
-  .ctrack::-webkit-scrollbar{ display:none; }
-  .ctrack .card{ flex:0 0 calc((100% - 2.4rem)/3); scroll-snap-align:start; }
-  .carrow{ flex:none; width:46px; height:46px; border-radius:50%; background:#fff; border:none;
-           color:#3d3229; font-size:1.7rem; font-weight:bold; cursor:pointer;
-           box-shadow:0 3px 10px rgba(0,0,0,.18); line-height:1; padding-bottom:4px; }
-  .carrow:hover:not(:disabled){ background:#b3541e; color:#fff; }
-  .carrow:disabled{ opacity:.25; cursor:default; }
+  .deck-shell{ position:relative; min-height:600px; overflow:hidden; border:1px solid var(--soft);
+           border-radius:16px; perspective:1400px; touch-action:pan-y;
+           background:linear-gradient(180deg,#fffdf8,#f5eedd); }
+  .deck-head{ position:absolute; z-index:12; top:14px; left:22px; right:22px; display:flex;
+           align-items:center; justify-content:space-between; pointer-events:none;
+           color:#8a7a63; font-size:.85rem; font-style:italic; }
+  .deck-count{ font-weight:bold; font-style:normal; letter-spacing:.05em; }
+  .deck-stage{ position:absolute; inset:52px 0 78px; transform-style:preserve-3d;
+           transform:translateX(var(--drag,0px)); }
+  .deck-card{ position:absolute; top:50%; left:50%; width:min(360px,calc(100vw - 64px)); margin:0;
+           transform:translate(-50%,-50%) scale(.6); opacity:0; pointer-events:none;
+           transition:transform .55s cubic-bezier(.22,.8,.28,1), opacity .45s ease, filter .45s ease;
+           border-radius:10px; overflow:hidden; box-shadow:0 18px 44px -12px rgba(61,50,41,.35);
+           background:#fff; cursor:grab; }
+  .deck-card:focus-visible{ outline:3px solid #b3541e; outline-offset:3px; }
+  .deck-shell.dragging{ user-select:none; -webkit-user-select:none; }
+  .deck-shell.dragging, .deck-shell.dragging .deck-card{ cursor:grabbing; }
+  .deck-card img{ width:100%; aspect-ratio:1206/1388; object-fit:cover; display:block;
+           pointer-events:none; }
+  .deck-card .dcap{ padding:.7rem 1rem; display:flex; justify-content:space-between;
+           align-items:baseline; gap:.5rem; pointer-events:none; }
+  .deck-card .dcap b{ font-size:1rem; }
+  .deck-card .dcap span{ font-size:.85rem; opacity:.6; font-style:italic; white-space:nowrap;
+           overflow:hidden; text-overflow:ellipsis; }
+  .deck-card.pos-0{ z-index:6; opacity:1; pointer-events:auto;
+           transform:translate(-50%,-50%) translateZ(80px) rotateY(0deg) scale(1); }
+  .deck-card.pos-1{ z-index:4; opacity:.8; pointer-events:auto; filter:saturate(.75) brightness(.85);
+           transform:translate(calc(-50% + 272px),-50%) translateZ(-60px) rotateY(-32deg) scale(.84); }
+  .deck-card.pos--1{ z-index:4; opacity:.8; pointer-events:auto; filter:saturate(.75) brightness(.85);
+           transform:translate(calc(-50% - 272px),-50%) translateZ(-60px) rotateY(32deg) scale(.84); }
+  .deck-card.pos-2{ z-index:2; opacity:.3; pointer-events:none;
+           transform:translate(calc(-50% + 462px),-50%) translateZ(-160px) rotateY(-42deg) scale(.68); }
+  .deck-card.pos--2{ z-index:2; opacity:.3; pointer-events:none;
+           transform:translate(calc(-50% - 462px),-50%) translateZ(-160px) rotateY(42deg) scale(.68); }
+  .deck-card.pos-3{ z-index:1; opacity:0; pointer-events:none;
+           transform:translate(calc(-50% + 640px),-50%) translateZ(-260px) rotateY(-48deg) scale(.55); }
+  .deck-card.pos--3{ z-index:1; opacity:0; pointer-events:none;
+           transform:translate(calc(-50% - 640px),-50%) translateZ(-260px) rotateY(48deg) scale(.55); }
+  .deck-controls{ position:absolute; z-index:12; bottom:18px; left:0; right:0; display:flex;
+           align-items:center; justify-content:center; gap:16px; }
+  .deck-arrow{ width:46px; height:46px; border-radius:50%; border:1px solid var(--soft);
+           background:#fff; color:#3d3229; font-size:1.4rem; font-weight:bold; cursor:pointer;
+           box-shadow:0 3px 10px rgba(0,0,0,.12); line-height:1; padding-bottom:4px; }
+  .deck-arrow:hover{ background:#b3541e; border-color:#b3541e; color:#fff; }
+  .deck-dots{ display:flex; gap:8px; align-items:center; }
+  .deck-dot{ width:9px; height:9px; border-radius:50%; border:none; background:#d8cbb2;
+           padding:0; cursor:pointer; }
+  .deck-dot[aria-current="true"]{ background:#b3541e; }
   @media (max-width:640px){
-    .ctrack .card{ flex-basis:80%; }
-    .carrow{ width:42px; height:42px; font-size:1.5rem; }
+    .deck-shell{ min-height:520px; }
+    .deck-card.pos-1{ transform:translate(calc(-50% + 208px),-50%) translateZ(-60px) rotateY(-30deg) scale(.8); }
+    .deck-card.pos--1{ transform:translate(calc(-50% - 208px),-50%) translateZ(-60px) rotateY(30deg) scale(.8); }
+    .deck-card.pos-2,.deck-card.pos--2{ opacity:0; }
   }
   @media (max-width:640px){
     #readtext{ top:10px; left:10px; font-size:.85rem; padding:.45rem .95rem; }
@@ -158,12 +198,19 @@
 
 <section class="alt" id="title-treatments">
   <div class="wrap">
-    <h2>Logo &amp; Title Treatments</h2>
-    <p class="hint">Eight title treatments &mdash; use the arrows to browse. Tap any image to view it big.</p>
-    <div class="carousel">
-      <button class="carrow" id="ttPrev" aria-label="Previous treatments">&#8249;</button>
-      <div class="ctrack" data-gallery="logos"></div>
-      <button class="carrow" id="ttNext" aria-label="Next treatments">&#8250;</button>
+    <h2>Front Cover Mock-ups</h2>
+    <p class="hint">Each logo on the front cover &mdash; grab a card or use the arrows. Tap a card to view it big.</p>
+    <div class="deck-shell" id="deckShell" tabindex="0" aria-label="Cover mock-up deck">
+      <div class="deck-head">
+        <span class="deck-count" id="deckCount" aria-live="polite"></span>
+        <span class="deck-hint">Drag or use &larr; &rarr;</span>
+      </div>
+      <div class="deck-stage" id="deckStage"></div>
+      <div class="deck-controls">
+        <button class="deck-arrow" id="deckPrev" type="button" aria-label="Previous cover">&larr;</button>
+        <div class="deck-dots" id="deckDots"></div>
+        <button class="deck-arrow" id="deckNext" type="button" aria-label="Next cover">&rarr;</button>
+      </div>
     </div>
   </div>
 </section>
@@ -264,14 +311,14 @@ const galleries={
     {src:"welcome/v3-follow-the-paws.jpg", title:"Follow the Paws", sub:"Version 3"}
   ],
   logos:[
-    {src:"logos/tt-1.jpg", title:"Logo 1", sub:"Bold red, truck on road"},
-    {src:"logos/tt-2.jpg", title:"Logo 2", sub:"Brush script, tail-J flourish"},
-    {src:"logos/tt-3.jpg", title:"Logo 3", sub:"Brush script, road underline"},
-    {src:"logos/tt-4.jpg", title:"Logo 4", sub:"Bubbly rounded, tail underline"},
-    {src:"logos/tt-5.jpg", title:"Logo 5", sub:"Brush script, red Accidental"},
-    {src:"logos/tt-6.jpg", title:"Logo 6", sub:"Classic serif, leaf flourish"},
-    {src:"logos/tt-7.jpg", title:"Logo 7", sub:"Tall serif, sunset gradient"},
-    {src:"logos/tt-8.jpg", title:"Logo 8", sub:"Winding road to city"}
+    {src:"covers/mock-1.jpg", title:"Logo 1", sub:"Bold red, truck on road"},
+    {src:"covers/mock-2.jpg", title:"Logo 2", sub:"Brush script, tail-J flourish"},
+    {src:"covers/mock-3.jpg", title:"Logo 3", sub:"Brush script, road underline"},
+    {src:"covers/mock-4.jpg", title:"Logo 4", sub:"Bubbly rounded, tail underline"},
+    {src:"covers/mock-5.jpg", title:"Logo 5", sub:"Brush script, red Accidental"},
+    {src:"covers/mock-6.jpg", title:"Logo 6", sub:"Classic serif, leaf flourish"},
+    {src:"covers/mock-7.jpg", title:"Logo 7", sub:"Tall serif, sunset gradient"},
+    {src:"covers/mock-8.jpg", title:"Logo 8", sub:"Winding road to city"}
   ]
 };
 
@@ -301,16 +348,6 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
     el.appendChild(d);
   });
 });
-const ttrack=document.querySelector('.ctrack');
-function ttStep(d){ const c=ttrack.querySelector('.card');
-  if(c) ttrack.scrollBy({left:d*(c.offsetWidth+19),behavior:'smooth'}); }
-document.getElementById('ttPrev').onclick=()=>ttStep(-1);
-document.getElementById('ttNext').onclick=()=>ttStep(1);
-function ttEnds(){ const max=ttrack.scrollWidth-ttrack.clientWidth-4;
-  document.getElementById('ttPrev').disabled=ttrack.scrollLeft<=4;
-  document.getElementById('ttNext').disabled=ttrack.scrollLeft>=max; }
-ttrack.addEventListener('scroll',ttEnds,{passive:true});
-window.addEventListener('resize',ttEnds); ttEnds();
 const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
       lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum');
 let gkey='spreads', cur=0;
@@ -352,6 +389,90 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft')step(-1);
   if(e.key==='ArrowRight')step(1);
 });
+
+// ---- front cover mock-up deck (adapted from IVZN Screening Room) ----
+let deckIndex = 0;
+const deckStage = document.getElementById('deckStage');
+const deckDots = document.getElementById('deckDots');
+const deckCount = document.getElementById('deckCount');
+const deckShell = document.getElementById('deckShell');
+function deckWrap(i, n){ return ((i % n) + n) % n; }
+function buildDeck(){
+  deckStage.innerHTML = galleries.logos.map((s, i) =>
+    '<article class="deck-card" data-i="'+i+'" tabindex="0" role="button" aria-label="View larger: '+s.title+'">'+
+    '<img src="'+s.src+'" alt="'+s.title+' — '+s.sub+'" loading="lazy">'+
+    '<div class="dcap"><b>'+s.title+'</b><span>'+s.sub+'</span></div></article>').join('');
+  galleries.logos.forEach((s, vi)=>{
+    const dot = document.createElement('button');
+    dot.type = 'button'; dot.className = 'deck-dot';
+    dot.setAttribute('aria-label', 'Show ' + s.title);
+    dot.addEventListener('click', ()=>{ deckIndex = vi; renderDeck(); });
+    deckDots.appendChild(dot);
+  });
+  deckStage.querySelectorAll('.deck-card').forEach(card=>{
+    card.addEventListener('click', ()=>{ openLb('logos', +card.dataset.i); });
+    card.addEventListener('keydown', e=>{
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openLb('logos', +card.dataset.i); } });
+  });
+}
+function renderDeck(){
+  const n = galleries.logos.length;
+  deckIndex = deckWrap(deckIndex, n);
+  const cards = deckStage.children, dots = deckDots.children;
+  for(let vi = 0; vi < n; vi++){
+    let off = vi - deckIndex;
+    if(off > n/2) off -= n;
+    if(off < -n/2) off += n;
+    cards[vi].className = 'deck-card pos-' + off;
+    dots[vi].setAttribute('aria-current', vi === deckIndex ? 'true' : 'false');
+  }
+  deckCount.textContent = (deckIndex + 1) + ' of ' + n;
+}
+function moveDeck(d){ deckIndex = deckWrap(deckIndex + d, galleries.logos.length); renderDeck(); }
+document.getElementById('deckPrev').addEventListener('click', ()=>moveDeck(-1));
+document.getElementById('deckNext').addEventListener('click', ()=>moveDeck(1));
+document.addEventListener('keydown', e=>{
+  if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  if(lb.classList.contains('open')) return;
+  const r = deckShell.getBoundingClientRect();
+  if(r.bottom < 0 || r.top > window.innerHeight) return;
+  e.preventDefault();
+  moveDeck(e.key === 'ArrowLeft' ? -1 : 1);
+});
+let dragX = null, suppressClick = false;
+const DRAG_THRESHOLD = 70;
+deckStage.addEventListener('pointerdown', e=>{
+  if(e.target.closest('a,button')) return;
+  dragX = e.clientX;
+  deckShell.classList.add('dragging');
+  try{ deckStage.setPointerCapture(e.pointerId); }catch(err){}
+});
+deckStage.addEventListener('pointermove', e=>{
+  if(dragX === null) return;
+  deckStage.style.setProperty('--drag', (e.clientX - dragX) + 'px');
+});
+function endDrag(e){
+  if(dragX === null) return;
+  const dx = e.clientX - dragX;
+  dragX = null;
+  deckShell.classList.remove('dragging');
+  deckStage.style.transition = 'transform .3s cubic-bezier(.22,.8,.28,1)';
+  deckStage.style.setProperty('--drag', '0px');
+  setTimeout(()=>{ deckStage.style.transition = ''; }, 320);
+  if(Math.abs(dx) > DRAG_THRESHOLD){
+    suppressClick = true;
+    setTimeout(()=>{ suppressClick = false; }, 80);
+    moveDeck(dx > 0 ? -1 : 1);
+  }
+}
+deckStage.addEventListener('pointerup', endDrag);
+deckStage.addEventListener('pointercancel', endDrag);
+deckStage.addEventListener('dragstart', e=>e.preventDefault());
+deckStage.addEventListener('click', e=>{
+  if(suppressClick){ e.preventDefault(); e.stopPropagation(); }
+}, true);
+buildDeck();
+renderDeck();
 </script>
 </body>
 </html>
