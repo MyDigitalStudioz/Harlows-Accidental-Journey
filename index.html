@@ -39,6 +39,27 @@
   .card .cap b{ font-size:1rem; }
   .card .cap span{ font-size:.85rem; opacity:.6; font-style:italic; white-space:nowrap; }
   .pair{ display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
+  #readtext{ position:absolute; top:12px; left:12px; background:#faf6ee; border:none; color:#3d3229;
+             padding:.55rem 1.15rem; border-radius:25px; font-size:.95rem; cursor:pointer;
+             box-shadow:0 3px 12px rgba(0,0,0,.4); font-family:Georgia,'Times New Roman',serif;
+             font-style:italic; }
+  #readtext:hover{ background:#fff; }
+  #readtext.hidden{ display:none; }
+  #textpanel{ position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+              background:rgba(20,14,10,.55); padding:1rem; }
+  #textpanel.open{ display:flex; }
+  #textpanel .tcard{ background:#faf6ee; color:#3d3229; max-width:560px; width:100%; max-height:82%;
+                     overflow:auto; border-radius:12px; padding:1.6rem 1.8rem; text-align:left;
+                     position:relative; box-shadow:0 20px 60px rgba(0,0,0,.5); }
+  #textpanel h3{ margin:0 0 .25rem; font-size:1.3rem; }
+  #textpanel .place{ font-style:italic; opacity:.65; font-size:.92rem; margin:0 0 1rem; }
+  #textpanel .copy{ font-size:1.06rem; line-height:1.7; margin:0; }
+  #textpanel .tclose{ position:absolute; top:8px; right:12px; background:none; border:none;
+                      font-size:1.5rem; cursor:pointer; color:#3d3229; line-height:1; }
+  @media (max-width:640px){
+    #readtext{ top:10px; left:10px; font-size:.85rem; padding:.45rem .95rem; }
+    #textpanel .tcard{ padding:1.3rem 1.2rem; }
+  }
   @media (max-width:640px){ .pair{ grid-template-columns:1fr; } }
   footer{ padding:0 1.5rem 2.5rem; text-align:center; font-size:.9rem; opacity:.65; font-style:italic; }
 
@@ -182,6 +203,15 @@
     </figcaption>
   </figure>
   <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
+  <button id="readtext" aria-label="Read the page text">Read text</button>
+  <div id="textpanel" role="dialog" aria-label="Page text">
+    <div class="tcard">
+      <button class="tclose" aria-label="Close text">&times;</button>
+      <h3 id="tpTitle"></h3>
+      <p class="place" id="tpPlace"></p>
+      <p class="copy" id="tpCopy"></p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -220,6 +250,21 @@ const galleries={
     {src:"logos/logo-3-cat-top.webp", title:"Title Treatment 3", sub:"Cat-top motif"}
   ]
 };
+
+const spreadText=[
+ {place:"Planned placement: upper-left sky on the left page only \u2014 the art keeps that area quiet and clear.",
+  text:"Hey there! I'm Harlow, a laid-back Ragdoll cat living the good life in sunny Long Beach, California with my best human friend, Lois. My favorite pastimes boil down to eating, sleeping, and eating some more. I want to share a wild, unexpected journey I had recently \u2014 not a story about cat curiosity, but one about the kindness and generosity of strangers. I think you're going to love it."},
+ {place:"Planned placement: upper-left sky \u2014 the right side stays art-only.",
+  text:"A few days ago, Lois asked, \u201CHey Harlow, want to drive out to Farrelli Farms for some fresh fruits and veggies and enjoy the country scenery?\u201D  Sounded awesome to me, so we hopped into her classic \u201965 Mustang for a nice day trip to the country."},
+ {place:"Planned placement: split zones \u2014 upper-left and upper-right, above the market bustle.",
+  text:"\u201CAh, we finally made it,\u201D I sighed, taking in the rolling green fields as we pulled into Farrelli Farms.  Lois was practically shaking with excitement, her eyes locked on a vibrant display of heirloom tomatoes and fresh berries.  Seeing her completely mesmerized and in her element, I smiled and decided to wander off to stretch my legs."},
+ {place:"Planned placement: upper band across the spread, above the puddle scene.",
+  text:"\u201CPhew, it's toasty today!\u201D grunted Sweet Pea the pig, splashing in a big muddy puddle. \u201CCome on in! The mud is where it's at to beat the heat.\u201D I crept to the edge, then jumped back, wrinkling my nose. \u201CI appreciate the tip, but have you seen my coat? This fur does not do mud.\u201D \u201CAre you sure? It feels amazing!\u201D Sweet Pea snorted, wiggling happily. \u201CI'll find another way to cool off,\u201D I said. \u201CLovely meeting you \u2014 catch you later!\u201D"},
+ {place:"Planned placement: upper band across the spread, above the pond.",
+  text:"I soon spotted a pond, where Mama Fiona and her ducklings \u2014 Missi, Sammi, and Lili \u2014 swam over to greet me. \u201COh honey, you look miserable!\u201D Fiona said, seeing my crusty coat. \u201CCome take a dip and wash that mud off.\u201D Normally a cat avoids water at all costs, but desperate times call for desperate measures. I took a breath and hopped in \u2014 it felt amazing! I scrambled out, shook my fur dry, thanked Fiona and her girls, and set off again."},
+ {place:"Planned placement: upper band across the spread, above the donkeys.",
+  text:"After a while, I realized I'd wandered far from Lois. Molly the donkey and her baby, Albie, trotted over, sensing I was lost. \u201CFeeling turned around, little guy?\u201D Molly chuckled. \u201CTake a look at our big ears \u2014 let them remind you to listen to your surroundings in tight spots.\u201D I swiveled my ears like radar dishes and caught the sound of people talking. \u201CThat's brilliant! Thank you, Molly!\u201D I called, nodding to her and Albie as I hurried toward the voices."}
+];
 document.querySelectorAll('[data-gallery]').forEach(el=>{
   const items=galleries[el.dataset.gallery];
   items.forEach((s,i)=>{
@@ -243,8 +288,19 @@ function openLb(key,i){ gkey=key; const items=galleries[key]; cur=(i+items.lengt
   document.getElementById('next').classList.toggle('hidden',single);
   lbnum.textContent=single ? 'Tap × to close'
     : 'Image '+(cur+1)+' of '+items.length+' — tap the arrows to browse';
-  lb.classList.add('open'); document.body.style.overflow='hidden'; }
+  lb.classList.add('open'); document.body.style.overflow='hidden';
+  document.getElementById('readtext').classList.toggle('hidden', key!=='spreads');
+  document.getElementById('textpanel').classList.remove('open'); }
 function closeLb(){ lb.classList.remove('open'); document.body.style.overflow=''; }
+const textpanel=document.getElementById('textpanel');
+document.getElementById('readtext').onclick=e=>{ e.stopPropagation();
+  const s=galleries[gkey][cur], d=spreadText[cur];
+  document.getElementById('tpTitle').textContent=s.title+' \u2014 '+s.sub;
+  document.getElementById('tpPlace').textContent=d.place;
+  document.getElementById('tpCopy').textContent=d.text;
+  textpanel.classList.add('open'); };
+textpanel.querySelector('.tclose').onclick=e=>{ e.stopPropagation(); textpanel.classList.remove('open'); };
+textpanel.onclick=e=>{ if(e.target===textpanel) textpanel.classList.remove('open'); };
 function step(d){ openLb(gkey,cur+d); }
 document.getElementById('close').onclick=closeLb;
 document.getElementById('prev').onclick=e=>{e.stopPropagation();step(-1);};
@@ -257,7 +313,8 @@ document.getElementById('fs').onclick=e=>{ e.stopPropagation();
   else if(el.webkitRequestFullscreen){ el.webkitRequestFullscreen(); } };
 document.addEventListener('keydown',e=>{
   if(!lb.classList.contains('open'))return;
-  if(e.key==='Escape')closeLb();
+  if(e.key==='Escape'){ if(textpanel.classList.contains('open')) textpanel.classList.remove('open');
+    else closeLb(); }
   if(e.key==='ArrowLeft')step(-1);
   if(e.key==='ArrowRight')step(1);
 });
