@@ -50,27 +50,30 @@
   #lb img{ max-width:100%; max-height:72vh; border-radius:8px; box-shadow:0 20px 60px rgba(0,0,0,.5); }
   #lb figcaption{ color:#f5efe2; margin-top:.9rem; font-size:1.15rem; }
   #lb figcaption .n{ display:block; font-size:1rem; opacity:.65; margin-top:.25rem; }
-  .nav{ position:absolute; top:50%; transform:translateY(-50%);
-        width:46px; height:46px; border-radius:50%; cursor:pointer;
-        background:#faf6ee; border:none; color:#3d3229; font-size:1.6rem; font-weight:bold;
+  #lb figure{ max-width:min(1100px,92vw); text-align:center; }
+  #lb img{ max-width:100%; max-height:70vh; border-radius:8px; box-shadow:0 20px 60px rgba(0,0,0,.5); }
+  #lb figcaption{ color:#f5efe2; margin-top:1rem; font-size:1.15rem;
+                  display:flex; align-items:center; justify-content:center; gap:1rem; }
+  #lb figcaption .t{ display:flex; flex-direction:column; }
+  #lb figcaption .n{ font-size:.95rem; opacity:.65; margin-top:.2rem; }
+  .nav{ width:38px; height:38px; border-radius:50%; cursor:pointer; flex:none;
+        background:#faf6ee; border:none; color:#3d3229; font-size:1.5rem; font-weight:bold;
         box-shadow:0 3px 12px rgba(0,0,0,.4); line-height:1; padding-bottom:3px; }
-  .nav:hover{ background:#fff; transform:translateY(-50%) scale(1.06); }
-  .nav:active{ transform:translateY(-50%) scale(.97); }
+  .nav:hover{ background:#fff; transform:scale(1.08); }
+  .nav:active{ transform:scale(.96); }
   .nav.hidden{ display:none; }
-  #prev{ left:12px; } #next{ right:12px; }
-  #close{ position:absolute; top:12px; right:12px; width:40px; height:40px; border-radius:50%;
-          background:#faf6ee; border:none; color:#3d3229; font-size:1.35rem; cursor:pointer;
+  #close{ position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%;
+          background:#faf6ee; border:none; color:#3d3229; font-size:1.25rem; cursor:pointer;
           box-shadow:0 3px 12px rgba(0,0,0,.4); line-height:1; }
   #close:hover{ background:#fff; }
-  #fs{ position:absolute; top:12px; left:12px; width:40px; height:40px; border-radius:50%;
-       background:#faf6ee; border:none; color:#3d3229; font-size:1.2rem; cursor:pointer;
-       box-shadow:0 3px 12px rgba(0,0,0,.4); line-height:1; }
-  #fs:hover{ background:#fff; }
-  @media (max-width:640px){ #fs{ width:36px; height:36px; top:8px; left:8px; font-size:1.05rem; } }
+  #fs{ position:absolute; bottom:14px; right:16px; background:none; border:none; cursor:pointer;
+       color:#f5efe2; opacity:.75; font-size:1.5rem; line-height:1; padding:6px; }
+  #fs:hover{ opacity:1; }
   @media (max-width:640px){
-    .nav{ width:42px; height:42px; font-size:1.45rem; }
-    #prev{ left:6px; } #next{ right:6px; }
-    #close{ width:36px; height:36px; top:8px; right:8px; font-size:1.2rem; }
+    #lb img{ max-height:62vh; }
+    .nav{ width:36px; height:36px; font-size:1.4rem; }
+    #close{ width:32px; height:32px; top:10px; right:10px; font-size:1.15rem; }
+    #fs{ bottom:10px; right:12px; font-size:1.35rem; }
   }
 </style>
 </head>
@@ -170,13 +173,15 @@
 
 <div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button id="close" aria-label="Close viewer">&times;</button>
-  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
-  <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
   <figure>
     <img id="lbimg" src="" alt="">
-    <figcaption><span id="lbcap"></span><span class="n" id="lbnum"></span></figcaption>
+    <figcaption>
+      <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
+      <span class="t"><span id="lbcap"></span><span class="n" id="lbnum"></span></span>
+      <button class="nav" id="next" aria-label="Next image">&#8250;</button>
+    </figcaption>
   </figure>
-  <button class="nav" id="next" aria-label="Next image">&#8250;</button>
+  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
 </div>
 
 <script>
