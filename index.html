@@ -179,7 +179,8 @@
   .drawerinner{ overflow:hidden; min-height:0; }
   .logodrawer .hint{ margin:1.2rem 0 1rem; }
   .logocarousel{ position:relative; margin-top:1.2rem; }
-  .logoview{ overflow:hidden; padding:8px 24px 28px; }
+  .logoview{ padding:8px 24px 28px; }
+  .logoclip{ overflow:hidden; }
   .logotrack{ display:flex; transition:transform .45s ease; }
   .logotrack .card{ flex:0 0 calc(25% - 1.2rem); margin:0 .6rem; box-sizing:border-box; }
   .lcarrow{ position:absolute; top:calc(50% - 10px); transform:translateY(-50%); z-index:2;
@@ -298,7 +299,7 @@
           <p class="hint">The eight title treatments on their own &mdash; use the arrows to browse. Tap any logo to view it big.</p>
           <div class="logocarousel">
             <button class="lcarrow" id="logoPrev" aria-label="Previous logos">&#8249;</button>
-            <div class="logoview"><div class="logotrack" data-gallery="logosraw"></div></div>
+            <div class="logoview"><div class="logoclip"><div class="logotrack" data-gallery="logosraw"></div></div></div>
             <button class="lcarrow" id="logoNext" aria-label="Next logos">&#8250;</button>
           </div>
           <div class="logodots" id="logoDots"></div>
