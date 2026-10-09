@@ -33,8 +33,9 @@
   .grid.portrait{ grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); }
   .card{ background:#fff; border:1px solid var(--soft); border-radius:12px; overflow:hidden;
          box-shadow:var(--card-shadow); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease; }
-  .card:hover{ transform:translateY(-4px); box-shadow:0 12px 32px rgba(61,50,41,.2); }
-  .card img{ width:100%; height:auto; display:block; }
+  .card:hover{ box-shadow:0 12px 32px rgba(61,50,41,.2); }
+  .card img{ width:100%; height:auto; display:block; transition:transform .3s ease; }
+  .card:hover img{ transform:scale(1.045); }
   .card .cap{ padding:.8rem 1rem 1rem; display:flex; justify-content:space-between; align-items:baseline; gap:.5rem; }
   .card .cap b{ font-size:1rem; }
   .card .cap span{ font-size:.85rem; opacity:.6; font-style:italic; white-space:nowrap; }
