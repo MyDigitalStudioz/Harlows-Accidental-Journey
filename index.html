@@ -57,7 +57,7 @@
   .card .cap b{ font-size:1rem; }
   .card .cap span{ font-size:.85rem; opacity:.6; font-style:italic; white-space:nowrap; }
   .pair{ display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
-  #readtext{ position:absolute; top:12px; left:12px; background:#faf6ee; border:none; color:#3d3229;
+  #readtext{ position:absolute; bottom:16px; right:18px; background:#faf6ee; border:none; color:#3d3229;
              padding:.55rem 1.15rem; border-radius:25px; font-size:.95rem; cursor:pointer;
              box-shadow:0 3px 12px rgba(0,0,0,.4); font-family:Georgia,'Times New Roman',serif;
              font-style:italic; }
@@ -129,7 +129,8 @@
     .deck-card.pos-2,.deck-card.pos--2{ opacity:0; }
   }
   @media (max-width:640px){
-    #readtext{ top:10px; left:10px; font-size:.85rem; padding:.45rem .95rem; }
+    #readtext{ bottom:12px; right:12px; font-size:.85rem; padding:.45rem .95rem; }
+    #fs{ bottom:60px; right:16px; }
     #textpanel .tcard{ padding:1.3rem 1.2rem; }
   }
   @media (max-width:640px){ .pair{ grid-template-columns:1fr; } }
@@ -159,7 +160,7 @@
           background:#faf6ee; border:none; color:#3d3229; font-size:1.25rem; cursor:pointer;
           box-shadow:0 3px 12px rgba(0,0,0,.4); line-height:1; }
   #close:hover{ background:#fff; }
-  #fs{ position:absolute; bottom:14px; right:16px; background:none; border:none; cursor:pointer;
+  #fs{ position:absolute; bottom:68px; right:22px; background:none; border:none; cursor:pointer;
        color:#f5efe2; opacity:.75; font-size:1.5rem; line-height:1; padding:6px; }
   #fs:hover{ opacity:1; }
   @media (max-width:640px){
