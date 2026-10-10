@@ -2,7 +2,7 @@
 
 > A picture book by Lois Farrell — the family review site for finished spreads, cover options, title treatments, and the character cast.
 
-**Branch policy:** work happens on the latest *-vN / project branch. List branches before editing. Never assume the GitHub default is the working line. Working line: `main` (GitHub default is `main`). `harlows-v1` is the frozen restore point for the dialed-in Oct 9 build — do not commit to it.
+**Branch policy:** work happens on the latest *-vN / project branch. List branches before editing. Never assume the GitHub default is the working line. Working line: `Harlows-V2` (GitHub default is `main`). `harlows-v1` is the frozen restore point for the dialed-in Oct 9 build — do not commit to it. `main` is the published branch, synced from `Harlows-V2`.
 
 [![Preview](https://img.shields.io/badge/Preview-Live-brightgreen)](https://mydigitalstudioz.github.io/Harlows-Accidental-Journey/)
 [![GitHub Pages](https://github.com/MyDigitalStudioz/Harlows-Accidental-Journey/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/MyDigitalStudioz/Harlows-Accidental-Journey/actions/workflows/pages/pages-build-deployment)
