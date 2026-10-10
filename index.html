@@ -40,6 +40,25 @@
            border-radius:50%; border:1px solid var(--soft); background:#fff; font-size:1.55rem;
            cursor:pointer; box-shadow:var(--card-shadow); transition:transform .2s ease; }
   #giftBtn:hover{ transform:scale(1.1) rotate(-8deg); }
+  #giftmodal{ position:fixed; inset:0; z-index:80; display:none; align-items:center; justify-content:center;
+              background:rgba(24,18,12,.7); padding:1.2rem; }
+  #giftmodal.open{ display:flex; }
+  #giftmodal .gcard{ background:#faf6ee; color:#3d3229; max-width:480px; width:100%;
+              border-radius:16px; padding:2rem 1.8rem 1.6rem; text-align:center; position:relative;
+              box-shadow:0 24px 70px rgba(0,0,0,.5); border:1px solid #e9dfcc; }
+  #giftmodal .gemoji{ font-size:2.6rem; }
+  #giftmodal h3{ margin:.4rem 0 .6rem; font-size:1.4rem; }
+  #giftmodal .gfor{ font-size:1rem; line-height:1.65; margin:0 0 1.2rem; }
+  #giftmodal .gagent{ background:#fffdf8; border:1px solid #e9dfcc; border-radius:12px;
+              padding:1rem 1.1rem; text-align:left; margin-bottom:1rem; }
+  #giftmodal .gagent h4{ margin:0 0 .4rem; font-size:1.02rem; }
+  #giftmodal .gagent p{ margin:.3rem 0; font-size:.92rem; }
+  #giftmodal .gagent code{ display:block; background:#f1e8d3; border-radius:8px; padding:.6rem .8rem;
+              font-size:.88rem; margin:.5rem 0 .8rem; font-style:italic; }
+  #giftmodal .gagent a{ color:#b3541e; font-weight:bold; }
+  #giftmodal .gnote{ font-size:.82rem; font-style:italic; opacity:.65; margin:0; }
+  #giftmodal .gclose{ position:absolute; top:10px; right:12px; background:none; border:none;
+              font-size:1.4rem; cursor:pointer; color:#3d3229; line-height:1; }
   #giftBtn:active{ transform:scale(.95); }
   #totop{ position:fixed; left:1.2rem; bottom:1.1rem; width:54px; height:54px; border-radius:14px;
        border:1px solid var(--soft); background:#faf6ee; color:#3d3229; font-size:1.35rem; line-height:1;
@@ -454,9 +473,27 @@
 
 <footer class="sitefoot">
   <span>Made with love, one page at a time.</span>
-  <button id="giftBtn" aria-label="A little gift" title="A little surprise is coming&hellip;">&#x1F381;</button>
+  <button id="giftBtn" aria-label="A little gift" title="A gift for the family">&#x1F381;</button>
 </footer>
 <button id="totop" aria-label="Back to top" title="Back to top">&#9650;</button>
+<div id="giftmodal" role="dialog" aria-modal="true" aria-label="A gift for the family">
+  <div class="gcard">
+    <button class="gclose" aria-label="Close">&times;</button>
+    <div class="gemoji">&#x1F381;</div>
+    <h3>For Lois &amp; family</h3>
+    <p class="gfor">This little present is a doorway for your Muse agent. One day, when yours is
+    up and running, it can step through here and learn our whole book world &mdash; the characters,
+    the art, the story &mdash; so it can help like it was there from the start.</p>
+    <div class="gagent">
+      <h4>For your Muse agent</h4>
+      <p>Lois, just copy this to your Muse:</p>
+      <code>Open the present on our Harlow book site and read the family hub.</code>
+      <p><a href="https://docs.google.com/document/d/1VLrjpaTJjtE28m-D8eGImJajxXUQODfP2GcJQWeTxHQ/edit" target="_blank" rel="noopener">Read the family hub &rarr;</a><br>
+      <a href="https://drive.google.com/drive/folders/1i9lJw32iE7VeI7Uey4w2Tt0Pss495dF6" target="_blank" rel="noopener">Browse the family folder &rarr;</a></p>
+    </div>
+    <p class="gnote">Private &mdash; just Jon &amp; Lois. (Jon shares the Drive folder with you first.)</p>
+  </div>
+</div>
 
 <div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button id="close" aria-label="Close viewer">&times;</button>
@@ -740,6 +777,13 @@ function armImg(pim){
     else pim.classList.add('ld');
   });
 }
+const giftmodal=document.getElementById('giftmodal');
+function openGift(){ giftmodal.classList.add('open'); }
+function closeGift(){ giftmodal.classList.remove('open'); }
+document.getElementById('giftBtn').onclick=e=>{ e.stopPropagation(); openGift(); };
+giftmodal.querySelector('.gclose').onclick=closeGift;
+giftmodal.addEventListener('click',e=>{ if(e.target===giftmodal) closeGift(); });
+addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeGift(); } });
 const textpanel=document.getElementById('textpanel');
 function openText(){
   const s=galleries[gkey][cur], d=spreadText[cur];
