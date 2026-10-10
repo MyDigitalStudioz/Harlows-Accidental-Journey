@@ -219,7 +219,8 @@
   .logodrawer .hint{ margin:1.2rem 0 1rem; }
   .logocarousel{ position:relative; margin-top:1.2rem; }
   .logoview{ padding:8px 24px 28px; }
-  .logoclip{ overflow:hidden; touch-action:pan-y; }
+  .logoclip{ overflow:hidden; touch-action:pan-y; user-select:none; -webkit-user-select:none; }
+  .logotrack img{ -webkit-user-drag:none; }
   .logotrack{ display:flex; transition:transform .45s ease; }
   .logotrack .card{ flex:0 0 calc(25% - 1.2rem); margin:0 .6rem; box-sizing:border-box; }
   .lcarrow{ position:absolute; top:calc(50% - 10px); transform:translateY(-50%); z-index:2;
@@ -599,7 +600,7 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
     d.setAttribute('role','button'); d.setAttribute('aria-label','View larger: '+s.title);
     d.dataset.name=s.title.toLowerCase();
     const eager=(el.dataset.gallery==='spreads'&&i<3)||el.dataset.gallery==='logosraw';
-    d.innerHTML='<img src="'+s.src+'" alt="'+s.title+'" loading="'+(eager?'eager':'lazy')+'"'+
+    d.innerHTML='<img src="'+s.src+'" alt="'+s.title+'" draggable="false" loading="'+(eager?'eager':'lazy')+'"'+
       (eager?' fetchpriority="high"':'')+' decoding="async">'+
       '<div class="cap"><b>'+s.title+'</b><span>'+s.sub+'</span></div>';
     const pim=d.querySelector('img');
@@ -664,17 +665,20 @@ logoPrev.onclick=()=>logoGo(logoPage-1);
 logoNext.onclick=()=>logoGo(logoPage+1);
 addEventListener('resize', ()=>logoGo(logoPage));
 buildDots();
-let lDragX=null, lSuppress=false;
+let lDragX=null, lBaseX=0, lSuppress=false;
 logoClip.addEventListener('pointerdown',e=>{
   if(e.target.closest('button'))return;
+  e.preventDefault();
   lDragX=e.clientX;
+  const m=/translateX\((-?[\d.]+)px\)/.exec(logoTrack.style.transform);
+  lBaseX=m?parseFloat(m[1]):-logoPage*logoClip.clientWidth;
   logoTrack.style.transition='none';
   try{ logoClip.setPointerCapture(e.pointerId); }catch(err){}
 });
 logoClip.addEventListener('pointermove',e=>{
   if(lDragX===null)return;
   const n=logoPages(), w=logoClip.clientWidth, dx=e.clientX-lDragX;
-  let x=-logoPage*w+dx;
+  let x=lBaseX+dx;
   const minX=-(n-1)*w, maxX=0;
   if(x>maxX) x=maxX+(x-maxX)*0.35;
   if(x<minX) x=minX+(x-minX)*0.35;
