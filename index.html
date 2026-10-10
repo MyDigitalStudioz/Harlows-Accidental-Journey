@@ -187,9 +187,14 @@
   .nav{ width:38px; height:38px; border-radius:50%; cursor:pointer; flex:none;
         background:#faf6ee; border:none; color:#3d3229; font-size:1.5rem; font-weight:bold;
         box-shadow:0 3px 12px rgba(0,0,0,.4); line-height:1; padding-bottom:3px; }
-  #prev, #next{ position:fixed; top:50%; transform:translateY(-50%); z-index:51; }
+  #prev, #next{ position:fixed; top:50%; transform:translateY(-50%); z-index:51;
+           background:linear-gradient(135deg,#4a3826 0%,#7d5f31 48%,#c9a227 100%);
+           border:1px solid rgba(201,162,39,.6); color:#faf6ee;
+           box-shadow:0 4px 18px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.28);
+           text-shadow:0 1px 2px rgba(0,0,0,.45); }
   #prev{ left:18px; } #next{ right:18px; }
-  .nav:hover{ background:#fff; transform:translateY(-50%) scale(1.08); }
+  .nav:hover{ background:linear-gradient(135deg,#5a452e 0%,#97743c 48%,#e3bd45 100%);
+           transform:translateY(-50%) scale(1.08); }
   .nav:active{ transform:translateY(-50%) scale(.96); }
   .nav.hidden{ display:none; }
   #close{ position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%;
@@ -249,11 +254,15 @@
   .fnav, .fclose{ display:none; }
   #lbfig:fullscreen .fnav, #lbfig:-webkit-full-screen .fnav, #lb.zoomed .fnav{ display:block; position:absolute; top:50%;
            transform:translateY(-50%); width:56px; height:56px; border-radius:50%;
-           background:rgba(250,246,238,.65); border:1px solid rgba(250,246,238,.8); color:#3d3229;
+           background:linear-gradient(135deg,#4a3826 0%,#7d5f31 48%,#c9a227 100%);
+           border:1px solid rgba(201,162,39,.6); color:#faf6ee;
+           box-shadow:0 4px 18px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.28);
+           text-shadow:0 1px 2px rgba(0,0,0,.45);
            font-size:2rem; line-height:1; padding-bottom:5px; cursor:pointer; z-index:5; }
   #lbfig:fullscreen #fprev, #lbfig:-webkit-full-screen #fprev, #lb.zoomed #fprev{ left:16px; }
   #lbfig:fullscreen #fnext, #lbfig:-webkit-full-screen #fnext, #lb.zoomed #fnext{ right:16px; }
-  #lbfig:fullscreen .fnav:hover, #lbfig:-webkit-full-screen .fnav:hover, #lb.zoomed .fnav:hover{ background:rgba(250,246,238,.9); }
+  #lbfig:fullscreen .fnav:hover, #lbfig:-webkit-full-screen .fnav:hover, #lb.zoomed .fnav:hover{
+           background:linear-gradient(135deg,#5a452e 0%,#97743c 48%,#e3bd45 100%); }
   #lbfig:fullscreen .fclose, #lbfig:-webkit-full-screen .fclose, #lb.zoomed .fclose{ display:block; position:absolute; top:16px; right:16px;
            width:40px; height:40px; border-radius:50%; background:rgba(250,246,238,.65);
            border:1px solid rgba(250,246,238,.8); color:#3d3229; font-size:1.35rem; line-height:1;
