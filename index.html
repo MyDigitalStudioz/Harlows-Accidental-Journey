@@ -111,6 +111,7 @@
   .deck-shell.dragging, .deck-shell.dragging .deck-card{ cursor:grabbing; }
   .deck-card img{ width:100%; aspect-ratio:1206/1388; object-fit:cover; display:block;
            pointer-events:none; }
+  .deck-shell.square .deck-card img{ aspect-ratio:1/1; }
   .deck-card .dcap{ padding:.7rem 1rem; display:flex; justify-content:space-between;
            align-items:baseline; gap:.5rem; pointer-events:none; }
   .deck-card .dcap b{ font-size:1rem; }
@@ -346,6 +347,25 @@
     </div>
     <div class="grid castgrid" data-gallery="characters" id="castGrid"></div>
     <p class="castempty hidden" id="castEmpty">No characters match &mdash; try another name.</p>
+    <div class="logodrawer-wrap">
+      <button class="revealbtn" id="castToggle" aria-expanded="false" aria-controls="castDrawer">Reveal cast members &#9662;</button>
+      <div class="logodrawer" id="castDrawer">
+        <div class="drawerinner">
+          <p class="hint">Flip through every character &mdash; tap a card to view it big.</p>
+          <div class="deck-shell square" id="castShell" tabindex="0" aria-label="Character card deck">
+            <div class="deck-head">
+              <span class="deck-count" id="castDeckCount" aria-live="polite"></span>
+              <span class="deck-hint">Drag or use &larr; &rarr;</span>
+            </div>
+            <div class="deck-stage" id="castStage"></div>
+            <div class="deck-controls">
+              <button class="deck-arrow" id="castPrev" type="button" aria-label="Previous character">&larr;</button>
+              <button class="deck-arrow" id="castNext" type="button" aria-label="Next character">&rarr;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -655,89 +675,100 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight')step(1);
 });
 
-// ---- front cover mock-up deck (adapted from IVZN Screening Room) ----
-let deckIndex = 0;
-const deckStage = document.getElementById('deckStage');
-const deckDots = document.getElementById('deckDots');
-const deckCount = document.getElementById('deckCount');
-const deckShell = document.getElementById('deckShell');
-function deckWrap(i, n){ return ((i % n) + n) % n; }
-function buildDeck(){
-  deckStage.innerHTML = galleries.logos.map((s, i) =>
+// ---- 3D card decks (Deckz pattern, adapted from IVZN Screening Room) ----
+const decks=[];
+function makeDeck(cfg){
+  const shell=document.getElementById(cfg.shell), stage=document.getElementById(cfg.stage),
+        count=document.getElementById(cfg.count);
+  const dots=cfg.dots?document.getElementById(cfg.dots):null;
+  const items=cfg.items, n=items.length;
+  let index=0, dragX=null, suppressClick=false;
+  const wrap=i=>((i%n)+n)%n;
+  stage.innerHTML=items.map((s,i)=>
     '<article class="deck-card" data-i="'+i+'" tabindex="0" role="button" aria-label="View larger: '+s.title+'">'+
-    '<img src="'+s.src+'" alt="'+s.title+' — '+s.sub+'" loading="lazy">'+
-    '<div class="dcap"><b>'+s.title+'</b><span>'+s.sub+'</span></div></article>').join('');
-  galleries.logos.forEach((s, vi)=>{
-    const dot = document.createElement('button');
-    dot.type = 'button'; dot.className = 'deck-dot';
-    dot.setAttribute('aria-label', 'Show ' + s.title);
-    dot.addEventListener('click', ()=>{ deckIndex = vi; renderDeck(); });
-    deckDots.appendChild(dot);
-  });
-  deckStage.querySelectorAll('.deck-card').forEach(card=>{
-    card.addEventListener('click', ()=>{ openLb('logos', +card.dataset.i); });
-    card.addEventListener('keydown', e=>{
-      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openLb('logos', +card.dataset.i); } });
-  });
-}
-function renderDeck(){
-  const n = galleries.logos.length;
-  deckIndex = deckWrap(deckIndex, n);
-  const cards = deckStage.children, dots = deckDots.children;
-  for(let vi = 0; vi < n; vi++){
-    let off = vi - deckIndex;
-    if(off > n/2) off -= n;
-    if(off < -n/2) off += n;
-    cards[vi].className = 'deck-card pos-' + off;
-    dots[vi].setAttribute('aria-current', vi === deckIndex ? 'true' : 'false');
+    '<img src="'+s.src+'" alt="'+s.title+'" loading="lazy"'+(s.pos?' style="object-position:'+s.pos+'"':'')+'>'+
+    '<div class="dcap"><b>'+s.title+'</b>'+(cfg.hideSub?'':'<span>'+s.sub+'</span>')+'</div></article>').join('');
+  if(dots){ items.forEach((s,vi)=>{
+    const dot=document.createElement('button');
+    dot.type='button'; dot.className='deck-dot';
+    dot.setAttribute('aria-label','Show '+s.title);
+    dot.addEventListener('click',()=>{ index=vi; render(); });
+    dots.appendChild(dot);
+  });}
+  function render(){
+    index=wrap(index);
+    const cards=stage.children;
+    for(let vi=0;vi<n;vi++){
+      let off=vi-index;
+      if(off>n/2)off-=n;
+      if(off<-n/2)off+=n;
+      cards[vi].className='deck-card pos-'+off;
+      if(dots)dots.children[vi].setAttribute('aria-current',vi===index?'true':'false');
+    }
+    count.textContent=(index+1)+' of '+n;
   }
-  deckCount.textContent = (deckIndex + 1) + ' of ' + n;
+  function move(d){ index=wrap(index+d); render(); }
+  document.getElementById(cfg.prev).addEventListener('click',()=>move(-1));
+  document.getElementById(cfg.next).addEventListener('click',()=>move(1));
+  stage.querySelectorAll('.deck-card').forEach(card=>{
+    card.addEventListener('click',()=>{ openLb(cfg.gallery,+card.dataset.i); });
+    card.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openLb(cfg.gallery,+card.dataset.i); } });
+  });
+  const TH=70;
+  stage.addEventListener('pointerdown',e=>{
+    if(e.target.closest('a,button'))return;
+    dragX=e.clientX; shell.classList.add('dragging');
+    try{ stage.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  stage.addEventListener('pointermove',e=>{
+    if(dragX===null)return;
+    stage.style.setProperty('--drag',(e.clientX-dragX)+'px');
+  });
+  function endDrag(e){
+    if(dragX===null)return;
+    const dx=e.clientX-dragX; dragX=null;
+    shell.classList.remove('dragging');
+    stage.style.transition='transform .3s cubic-bezier(.22,.8,.28,1)';
+    stage.style.setProperty('--drag','0px');
+    setTimeout(()=>{ stage.style.transition=''; },320);
+    if(Math.abs(dx)>TH){ suppressClick=true; setTimeout(()=>{suppressClick=false;},80); move(dx>0?-1:1); }
+  }
+  stage.addEventListener('pointerup',endDrag);
+  stage.addEventListener('pointercancel',endDrag);
+  stage.addEventListener('dragstart',e=>e.preventDefault());
+  stage.addEventListener('click',e=>{ if(suppressClick){ e.preventDefault(); e.stopPropagation(); } },true);
+  render();
+  const api={shell:shell,move:move,drawer:cfg.drawer||null};
+  decks.push(api);
+  return api;
 }
-function moveDeck(d){ deckIndex = deckWrap(deckIndex + d, galleries.logos.length); renderDeck(); }
-document.getElementById('deckPrev').addEventListener('click', ()=>moveDeck(-1));
-document.getElementById('deckNext').addEventListener('click', ()=>moveDeck(1));
-document.addEventListener('keydown', e=>{
-  if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-  if(lb.classList.contains('open')) return;
-  const r = deckShell.getBoundingClientRect();
-  if(r.bottom < 0 || r.top > window.innerHeight) return;
+makeDeck({shell:'deckShell',stage:'deckStage',dots:'deckDots',count:'deckCount',
+  prev:'deckPrev',next:'deckNext',items:galleries.logos,gallery:'logos'});
+makeDeck({shell:'castShell',stage:'castStage',dots:null,count:'castDeckCount',
+  prev:'castPrev',next:'castNext',items:galleries.characters,gallery:'characters',
+  hideSub:true,drawer:'castDrawer'});
+const castToggle=document.getElementById('castToggle'), castDrawer=document.getElementById('castDrawer');
+castToggle.onclick=()=>{
+  const open=castDrawer.classList.toggle('open');
+  castToggle.setAttribute('aria-expanded',open);
+  castToggle.innerHTML=open?'Hide cast members &#9652;':'Reveal cast members &#9662;';
+};
+document.addEventListener('keydown',e=>{
+  if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+  if(lb.classList.contains('open'))return;
+  let best=null,bestScore=1e9;
+  decks.forEach(d=>{
+    if(d.drawer&&!document.getElementById(d.drawer).classList.contains('open'))return;
+    const r=d.shell.getBoundingClientRect();
+    if(r.height<80||r.bottom<0||r.top>window.innerHeight)return;
+    const score=Math.abs((r.top+r.height/2)-window.innerHeight/2);
+    if(score<bestScore){ bestScore=score; best=d; }
+  });
+  if(!best)return;
   e.preventDefault();
-  moveDeck(e.key === 'ArrowLeft' ? -1 : 1);
+  best.move(e.key==='ArrowLeft'?-1:1);
 });
-let dragX = null, suppressClick = false;
-const DRAG_THRESHOLD = 70;
-deckStage.addEventListener('pointerdown', e=>{
-  if(e.target.closest('a,button')) return;
-  dragX = e.clientX;
-  deckShell.classList.add('dragging');
-  try{ deckStage.setPointerCapture(e.pointerId); }catch(err){}
-});
-deckStage.addEventListener('pointermove', e=>{
-  if(dragX === null) return;
-  deckStage.style.setProperty('--drag', (e.clientX - dragX) + 'px');
-});
-function endDrag(e){
-  if(dragX === null) return;
-  const dx = e.clientX - dragX;
-  dragX = null;
-  deckShell.classList.remove('dragging');
-  deckStage.style.transition = 'transform .3s cubic-bezier(.22,.8,.28,1)';
-  deckStage.style.setProperty('--drag', '0px');
-  setTimeout(()=>{ deckStage.style.transition = ''; }, 320);
-  if(Math.abs(dx) > DRAG_THRESHOLD){
-    suppressClick = true;
-    setTimeout(()=>{ suppressClick = false; }, 80);
-    moveDeck(dx > 0 ? -1 : 1);
-  }
-}
-deckStage.addEventListener('pointerup', endDrag);
-deckStage.addEventListener('pointercancel', endDrag);
-deckStage.addEventListener('dragstart', e=>e.preventDefault());
-deckStage.addEventListener('click', e=>{
-  if(suppressClick){ e.preventDefault(); e.stopPropagation(); }
-}, true);
-buildDeck();
-renderDeck();
 </script>
 </body>
 </html>
