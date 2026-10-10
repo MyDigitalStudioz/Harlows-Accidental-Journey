@@ -196,7 +196,7 @@
   .logodrawer .hint{ margin:1.2rem 0 1rem; }
   .logocarousel{ position:relative; margin-top:1.2rem; }
   .logoview{ padding:8px 24px 28px; }
-  .logoclip{ overflow:hidden; }
+  .logoclip{ overflow:hidden; touch-action:pan-y; }
   .logotrack{ display:flex; transition:transform .45s ease; }
   .logotrack .card{ flex:0 0 calc(25% - 1.2rem); margin:0 .6rem; box-sizing:border-box; }
   .lcarrow{ position:absolute; top:calc(50% - 10px); transform:translateY(-50%); z-index:2;
@@ -224,7 +224,7 @@
   #castGrid .card .cap span{ display:none; }
   .castempty{ text-align:center; font-style:italic; opacity:.65; padding:2rem 0; }
   .hidden{ display:none !important; }
-  @media (max-width:640px){ .logotrack .card{ flex-basis:calc(50% - 1rem); margin:0 .5rem; } }
+  @media (max-width:640px){ .logotrack .card{ flex-basis:calc(100% - 1rem); margin:0 .5rem; } }
   #lb.zoomed{ padding:0; }
   #lbfig:fullscreen, #lb.zoomed #lbfig{ width:100vw; height:100vh; max-width:100vw; background:#000;
            position:relative; margin:0; }
@@ -327,7 +327,7 @@
       <button class="revealbtn" id="logoToggle" aria-expanded="false" aria-controls="logoDrawer">Reveal logos &#9662;</button>
       <div class="logodrawer" id="logoDrawer">
         <div class="drawerinner">
-          <p class="hint">The title treatments on their own &mdash; use the arrows to browse. Tap any logo to view it big.</p>
+          <p class="hint">The title treatments on their own &mdash; swipe or use the arrows to browse. Tap any logo to view it big.</p>
           <div class="logocarousel">
             <button class="lcarrow" id="logoPrev" aria-label="Previous logos">&#8249;</button>
             <div class="logoview"><div class="logoclip"><div class="logotrack" data-gallery="logosraw"></div></div></div>
@@ -588,13 +588,14 @@ logoToggle.onclick=()=>{
   const open=logoDrawer.classList.toggle('open');
   logoToggle.setAttribute('aria-expanded', open);
   logoToggle.innerHTML=open ? 'Hide logos &#9652;' : 'Reveal logos &#9662;';
+  if(open) logoGo(logoPage);
 };
 const logoTrack=document.querySelector('.logotrack'),
       logoPrev=document.getElementById('logoPrev'),
       logoNext=document.getElementById('logoNext'),
       logoDots=document.getElementById('logoDots');
 let logoPage=0;
-function logoPerView(){ return matchMedia('(max-width:640px)').matches ? 2 : 4; }
+function logoPerView(){ return matchMedia('(max-width:640px)').matches ? 1 : 4; }
 function logoPages(){ return Math.ceil(galleries.logosraw.length/logoPerView()); }
 function buildDots(){
   logoDots.innerHTML='';
@@ -606,16 +607,40 @@ function buildDots(){
     logoDots.appendChild(b);
   }
 }
+const logoClip=document.querySelector('.logoclip');
 function logoGo(p){
   const n=logoPages();
   logoPage=((p%n)+n)%n;
-  logoTrack.style.transform='translateX(-'+(logoPage*100)+'%)';
+  const w=logoClip.clientWidth;
+  if(w>0) logoTrack.style.transform='translateX('+(-logoPage*w)+'px)';
   buildDots();
 }
 logoPrev.onclick=()=>logoGo(logoPage-1);
 logoNext.onclick=()=>logoGo(logoPage+1);
 addEventListener('resize', ()=>logoGo(logoPage));
 buildDots();
+let lDragX=null, lSuppress=false;
+logoClip.addEventListener('pointerdown',e=>{
+  if(e.target.closest('button'))return;
+  lDragX=e.clientX;
+  logoTrack.style.transition='none';
+  try{ logoClip.setPointerCapture(e.pointerId); }catch(err){}
+});
+logoClip.addEventListener('pointermove',e=>{
+  if(lDragX===null)return;
+  logoTrack.style.transform='translateX('+(-logoPage*logoClip.clientWidth+(e.clientX-lDragX))+'px)';
+});
+function logoEndDrag(e){
+  if(lDragX===null)return;
+  const dx=e.clientX-lDragX; lDragX=null;
+  logoTrack.style.transition='';
+  if(Math.abs(dx)>10){ lSuppress=true; setTimeout(()=>{lSuppress=false;},80); }
+  if(Math.abs(dx)>60){ logoGo(logoPage+(dx<0?1:-1)); }
+  else{ logoGo(logoPage); }
+}
+logoClip.addEventListener('pointerup',logoEndDrag);
+logoClip.addEventListener('pointercancel',logoEndDrag);
+logoClip.addEventListener('click',e=>{ if(lSuppress){ e.preventDefault(); e.stopPropagation(); } },true);
 const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
       lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum'),
       lbfig=document.getElementById('lbfig');
