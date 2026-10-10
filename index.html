@@ -652,7 +652,7 @@ function openLb(key,i){ gkey=key; const items=galleries[key]; cur=(i+items.lengt
   document.getElementById('prev').classList.toggle('hidden',single);
   document.getElementById('next').classList.toggle('hidden',single);
   lbnum.textContent=single ? 'Tap × to close'
-    : 'Image '+(cur+1)+' of '+items.length+' — tap the arrows to browse';
+    : 'Image '+(cur+1)+' of '+items.length;
   lb.classList.add('open'); document.body.style.overflow='hidden';
   document.getElementById('readtext').classList.toggle('hidden', key!=='spreads');
   document.getElementById('textpanel').classList.remove('open'); }
