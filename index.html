@@ -94,7 +94,10 @@
                       font-size:1.5rem; cursor:pointer; color:#3d3229; line-height:1; }
   .deck-shell{ position:relative; min-height:600px; overflow:hidden; border:1px solid var(--soft);
            border-radius:16px; perspective:1400px; touch-action:pan-y;
+           user-select:none; -webkit-user-select:none;
            background:linear-gradient(180deg,#fffdf8,#f5eedd); }
+  .deck-card{ -webkit-touch-callout:none; }
+  .deck-card.far{ visibility:hidden; }
   .deck-head{ position:absolute; z-index:12; top:14px; left:22px; right:22px; display:flex;
            align-items:center; justify-content:space-between; pointer-events:none;
            color:#8a7a63; font-size:.85rem; font-style:italic; }
@@ -702,7 +705,7 @@ function makeDeck(cfg){
       let off=vi-index;
       if(off>n/2)off-=n;
       if(off<-n/2)off+=n;
-      cards[vi].className='deck-card pos-'+off;
+      cards[vi].className='deck-card pos-'+off+(Math.abs(off)>3?' far':'');
       if(dots)dots.children[vi].setAttribute('aria-current',vi===index?'true':'false');
     }
     count.textContent=(index+1)+' of '+n;
@@ -718,6 +721,7 @@ function makeDeck(cfg){
   const TH=70;
   stage.addEventListener('pointerdown',e=>{
     if(e.target.closest('a,button'))return;
+    stage.style.transition='';
     dragX=e.clientX; shell.classList.add('dragging');
     try{ stage.setPointerCapture(e.pointerId); }catch(err){}
   });
@@ -732,7 +736,8 @@ function makeDeck(cfg){
     stage.style.transition='transform .3s cubic-bezier(.22,.8,.28,1)';
     stage.style.setProperty('--drag','0px');
     setTimeout(()=>{ stage.style.transition=''; },320);
-    if(Math.abs(dx)>TH){ suppressClick=true; setTimeout(()=>{suppressClick=false;},80); move(dx>0?-1:1); }
+    if(Math.abs(dx)>10){ suppressClick=true; setTimeout(()=>{suppressClick=false;},80); }
+    if(Math.abs(dx)>TH){ move(dx>0?-1:1); }
   }
   stage.addEventListener('pointerup',endDrag);
   stage.addEventListener('pointercancel',endDrag);
