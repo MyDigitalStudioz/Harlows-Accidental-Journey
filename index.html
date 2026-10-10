@@ -46,8 +46,8 @@
        cursor:pointer; box-shadow:0 4px 16px rgba(61,50,41,.18); opacity:0; pointer-events:none;
        transform:translateX(-90px); transition:opacity .45s ease, transform .5s cubic-bezier(.22,.8,.28,1);
        z-index:40; }
-  #totop.show{ opacity:1; pointer-events:auto; transform:translateX(0); }
-  #totop.show:hover{ background:#fff; }
+  #totop.show{ opacity:.7; pointer-events:auto; transform:translateX(0); }
+  #totop.show:hover{ opacity:1; background:#fff; }
   body{ font-family:Georgia,'Times New Roman',serif; background:var(--paper); color:var(--ink); }
   .wrap{ max-width:1100px; margin:0 auto; padding:0 1.5rem; }
   header.hero{ text-align:center; padding:3rem 1.5rem 2rem; max-width:720px; margin:0 auto; }
@@ -67,8 +67,19 @@
   .card{ background:#fff; border:1px solid var(--soft); border-radius:12px; overflow:hidden;
          box-shadow:var(--card-shadow); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease; }
   .card:hover{ box-shadow:0 12px 32px rgba(61,50,41,.2); }
-  .card img{ width:100%; height:auto; display:block; transition:transform .35s cubic-bezier(.25,.8,.3,1);
-           transform:translateZ(0); -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+  .card img{ width:100%; height:auto; display:block; transition:transform .35s cubic-bezier(.25,.8,.3,1), opacity .55s ease;
+           transform:translateZ(0); -webkit-backface-visibility:hidden; backface-visibility:hidden;
+           background:#f2ead9; }
+  [data-gallery="spreads"] .card img{ aspect-ratio:2/1; object-fit:cover; }
+  [data-gallery="coverwrap"] .card img{ aspect-ratio:1902/827; object-fit:cover; }
+  [data-gallery="coverb"] .card img, [data-gallery="coverd"] .card img,
+  [data-gallery="covere"] .card img{ aspect-ratio:1206/1385; object-fit:cover; }
+  [data-gallery="welcome"] .card img{ aspect-ratio:1206/1558; object-fit:cover; }
+  .card img.pl, .deck-card img.pl{ opacity:0;
+           background:linear-gradient(100deg,#ece1c9 35%,#faf6ee 50%,#ece1c9 65%);
+           background-size:200% 100%; animation:shim 1.4s linear infinite; }
+  .card img.pl.ld, .deck-card img.pl.ld{ opacity:1; animation:none; background:#f2ead9; }
+  @keyframes shim{ to{ background-position:-200% 0; } }
   .card:hover img{ transform:scale(1.03) translateZ(0); }
   .card .cap{ padding:.8rem 1rem 1rem; display:flex; justify-content:space-between; align-items:baseline; gap:.5rem; }
   .card .cap b{ font-size:1rem; flex:none; }
@@ -81,7 +92,7 @@
              font-style:italic; }
   #readtext:hover{ background:#fff; }
   #readtext.hidden{ display:none; }
-  #textpanel{ position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+  #textpanel{ position:absolute; inset:0; display:none; align-items:center; justify-content:center; z-index:10;
               background:rgba(20,14,10,.55); padding:1rem; }
   #textpanel.open{ display:flex; }
   #textpanel .tcard{ background:#faf6ee; color:#3d3229; max-width:560px; width:100%; max-height:82%;
@@ -113,7 +124,7 @@
   .deck-shell.dragging{ user-select:none; -webkit-user-select:none; }
   .deck-shell.dragging, .deck-shell.dragging .deck-card{ cursor:grabbing; }
   .deck-card img{ width:100%; aspect-ratio:1206/1388; object-fit:cover; display:block;
-           pointer-events:none; }
+           pointer-events:none; transition:opacity .55s ease; background:#f2ead9; }
   .deck-shell.square .deck-card img{ aspect-ratio:1/1; }
   .deck-card .dcap{ padding:.7rem 1rem; display:flex; justify-content:space-between;
            align-items:baseline; gap:.5rem; pointer-events:none; }
@@ -226,25 +237,32 @@
   .hidden{ display:none !important; }
   @media (max-width:640px){ .logotrack .card{ flex-basis:calc(100% - 1rem); margin:0 .5rem; } }
   #lb.zoomed{ padding:0; }
-  #lbfig:fullscreen, #lb.zoomed #lbfig{ width:100vw; height:100vh; max-width:100vw; background:#000;
+  #lbfig:fullscreen, #lbfig:-webkit-full-screen, #lb.zoomed #lbfig{ width:100vw; height:100vh; max-width:100vw; background:#000;
            position:relative; margin:0; }
-  #lbfig:fullscreen #lbimg, #lb.zoomed #lbimg{ width:100vw; height:100vh; max-width:100vw;
+  #lbfig:fullscreen, #lbfig:-webkit-full-screen #lbimg, #lb.zoomed #lbimg{ width:100vw; height:100vh; max-width:100vw;
            max-height:100vh; object-fit:contain; border-radius:0; cursor:zoom-out; }
-  #lbfig:fullscreen figcaption, #lb.zoomed figcaption{ display:none; }
+  #lbfig:fullscreen, #lbfig:-webkit-full-screen figcaption, #lb.zoomed figcaption{ display:none; }
   #lb.zoomed #readtext{ display:none; }
   .fnav, .fclose{ display:none; }
-  #lbfig:fullscreen .fnav, #lb.zoomed .fnav{ display:block; position:absolute; top:50%;
+  #lbfig:fullscreen, #lbfig:-webkit-full-screen .fnav, #lb.zoomed .fnav{ display:block; position:absolute; top:50%;
            transform:translateY(-50%); width:56px; height:56px; border-radius:50%;
            background:rgba(250,246,238,.65); border:1px solid rgba(250,246,238,.8); color:#3d3229;
            font-size:2rem; line-height:1; padding-bottom:5px; cursor:pointer; z-index:5; }
-  #lbfig:fullscreen #fprev, #lb.zoomed #fprev{ left:16px; }
-  #lbfig:fullscreen #fnext, #lb.zoomed #fnext{ right:16px; }
-  #lbfig:fullscreen .fnav:hover, #lb.zoomed .fnav:hover{ background:rgba(250,246,238,.9); }
-  #lbfig:fullscreen .fclose, #lb.zoomed .fclose{ display:block; position:absolute; top:14px; right:16px;
-           width:46px; height:46px; border-radius:50%; background:rgba(250,246,238,.65);
-           border:1px solid rgba(250,246,238,.8); color:#3d3229; font-size:1.6rem; line-height:1;
+  #lbfig:fullscreen, #lbfig:-webkit-full-screen #fprev, #lb.zoomed #fprev{ left:16px; }
+  #lbfig:fullscreen, #lbfig:-webkit-full-screen #fnext, #lb.zoomed #fnext{ right:16px; }
+  #lbfig:fullscreen, #lbfig:-webkit-full-screen .fnav:hover, #lb.zoomed .fnav:hover{ background:rgba(250,246,238,.9); }
+  #lbfig:fullscreen, #lbfig:-webkit-full-screen .fclose, #lb.zoomed .fclose{ display:block; position:absolute; top:16px; right:16px;
+           width:40px; height:40px; border-radius:50%; background:rgba(250,246,238,.65);
+           border:1px solid rgba(250,246,238,.8); color:#3d3229; font-size:1.35rem; line-height:1;
            cursor:pointer; z-index:5; }
-  #lbfig:fullscreen .fclose:hover, #lb.zoomed .fclose:hover{ background:rgba(250,246,238,.9); }
+  #lbfig:fullscreen, #lbfig:-webkit-full-screen .fclose:hover, #lb.zoomed .fclose:hover{ background:rgba(250,246,238,.9); }
+  .fread{ display:none; }
+  #lbfig:fullscreen .fread, #lbfig:-webkit-full-screen .fread, #lb.zoomed .fread{ display:block; position:absolute;
+           top:16px; right:64px; z-index:6; background:rgba(250,246,238,.65);
+           border:1px solid rgba(250,246,238,.8); color:#3d3229; border-radius:20px;
+           padding:.55rem 1.1rem; font-family:inherit; font-style:italic; font-size:.95rem;
+           cursor:pointer; }
+  #lbfig:fullscreen .fread:hover, #lb.zoomed .fread:hover{ background:rgba(250,246,238,.9); }
   @media (max-width:640px){
     #lb img{ max-height:62vh; }
     .nav{ width:36px; height:36px; font-size:1.4rem; }
@@ -424,14 +442,7 @@
     <button class="fnav" id="fprev" aria-label="Previous image">&#8249;</button>
     <button class="fnav" id="fnext" aria-label="Next image">&#8250;</button>
     <button class="fclose" id="fclose" aria-label="Exit fullscreen">&times;</button>
-    <figcaption>
-      <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
-      <span class="t"><span id="lbcap"></span><span class="n" id="lbnum"></span></span>
-      <button class="nav" id="next" aria-label="Next image">&#8250;</button>
-    </figcaption>
-  </figure>
-  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
-  <button id="readtext" aria-label="Read the page text">Read text</button>
+    <button class="fread" id="fread">Read text</button>
   <div id="textpanel" role="dialog" aria-label="Page text">
     <div class="tcard">
       <button class="tclose" aria-label="Close text">&times;</button>
@@ -440,6 +451,14 @@
       <p class="copy" id="tpCopy"></p>
     </div>
   </div>
+    <figcaption>
+      <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
+      <span class="t"><span id="lbcap"></span><span class="n" id="lbnum"></span></span>
+      <button class="nav" id="next" aria-label="Next image">&#8250;</button>
+    </figcaption>
+  </figure>
+  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
+  <button id="readtext" aria-label="Read the page text">Read text</button>
 </div>
 
 <script>
@@ -557,9 +576,16 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
     const d=document.createElement('div'); d.className='card'; d.tabIndex=0;
     d.setAttribute('role','button'); d.setAttribute('aria-label','View larger: '+s.title);
     d.dataset.name=s.title.toLowerCase();
-    d.innerHTML='<img src="'+s.src+'" alt="'+s.title+'" loading="lazy">'+
+    const eager=el.dataset.gallery==='spreads'&&i<3;
+    d.innerHTML='<img src="'+s.src+'" alt="'+s.title+'" loading="'+(eager?'eager':'lazy')+'"'+
+      (eager?' fetchpriority="high"':'')+' decoding="async">'+
       '<div class="cap"><b>'+s.title+'</b><span>'+s.sub+'</span></div>';
-    if(s.pos) d.querySelector('img').style.objectPosition=s.pos;
+    const pim=d.querySelector('img');
+    if(s.pos) pim.style.objectPosition=s.pos;
+    pim.classList.add('pl');
+    if(pim.complete&&pim.naturalWidth) pim.classList.add('ld');
+    else{ pim.addEventListener('load',()=>pim.classList.add('ld'),{once:true});
+          pim.addEventListener('error',()=>pim.classList.add('ld'),{once:true}); }
     d.onclick=()=>openLb(el.dataset.gallery,i);
     d.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(el.dataset.gallery,i);} };
     el.appendChild(d);
@@ -655,16 +681,19 @@ function openLb(key,i){ gkey=key; const items=galleries[key]; cur=(i+items.lengt
     : 'Image '+(cur+1)+' of '+items.length;
   lb.classList.add('open'); document.body.style.overflow='hidden';
   document.getElementById('readtext').classList.toggle('hidden', key!=='spreads');
+  document.getElementById('fread').classList.toggle('hidden', key!=='spreads');
   document.getElementById('textpanel').classList.remove('open'); }
 function closeLb(){ if(document.fullscreenElement) document.exitFullscreen();
   lb.classList.remove('zoomed'); lb.classList.remove('open'); document.body.style.overflow=''; }
 const textpanel=document.getElementById('textpanel');
-document.getElementById('readtext').onclick=e=>{ e.stopPropagation();
+function openText(){
   const s=galleries[gkey][cur], d=spreadText[cur];
   document.getElementById('tpTitle').textContent=s.title+' \u2014 '+s.sub;
   document.getElementById('tpPlace').textContent=d.place;
   document.getElementById('tpCopy').textContent=d.text;
-  textpanel.classList.add('open'); };
+  textpanel.classList.add('open'); }
+document.getElementById('readtext').onclick=e=>{ e.stopPropagation(); openText(); };
+document.getElementById('fread').onclick=e=>{ e.stopPropagation(); openText(); };
 textpanel.querySelector('.tclose').onclick=e=>{ e.stopPropagation(); textpanel.classList.remove('open'); };
 textpanel.onclick=e=>{ if(e.target===textpanel) textpanel.classList.remove('open'); };
 function step(d){ openLb(gkey,cur+d); }
@@ -672,9 +701,11 @@ document.getElementById('close').onclick=closeLb;
 document.getElementById('prev').onclick=e=>{e.stopPropagation();step(-1);};
 document.getElementById('next').onclick=e=>{e.stopPropagation();step(1);};
 lb.onclick=e=>{ if(e.target===lb) closeLb(); };
+const isIOS=/iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
 function toggleZoom(){
   if(document.fullscreenElement){ document.exitFullscreen(); return; }
   if(lb.classList.contains('zoomed')){ lb.classList.remove('zoomed'); return; }
+  if(isIOS){ lb.classList.add('zoomed'); return; }
   if(lbfig.requestFullscreen){ lbfig.requestFullscreen().catch(()=>lb.classList.add('zoomed')); }
   else if(lbfig.webkitRequestFullscreen){ lbfig.webkitRequestFullscreen(); }
   else { lb.classList.add('zoomed'); }
@@ -738,6 +769,12 @@ function makeDeck(cfg){
   function move(d){ index=wrap(index+d); render(); }
   document.getElementById(cfg.prev).addEventListener('click',()=>move(-1));
   document.getElementById(cfg.next).addEventListener('click',()=>move(1));
+  stage.querySelectorAll('.deck-card img').forEach(im=>{
+    im.classList.add('pl');
+    if(im.complete&&im.naturalWidth) im.classList.add('ld');
+    else{ im.addEventListener('load',()=>im.classList.add('ld'),{once:true});
+          im.addEventListener('error',()=>im.classList.add('ld'),{once:true}); }
+  });
   stage.querySelectorAll('.deck-card').forEach(card=>{
     card.addEventListener('click',()=>{ openLb(cfg.gallery,+card.dataset.i); });
     card.addEventListener('keydown',e=>{
