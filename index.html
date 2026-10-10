@@ -155,6 +155,7 @@
   .deck-dot{ width:9px; height:9px; border-radius:50%; border:none; background:#d8cbb2;
            padding:0; cursor:pointer; }
   .deck-dot[aria-current="true"]{ background:#b3541e; }
+  @media (max-width:640px){ #prev{ left:8px; } #next{ right:8px; } }
   @media (max-width:640px){
     .deck-shell{ min-height:560px; }
     .deck-card.pos-1{ transform:translate(calc(-50% + 208px),-50%) translateZ(-60px) rotateY(-30deg) scale(.8); }
@@ -186,8 +187,10 @@
   .nav{ width:38px; height:38px; border-radius:50%; cursor:pointer; flex:none;
         background:#faf6ee; border:none; color:#3d3229; font-size:1.5rem; font-weight:bold;
         box-shadow:0 3px 12px rgba(0,0,0,.4); line-height:1; padding-bottom:3px; }
-  .nav:hover{ background:#fff; transform:scale(1.08); }
-  .nav:active{ transform:scale(.96); }
+  #prev, #next{ position:fixed; top:50%; transform:translateY(-50%); z-index:51; }
+  #prev{ left:18px; } #next{ right:18px; }
+  .nav:hover{ background:#fff; transform:translateY(-50%) scale(1.08); }
+  .nav:active{ transform:translateY(-50%) scale(.96); }
   .nav.hidden{ display:none; }
   #close{ position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%;
           background:#faf6ee; border:none; color:#3d3229; font-size:1.25rem; cursor:pointer;
@@ -545,14 +548,14 @@ const galleries={
     {src:"characters/tiger.png", title:"Tiger", sub:"Character portrait"}
   ],
   logosraw:[
-    {src:"logos/tt-1.jpg", title:"Logo 1", sub:"Bold red, truck on road"},
-    {src:"logos/tt-2.jpg", title:"Logo 2", sub:"Brush script, tail-J flourish"},
-    {src:"logos/tt-3.jpg", title:"Logo 3", sub:"Brush script, road underline"},
-    {src:"logos/tt-4.jpg", title:"Logo 4", sub:"Bubbly rounded, tail underline"},
-    {src:"logos/tt-5.jpg", title:"Logo 5", sub:"Brush script, red Accidental"},
-    {src:"logos/tt-6.jpg", title:"Logo 6", sub:"Classic serif, leaf flourish"},
-    {src:"logos/tt-7.jpg", title:"Logo 7", sub:"Tall serif, sunset gradient"},
-    {src:"logos/tt-8.jpg", title:"Logo 8", sub:"Winding road to city"}
+    {src:"logos/tt-1.jpg?v=2", title:"Logo 1", sub:"Bold red, truck on road"},
+    {src:"logos/tt-2.jpg?v=2", title:"Logo 2", sub:"Brush script, tail-J flourish"},
+    {src:"logos/tt-3.jpg?v=2", title:"Logo 3", sub:"Brush script, road underline"},
+    {src:"logos/tt-4.jpg?v=2", title:"Logo 4", sub:"Bubbly rounded, tail underline"},
+    {src:"logos/tt-5.jpg?v=2", title:"Logo 5", sub:"Brush script, red Accidental"},
+    {src:"logos/tt-6.jpg?v=2", title:"Logo 6", sub:"Classic serif, leaf flourish"},
+    {src:"logos/tt-7.jpg?v=2", title:"Logo 7", sub:"Tall serif, sunset gradient"},
+    {src:"logos/tt-8.jpg?v=2", title:"Logo 8", sub:"Winding road to city"}
   ]
 };
 
@@ -576,16 +579,13 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
     const d=document.createElement('div'); d.className='card'; d.tabIndex=0;
     d.setAttribute('role','button'); d.setAttribute('aria-label','View larger: '+s.title);
     d.dataset.name=s.title.toLowerCase();
-    const eager=el.dataset.gallery==='spreads'&&i<3;
+    const eager=(el.dataset.gallery==='spreads'&&i<3)||el.dataset.gallery==='logosraw';
     d.innerHTML='<img src="'+s.src+'" alt="'+s.title+'" loading="'+(eager?'eager':'lazy')+'"'+
       (eager?' fetchpriority="high"':'')+' decoding="async">'+
       '<div class="cap"><b>'+s.title+'</b><span>'+s.sub+'</span></div>';
     const pim=d.querySelector('img');
     if(s.pos) pim.style.objectPosition=s.pos;
-    pim.classList.add('pl');
-    if(pim.complete&&pim.naturalWidth) pim.classList.add('ld');
-    else{ pim.addEventListener('load',()=>pim.classList.add('ld'),{once:true});
-          pim.addEventListener('error',()=>pim.classList.add('ld'),{once:true}); }
+    armImg(pim);
     d.onclick=()=>openLb(el.dataset.gallery,i);
     d.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(el.dataset.gallery,i);} };
     el.appendChild(d);
@@ -685,6 +685,17 @@ function openLb(key,i){ gkey=key; const items=galleries[key]; cur=(i+items.lengt
   document.getElementById('textpanel').classList.remove('open'); }
 function closeLb(){ if(document.fullscreenElement) document.exitFullscreen();
   lb.classList.remove('zoomed'); lb.classList.remove('open'); document.body.style.overflow=''; }
+function armImg(pim){
+  pim.classList.add('pl');
+  if(pim.complete&&pim.naturalWidth){ pim.classList.add('ld'); return; }
+  pim.addEventListener('load',()=>pim.classList.add('ld'),{once:true});
+  pim.addEventListener('error',()=>{
+    const s=pim.getAttribute('src');
+    if(s&&!pim.dataset.retried){ pim.dataset.retried='1';
+      pim.setAttribute('src',s+(s.includes('?')?'&':'?')+'retry=1'); }
+    else pim.classList.add('ld');
+  });
+}
 const textpanel=document.getElementById('textpanel');
 function openText(){
   const s=galleries[gkey][cur], d=spreadText[cur];
@@ -769,12 +780,7 @@ function makeDeck(cfg){
   function move(d){ index=wrap(index+d); render(); }
   document.getElementById(cfg.prev).addEventListener('click',()=>move(-1));
   document.getElementById(cfg.next).addEventListener('click',()=>move(1));
-  stage.querySelectorAll('.deck-card img').forEach(im=>{
-    im.classList.add('pl');
-    if(im.complete&&im.naturalWidth) im.classList.add('ld');
-    else{ im.addEventListener('load',()=>im.classList.add('ld'),{once:true});
-          im.addEventListener('error',()=>im.classList.add('ld'),{once:true}); }
-  });
+  stage.querySelectorAll('.deck-card img').forEach(armImg);
   stage.querySelectorAll('.deck-card').forEach(card=>{
     card.addEventListener('click',()=>{ openLb(cfg.gallery,+card.dataset.i); });
     card.addEventListener('keydown',e=>{
