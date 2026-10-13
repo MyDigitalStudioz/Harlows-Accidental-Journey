@@ -102,6 +102,7 @@
   .card:hover img{ transform:scale(1.03) translateZ(0); }
   .card .cap{ padding:.8rem 1rem 1rem; display:flex; justify-content:space-between; align-items:baseline; gap:.5rem; }
   .card .cap b{ font-size:1rem; flex:none; }
+  .card .cap .capmain{ display:flex; flex-direction:column; gap:.1rem; min-width:0; }
   .card .cap span{ font-size:.85rem; opacity:.6; font-style:italic; white-space:nowrap;
        min-width:0; overflow:hidden; text-overflow:ellipsis; }
   .pair{ display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
@@ -484,12 +485,12 @@
 <script>
 const galleries={
   spreads:[
-    {src:"spreads/p01-harlow.jpg",     title:"Harlow at Home",           sub:"Page 1 · book pages 1–2"},
-    {src:"spreads/p02-mustang.jpg",    title:"The Silver Blue Mustang",  sub:"Page 2 · book pages 3–4"},
-    {src:"spreads/p03-marketplace.jpg",title:"The Farmers Market",       sub:"Page 3 · book pages 5–6"},
-    {src:"spreads/p04-sweet-pea.jpg",  title:"Sweet Pea's Muddy Puddle", sub:"Page 4 · book pages 7–8"},
-    {src:"spreads/p05-pond.jpg",       title:"Mama Fiona's Pond",        sub:"Page 5 · book pages 9–10"},
-    {src:"spreads/p06-donkeys.jpg",    title:"Molly, Albie & Dallas",    sub:"Page 6 · book pages 11–12"}
+    {src:"spreads/p01-harlow.jpg",     title:"Harlow at Home",           sub:"Page 1", pages:"Book pages 1–2"},
+    {src:"spreads/p02-mustang.jpg",    title:"The Silver Blue Mustang",  sub:"Page 2", pages:"Book pages 3–4"},
+    {src:"spreads/p03-marketplace.jpg",title:"The Farmers Market",       sub:"Page 3", pages:"Book pages 5–6"},
+    {src:"spreads/p04-sweet-pea.jpg",  title:"Sweet Pea's Muddy Puddle", sub:"Page 4", pages:"Book pages 7–8"},
+    {src:"spreads/p05-pond.jpg",       title:"Mama Fiona's Pond",        sub:"Page 5", pages:"Book pages 9–10"},
+    {src:"spreads/p06-donkeys.jpg",    title:"Molly, Albie & Dallas",    sub:"Page 6", pages:"Book pages 11–12"}
   ],
   coverd:[
     {src:"covers/option-d-front-v2.jpg", title:"Front Cover", sub:"Locked — final"},
@@ -571,7 +572,9 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
     const eager=(el.dataset.gallery==='spreads'&&i<3)||el.dataset.gallery==='logosraw';
     d.innerHTML='<img src="'+s.src+'" alt="'+s.title+'" draggable="false" loading="'+(eager?'eager':'lazy')+'"'+
       (eager?' fetchpriority="high"':'')+' decoding="async">'+
-      '<div class="cap"><b>'+s.title+'</b><span>'+s.sub+'</span></div>';
+      (s.pages
+        ? '<div class="cap"><div class="capmain"><b>'+s.title+'</b><span>'+s.sub+'</span></div><span>'+s.pages+'</span></div>'
+        : '<div class="cap"><b>'+s.title+'</b><span>'+s.sub+'</span></div>');
     const pim=d.querySelector('img');
     if(s.pos) pim.style.objectPosition=s.pos;
     armImg(pim);
@@ -606,7 +609,7 @@ const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
 let gkey='spreads', cur=0;
 function openLb(key,i){ gkey=key; const items=galleries[key]; cur=(i+items.length)%items.length;
   lbimg.src=items[cur].src; lbimg.alt=items[cur].title;
-  lbcap.textContent=items[cur].title+' — '+items[cur].sub;
+  lbcap.textContent=items[cur].title+' — '+items[cur].sub+(items[cur].pages?' · '+items[cur].pages.toLowerCase():'');
   const single=items.length===1;
   document.getElementById('prev').classList.toggle('hidden',single);
   document.getElementById('next').classList.toggle('hidden',single);
