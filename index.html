@@ -363,29 +363,12 @@
   <div class="wrap">
     <h2>Approved Logo</h2>
     <p class="hint">The approved title treatment on the final front cover. Tap the card to view it big.</p>
-    <div class="deck-shell" id="deckShell" tabindex="0" aria-label="Cover mock-up deck">
-      <div class="deck-head">
-        <span class="deck-count" id="deckCount" aria-live="polite"></span>
-        <span class="deck-hint">Drag or use &larr; &rarr;</span>
-      </div>
-      <div class="deck-stage" id="deckStage"></div>
-      <div class="deck-controls">
-        <button class="deck-arrow" id="deckPrev" type="button" aria-label="Previous cover">&larr;</button>
-        <div class="deck-dots" id="deckDots"></div>
-        <button class="deck-arrow" id="deckNext" type="button" aria-label="Next cover">&rarr;</button>
-      </div>
-    </div>
-    <div class="logodrawer-wrap">
-      <button class="revealbtn" id="logoToggle" aria-expanded="false" aria-controls="logoDrawer">Reveal logos &#9662;</button>
-      <div class="logodrawer" id="logoDrawer">
-        <div class="drawerinner">
-          <p class="hint">The approved title treatment on its own. Tap to view it big.</p>
-          <div class="logocarousel">
-            <button class="lcarrow" id="logoPrev" aria-label="Previous logos">&#8249;</button>
-            <div class="logoview"><div class="logoclip"><div class="logotrack" data-gallery="logosraw"></div></div></div>
-            <button class="lcarrow" id="logoNext" aria-label="Next logos">&#8250;</button>
-          </div>
-          <div class="logodots" id="logoDots"></div>
+    <div style="max-width:480px;margin:0 auto;">
+      <div class="card" id="approvedMockupCard" style="cursor:pointer;">
+        <img src="covers/approved-logo-mockup.jpg" alt="Approved Logo — Logo 1 on the final front cover">
+        <div class="cap" style="flex-direction:column;align-items:flex-start;gap:.3rem;">
+          <b style="font-size:1.05rem;">Approved Logo</b>
+          <span style="white-space:normal;">Logo 1 — on the final front cover</span>
         </div>
       </div>
     </div>
@@ -563,9 +546,6 @@ const galleries={
     {src:"characters/teddy-new.png", title:"Teddy", sub:"Character portrait"},
     {src:"characters/tiger.png", title:"Tiger", sub:"Character portrait"}
   ],
-  logosraw:[
-    {src:"logos/tt-1.jpg?v=2", title:"Logo 1", sub:"Bold red, truck on road — APPROVED"}
-  ]
 };
 
 const spreadText=[
@@ -618,88 +598,8 @@ function castFilter(){
 }
 castSearch.addEventListener('input', castFilter);
 castFilter();
-const logoToggle=document.getElementById('logoToggle'), logoDrawer=document.getElementById('logoDrawer');
-logoToggle.onclick=()=>{
-  const open=logoDrawer.classList.toggle('open');
-  logoToggle.setAttribute('aria-expanded', open);
-  logoToggle.innerHTML=open ? 'Hide logos &#9652;' : 'Reveal logos &#9662;';
-  if(open) logoGo(logoPage);
-};
-const logoTrack=document.querySelector('.logotrack'),
-      logoPrev=document.getElementById('logoPrev'),
-      logoNext=document.getElementById('logoNext'),
-      logoDots=document.getElementById('logoDots');
-let logoPage=0;
-function logoPerView(){ return matchMedia('(max-width:640px)').matches ? 1 : 4; }
-function logoPages(){ return Math.ceil(galleries.logosraw.length/logoPerView()); }
-function buildDots(){
-  logoDots.innerHTML='';
-  for(let i=0;i<logoPages();i++){
-    const b=document.createElement('button');
-    b.setAttribute('aria-label','Go to logos page '+(i+1));
-    if(i===logoPage) b.classList.add('on');
-    b.onclick=()=>logoGo(i);
-    logoDots.appendChild(b);
-  }
-}
-const logoClip=document.querySelector('.logoclip');
-function logoGo(p){
-  const n=logoPages();
-  logoPage=((p%n)+n)%n;
-  const w=logoClip.clientWidth;
-  if(w>0) logoTrack.style.transform='translateX('+(-logoPage*w)+'px)';
-  buildDots();
-}
-logoPrev.onclick=()=>logoGo(logoPage-1);
-logoNext.onclick=()=>logoGo(logoPage+1);
-addEventListener('resize', ()=>logoGo(logoPage));
-buildDots();
-let lDragX=null, lBaseX=0, lSuppress=false;
-logoClip.addEventListener('pointerdown',e=>{
-  if(e.target.closest('button'))return;
-  e.preventDefault();
-  lDragX=e.clientX;
-  const m=/translateX\((-?[\d.]+)px\)/.exec(logoTrack.style.transform);
-  lBaseX=m?parseFloat(m[1]):-logoPage*logoClip.clientWidth;
-  logoTrack.style.transition='none';
-  try{ logoClip.setPointerCapture(e.pointerId); }catch(err){}
-});
-logoClip.addEventListener('pointermove',e=>{
-  if(lDragX===null)return;
-  const n=logoPages(), w=logoClip.clientWidth, dx=e.clientX-lDragX;
-  let x=lBaseX+dx;
-  const minX=-(n-1)*w, maxX=0;
-  if(x>maxX) x=maxX+(x-maxX)*0.35;
-  if(x<minX) x=minX+(x-minX)*0.35;
-  logoTrack.style.transform='translateX('+x+'px)';
-});
-function logoEndDrag(e){
-  if(lDragX===null)return;
-  const dx=e.clientX-lDragX; lDragX=null;
-  try{ logoClip.releasePointerCapture(e.pointerId); }catch(err){}
-  logoTrack.style.transition='';
-  if(Math.abs(dx)>10){ lSuppress=true; setTimeout(()=>{lSuppress=false;},80); }
-  if(Math.abs(dx)>60){
-    const n=logoPages();
-    let pg=logoPage+(dx<0?1:-1);
-    pg=Math.max(0,Math.min(n-1,pg));
-    logoGo(pg);
-  }
-  else{
-    logoGo(logoPage);
-    if(e.clientX>0&&e.clientY>0){
-      const el=document.elementFromPoint(e.clientX,e.clientY);
-      const card=el&&el.closest?el.closest('.card'):null;
-      if(card&&logoTrack.contains(card)){
-        const idx=Array.prototype.indexOf.call(logoTrack.children,card);
-        if(idx>=0){ openLb('logosraw',idx); lSuppress=true; setTimeout(()=>{lSuppress=false;},120); }
-      }
-    }
-  }
-}
-logoClip.addEventListener('pointerup',logoEndDrag);
-logoClip.addEventListener('pointercancel',logoEndDrag);
-logoClip.addEventListener('click',e=>{ if(lSuppress){ e.preventDefault(); e.stopPropagation(); } },true);
+document.getElementById('approvedMockupCard').addEventListener('click',()=>openLb('logos',0));
+
 const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
       lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum'),
       lbfig=document.getElementById('lbfig');
@@ -891,8 +791,6 @@ function makeDeck(cfg){
   decks.push(api);
   return api;
 }
-makeDeck({shell:'deckShell',stage:'deckStage',dots:'deckDots',count:'deckCount',
-  prev:'deckPrev',next:'deckNext',items:galleries.logos,gallery:'logos'});
 makeDeck({shell:'castShell',stage:'castStage',dots:null,count:'castDeckCount',
   prev:'castPrev',next:'castNext',items:galleries.characters,gallery:'characters',
   hideSub:true,drawer:'castDrawer'});
