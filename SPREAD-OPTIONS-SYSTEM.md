@@ -7,8 +7,14 @@ This guide is for whoever maintains the Harlow's Accidental Journey review pages
 | Page | Live URL | File |
 |---|---|---|
 | Showcase (top section is "Current favorites") | https://mydigitalstudioz.github.io/Harlows-Accidental-Journey/ | `index.html` |
-| Spread Options (every version of every spread) | https://mydigitalstudioz.github.io/Harlows-Accidental-Journey/spread-options.html | `spread-options.html` |
-| Favorites data (read by both pages at load time) | https://mydigitalstudioz.github.io/Harlows-Accidental-Journey/favorites.json | `favorites.json` |
+| Spread Options (every ChatGPT version of every spread) | https://mydigitalstudioz.github.io/Harlows-Accidental-Journey/spread-options.html | `spread-options.html` |
+| Mockups (quick scene ideas by Ravyn / Trinity) | https://mydigitalstudioz.github.io/Harlows-Accidental-Journey/mockups.html | `mockups.html` |
+| Favorites data (read by all three pages at load time) | https://mydigitalstudioz.github.io/Harlows-Accidental-Journey/favorites.json | `favorites.json` |
+
+**Three pages, one nav.** Every page links to the other two and highlights the one you're on:
+- Showcase: the existing top bar keeps its look; after the section links there's a thin divider, then **Showcase** (current, bold + underlined) · **Spread Options** · **Mockups**. (The older "Mock-ups" link in that bar is the title-treatments section on the showcase, not the Mockups page.)
+- Spread Options and Mockups: a `<nav class="pagenav">` pill row under the header meta; the current page's pill is filled with the page accent (`aria-current="page"`).
+- **Page tints** (same layout, small identity accent, art stays the focus): Showcase unchanged (cream, rust accent `#b3541e`). Spread Options = soft warm band (5px `#e3a76f` top border + faint peach header gradient `#fbeedd`), rust accent. Mockups = lavender band (5px `#a58bd6` + header gradient `#ece5f8`), lavender paper `#f8f6fc`, accent `#6d4fa8`.
 
 Repo: `MyDigitalStudioz/Harlows-Accidental-Journey`, published by GitHub Pages from `main`.
 When you send someone a link, add a cache-buster: `...spread-options.html?v=<short-sha>`.
@@ -21,16 +27,21 @@ To link to one card, add its letter as an anchor: `spread-options.html#S05-G`. E
 - **The `render:` line** under a letter (`<span class="render-id">render: S05-E</span>`) is the name the picture had when it was first made, before it got its page letter. Add it whenever the two differ. Showcase images say `render: showcase pNN`.
 - **Images:** export each version as a **1400×700 JPEG** (2:1) into `spread-options/`, named in lower case after the letter (`spread-options/s05-g.jpg`). Point the card's `<img class="thumb">` `src` and `data-render` at it. Leave `data-print` empty.
 - **Print is parked.** The print-related bits (`data-print`, the "As rendered / Print-ready" toggle on older cards, the `print md5` facts, desat/print-file notes) stay as they are but dormant. Don't add new print variants or build on them until print is un-parked.
-- After adding cards, update the section hint ("N versions, oldest first") and the header total ("164 versions"), and check the card count (see Publish).
+- After adding cards, update the section hint ("N versions, oldest first") and the header total ("163 versions"), and check the card count (see Publish).
 
-## Who made it (card colour)
+## Mockups page (`mockups.html`)
 
-- Card colour shows who made the picture: white = ChatGPT, lavender = Ravyn's mockup, mint = Trinity's mockup. Mockups are quick scene and layout tests; finals are made with ChatGPT.
-- Mark a mockup card with `data-maker="ravyn"` (light lavender-grey, `#F1EEF8`) or `data-maker="trinity"` (light mint, `#EAF6F1`) on the `<article class="card">`. Also put `<span class="maker-tag">Mockup</span>` first in the card's status row (before the label), so mockups aren't marked by colour alone. ChatGPT cards get **no** `data-maker` attribute and stay white. Don't add the attribute to existing cards.
-- Mockups are for layout and mood. A mockup can still be picked (dots work the same, and the showcase rules apply as usual), but its final would be redone in ChatGPT.
-- Mockups use the normal labels (usually **Option**, grey **Being checked**) and the `render:` line reads `render: Ravyn mockup` / `render: Trinity mockup`. A mockup image may keep its own shape (e.g. 16:9) instead of 1400×700; the thumbnail crops to 2:1 and the lightbox shows it whole.
-- The label guide has a short **Who made the picture** section: White = made by ChatGPT. Lavender = made by Ravyn (quick mockup). Mint = made by Trinity (quick mockup). "Mockups are quick scene ideas; the finished page is made with ChatGPT." Keep it that short.
-- First mockup: **S07-G** (Ravyn, 2026-10-15). S07-F stays reserved for the queued S07-E redo.
+- **Spread Options is ChatGPT only.** Its guide just says: "All pictures here are made with ChatGPT. Quick scene mockups live on the Mockups page." Don't put mockup cards on Spread Options.
+- **Mockups are quick scene ideas** made by Ravyn (lavender card, `data-maker="ravyn"`, `#F1EEF8`) or Trinity (mint card, `data-maker="trinity"`, `#EAF6F1`). Each card also carries `<span class="maker-tag">Mockup</span>`, so colour isn't the only signal. Finals are always made with ChatGPT. Likeness is rough by design.
+- **Letters:** mockups use their own series per spread: **S07-M1, S07-M2, ...** Append-only, never renumber or reuse. Card markup: `<article class="card" id="S07-M1" data-kind="mockup" data-maker="ravyn" data-letter="S07-M1" data-check="Being checked" data-final="" data-summary="...">`. No `data-status` (mockups don't use the four labels).
+- **Image:** keep the mockup's own shape (e.g. 16:9) in `mockups/` (`mockups/s07-m1.jpg`). The thumbnail shows the whole picture with a dashed **2:1 crop guide** (centre line = fold), placed by JS from the image's real shape; the lightbox shows the same guide. Each card has a "Hide/Show crop guide" button.
+- **"See the final" slot:** every mockup card has `<p class="final-slot" data-final-slot>`. It reads "not made yet" while `data-final=""`; set `data-final="S07-H"` (a real Spread Options letter) and the slot becomes a link to `spread-options.html#S07-H`.
+- **Cap:** 2–3 mockups per spread per round.
+- **Checks: layout only** (fold, text sky, page edges), shown with the same check notes: green **Checks passed** or grey **Being checked** (default).
+- **Filters:** All, Ravyn, Trinity, Any favorite. Section hint: "N mockup(s) this round (cap 2–3)". The header count is computed from the cards.
+- **Likes on mockups** go in `favorites.json` → `mockup_picks` (`{"T":[],"F":[],"R":[],"J":[],"L":[]}`, letters like `S07-M1`). They show as dots on the Mockups page only. **Mockups never feed the showcase**: a liked idea gets made as a ChatGPT final, which then goes on Spread Options with a normal letter.
+- The Mockups guide explains: what a mockup is, lavender = Ravyn / mint = Trinity, finals are ChatGPT, the 2–3 cap, layout-only checks, the dashed 2:1 box, dots don't reach the showcase, and the M-letter series.
+- **First mockup:** Ravyn's S07 scene test was briefly S07-G on Spread Options; on 2026-10-15 it moved to Mockups as **S07-M1** (image now `mockups/s07-m1.jpg`). It was removed from Spread Options with no stub, so **G is free again**: the next real S07 ChatGPT option after F (still reserved for the S07-E redo) takes **S07-G**, no skipped letter.
 
 ## The four labels
 
@@ -89,6 +100,8 @@ One image per spread that has cards on Spread Options, computed in the browser f
 3. **Most desk dots** (T/F/R). On a tie, keep the image currently showing (`showing` in `favorites.json`). If that isn't among the tied versions, use Trinity's pick among the tied (then Folio's, then Ravyn's).
 4. **No picks:** keep the current `showing` image if one exists, otherwise Folio's pick, otherwise skip the spread.
 
+**Only real Spread Options cards count.** `pickShowcase()` only considers `main article.card[data-status]` on `spread-options.html` and drops any `-M<n>` letter; a pick for a letter that isn't a real card there (a mockup like S07-M1, a letter not in use, a typo) is ignored. `mockup_picks` is never read by the showcase.
+
 **Eligibility:** a **Needs a fix** card can never be on the showcase. It's skipped, and the next rule applies. When someone's pick in a spread was skipped for this reason, the showcase shows a small hint under that spread: "a pick was skipped: needs a fix".
 
 Under each image: the pickers' dots and the page letter, linked to `spread-options.html#<letter>`. Tapping the image opens the big viewer with arrows, as before. "Read text" shows only for spreads that have page text in `spreadText`.
@@ -103,7 +116,7 @@ A reference copy of the rules in Python is at `/workspace/haj-batch/tmp/showcase
 2. Push the branch, then **fast-forward** `main` to it (e.g. `gh api -X PATCH repos/MyDigitalStudioz/Harlows-Accidental-Journey/git/refs/heads/main -f sha=<sha> -F force=false`). If `main` moved, rebase or redo your change on the new main; don't overwrite.
 3. Wait for the Pages build (`gh api repos/.../pages/builds/latest` → `built <sha>`).
 4. Fetch the live file with `?v=<short-sha>` and compare its size/SHA-256 with the committed file.
-5. Verify in a browser: the card count is unchanged unless you added cards (count `main article.card`; it's 163 as of 2026-10-15), only the four labels appear, no script errors, and it looks right at 390px wide.
+5. Verify in a browser: the card count is unchanged unless you added cards (count `main article.card`; it's 163 as of 2026-10-15, after the S07 mockup moved to Mockups as S07-M1), the Mockups page count (1 as of 2026-10-15), the nav works both ways on all three pages, only the four labels appear, no script errors, and it looks right at 390px wide.
 6. Only then share the link, with `?v=<short-sha>`.
 
 ## Never
@@ -111,6 +124,7 @@ A reference copy of the rules in Python is at `/workspace/haj-batch/tmp/showcase
 - Never force-push, and never rewrite published history.
 - Never touch the `Harlows-v2` branch (or the other `Harlows-v*` branches).
 - Never re-letter, reorder, delete or reuse card letters.
+- Never put mockups on Spread Options or the showcase; they live on `mockups.html`.
 - Never use "Banked", "Provisional", "Approved", "locked" or "final" wording on cards or in `favorites.json`. Desk recommendations aren't a separate word; they fold into **Candidate** (with its check note) or a plain note. Only Jon gives a yes, shown as **Jon's yes**.
 - "Farrelli Farms" door lettering on the S08 truck is canon. Never describe it as an error.
 - Never use **Needs a fix** for anything but fit (fold, page edge, text band).

@@ -271,6 +271,19 @@
            font-size:1.05rem; padding-bottom:0; border-bottom:none; }
   #labelGuide ul.lg-makers .maker-sw{ width:1.4rem; height:1.4rem; margin-right:0; flex:none; }
   #labelGuide .lg-makers-note{ font-size:1rem; font-style:italic; opacity:.8; margin-top:.7rem; }
+  /* Page identity: soft warm band (Spread Options) */
+  body{ border-top:5px solid #e3a76f; }
+  header.hero{ background:linear-gradient(180deg,#fbeedd 0%,rgba(251,238,221,0) 100%); max-width:none; }
+  header.hero > *, header.hero > .eyebrow{ max-width:760px; margin-left:auto; margin-right:auto; }
+  /* Shared page nav (Showcase / Spread Options / Mockups) */
+  .pagenav{ display:flex; flex-wrap:wrap; justify-content:center; gap:.45rem; margin-top:1rem; }
+  .pagenav a{ font-size:.95rem; font-style:italic; text-decoration:none; color:var(--ink); background:#fff;
+           border:1px solid var(--soft); border-radius:20px; padding:.35rem .95rem; min-height:36px;
+           display:inline-flex; align-items:center; box-shadow:0 2px 6px rgba(61,50,41,.08); }
+  .pagenav a:hover{ border-color:var(--accent); color:var(--accent); }
+  .pagenav a[aria-current="page"]{ background:var(--accent); border-color:var(--accent); color:#fff; font-style:normal; font-weight:bold; }
+  #labelGuide .lg-onlygpt{ margin-top:1.2rem; padding-top:1rem; border-top:1px solid var(--soft); }
+  #labelGuide .lg-onlygpt a{ color:var(--accent); font-weight:bold; }
 </style>
 </head>
 <body>
@@ -278,8 +291,12 @@
   <p class="eyebrow">Harlow&#8217;s Accidental Journey</p>
   <h1>Spread Options</h1>
   <p class="sub">Harlow&#8217;s Accidental Journey &#8212; every version of every spread</p>
-  <p class="meta">164 versions &middot; generated 2026-10-15</p>
-  <a class="backlink" href="index.html">&#8592; Back to the showcase</a>
+  <p class="meta">163 versions &middot; generated 2026-10-15</p>
+  <nav class="pagenav" aria-label="Pages">
+    <a href="index.html">Showcase</a>
+    <a href="spread-options.html" aria-current="page">Spread Options</a>
+    <a href="mockups.html">Mockups</a>
+  </nav>
   <div class="rule"></div>
   <div class="fav-key" aria-label="Who each colored initial means">
     <span class="fk"><span class="fav-dot T" aria-hidden="true">T</span> Trinity</span>
@@ -811,7 +828,7 @@
 </section>
 <section id="S07">
   <h2>S07 &middot; Print pages 16&ndash;17</h2>
-  <p class="hint">6 versions, oldest first &mdash; letters never renumber.</p>
+  <p class="hint">5 versions, oldest first &mdash; letters never renumber.</p>
   <div class="grid">
     <article class="card" id="S07-A" data-status="Needs a fix" data-letter="S07-A" data-summary="Chester chuckle r1 — the laugh landed, but Chester too big and central: muzzle ~x53% in the fold, ear tips ~y8–12% in the text band, cumulus in the sky." data-fav-count="0">
       <img class="thumb" src="spread-options/s07-a.jpg" alt="S07-A spread render" loading="lazy" data-render="spread-options/s07-a.jpg" data-print="">
@@ -856,14 +873,6 @@
         <p class="facts">Blocked (fold), redo queued (S07-F) &middot; Gate date not recorded</p>
       
         <div class="fav-dots" aria-label="Current favorites: Ravyn"><span class="fav-dot R" title="Ravyn">R</span></div>
-      </div>
-    </article>
-    <article class="card" id="S07-G" data-maker="ravyn" data-status="Option" data-check="Being checked" data-letter="S07-G" data-summary="Ravyn mockup (Grok Bot image tool, not ChatGPT) — scene and layout test recreating S07-B from cast refs. Brighter, glossier look; Harlow less dialed-in than the ChatGPT versions; Chester&#x27;s head rides high into the text sky; 16:9, not 2:1." data-fav-count="0">
-      <img class="thumb" src="spread-options/s07-g.jpg" alt="S07-G spread mockup (Ravyn mockup)" loading="lazy" data-render="spread-options/s07-g.jpg" data-print="">
-      <div class="body">
-        <div class="titlerow"><div class="lettercol"><span class="letter">S07-G</span><span class="render-id">render: Ravyn mockup</span></div><span class="maker-tag">Mockup</span><span class="status st-opt">Option</span><span class="check ck-grey">Being checked</span></div>
-        <p class="summary">Ravyn mockup (Grok Bot image tool, not ChatGPT) — scene and layout test recreating S07-B from cast refs. Brighter, glossier look; Harlow less dialed-in than the ChatGPT versions; Chester&#x27;s head rides high into the text sky; 16:9, not 2:1.</p>
-        <p class="facts">Ravyn mockup &middot; made 2026-10-15 with Ravyn&#x27;s own image tool from the cast reference images &middot; layout and mood test; a final would be redone in ChatGPT &middot; S07-F stays reserved for the queued S07-E redo.</p>
       </div>
     </article>
   </div>
@@ -2000,13 +2009,7 @@
       <li><div class="lg-key"><span class="lg-name">&#8216;render:&#8217; line</span><span class="lg-render">render: S01-K</span></div>
         <div>The name the picture had when it was first made, before it got its letter on this page.</div></li>
     </ul>
-    <h3 class="lg-sub">Who made the picture</h3>
-    <ul class="lg-makers">
-      <li><span class="maker-sw chatgpt" aria-hidden="true"></span><span>White = made by ChatGPT.</span></li>
-      <li><span class="maker-sw ravyn" aria-hidden="true"></span><span>Lavender = made by Ravyn (quick mockup).</span></li>
-      <li><span class="maker-sw trinity" aria-hidden="true"></span><span>Mint = made by Trinity (quick mockup).</span></li>
-    </ul>
-    <p class="lg-makers-note">Mockups are quick scene ideas; the finished page is made with ChatGPT.</p>
+    <p class="lg-makers-note lg-onlygpt">All pictures here are made with ChatGPT. Quick scene mockups live on the <a href="mockups.html">Mockups page</a>.</p>
   </div>
 </div>
 <script>

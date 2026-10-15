@@ -34,6 +34,8 @@
   .topnav a{ color:var(--ink); text-decoration:none; font-size:.95rem; font-style:italic;
            white-space:nowrap; }
   .topnav a:hover{ color:var(--accent); }
+  .topnav .pg-sep{ flex:none; width:1px; align-self:stretch; background:var(--soft); }
+  .topnav a.pg[aria-current="page"]{ color:var(--accent); font-weight:bold; font-style:normal; text-decoration:underline; text-underline-offset:.3em; text-decoration-thickness:2px; }
   .sitefoot{ position:relative; display:flex; align-items:center; justify-content:center;
            padding:2rem 1.5rem 2.5rem; font-style:italic; opacity:.9; }
   #giftBtn{ position:absolute; right:1.2rem; bottom:1.1rem; width:54px; height:54px;
@@ -343,7 +345,10 @@
     <a href="#title-treatments">Mock-ups</a>
     <a href="#cast">Cast</a>
     <a href="#documents">Documents</a>
-    <a href="spread-options.html">Spread Options</a>
+    <span class="pg-sep" aria-hidden="true"></span>
+    <a href="index.html" class="pg" aria-current="page">Showcase</a>
+    <a href="spread-options.html" class="pg">Spread Options</a>
+    <a href="mockups.html" class="pg">Mockups</a>
   </div>
 </nav>
 
@@ -648,6 +653,8 @@ const SPREAD_TITLES=["Harlow at Home","The Silver Blue Mustang","The Farmers Mar
   "Pebbles the Lost Penguin","Helga's Pouch Ride","Mittens and Teddy","Home Again","Fireside with Little Mouse"];
 function pickShowcase(cards, people, SHOWCASE_SHOWING){
   SHOWCASE_SHOWING=SHOWCASE_SHOWING||{};
+  // Ignore any letter that is not a real Spread Options card (mockups, unused letters, typos): picks are matched against these cards only.
+  cards=cards.filter(c=>c.letter && c.status && !/-M\d+$/.test(c.letter));
   const bySpread={};
   cards.forEach(c=>{ (bySpread[c.letter.slice(0,3)]=bySpread[c.letter.slice(0,3)]||[]).push(c); });
   const picksOf=w=>(people[w]&&people[w].picks)||[];
@@ -690,7 +697,8 @@ function pickShowcase(cards, people, SHOWCASE_SHOWING){
     fetch('favorites.json',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return r.json(); })
   ]).then(([html,fav])=>{
     const doc=new DOMParser().parseFromString(html,'text/html');
-    const cards=[...doc.querySelectorAll('main article.card')].map(a=>{
+    // Only real Spread Options cards count: mockup letters (S07-M1…) and anything not an article.card with a status are ignored.
+    const cards=[...doc.querySelectorAll('main article.card[data-status]')].filter(a=>a.dataset.kind!=='mockup' && !/-M\d+$/.test(a.dataset.letter||'')).map(a=>{
       const img=a.querySelector('img.thumb');
       return {letter:a.dataset.letter, status:a.dataset.status,
               src:(img&&(img.getAttribute('data-render')||img.getAttribute('src')))||''};

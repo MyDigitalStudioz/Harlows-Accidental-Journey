@@ -1,5 +1,5 @@
 {
-  "_comment": "CURRENT FAVORITES ONLY — edit picks arrays (page letters as shown on Spread Options). Both pages read this file at load time. \"showing\" = the image each spread shows on the showcase right now (the tie-break baseline): whoever changes picks also refreshes \"showing\" for that spread in the same edit. Do not mark anything locked/final/banked/approved here.",
+  "_comment": "CURRENT FAVORITES ONLY — edit picks arrays (page letters as shown on Spread Options). Both pages read this file at load time. \"showing\" = the image each spread shows on the showcase right now (the tie-break baseline): whoever changes picks also refreshes \"showing\" for that spread in the same edit. Do not mark anything locked/final/banked/approved here. \"mockup_picks\" = likes on Mockups-page letters (S07-M1 etc.); they never feed the showcase.",
   "people": {
     "T": {
       "name": "Trinity",
@@ -125,5 +125,12 @@
     "S22": "S22-I",
     "S23": "S23-G",
     "S24": "S24-G"
+  },
+  "mockup_picks": {
+    "T": [],
+    "F": [],
+    "R": [],
+    "J": [],
+    "L": []
   }
 }
