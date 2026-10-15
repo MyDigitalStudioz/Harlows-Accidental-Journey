@@ -32,13 +32,13 @@ To link to one card, add its letter as an anchor: `spread-options.html#S05-G`. E
 ## Mockups page (`mockups.html`)
 
 - **Spread Options is ChatGPT only.** Its guide just says: "All pictures here are made with ChatGPT. Quick scene mockups live on the Mockups page." Don't put mockup cards on Spread Options.
-- **Mockups are quick scene ideas** made by Ravyn (lavender card, `data-maker="ravyn"`, `#F1EEF8`) or Trinity (mint card, `data-maker="trinity"`, `#EAF6F1`). Each card also carries `<span class="maker-tag">Mockup</span>`, so colour isn't the only signal. Finals are always made with ChatGPT. Likeness is rough by design.
+- **Mockups are quick scene ideas** made by Ravyn (lavender card, `data-maker="ravyn"`, `#F1EEF8`), Trinity (mint card, `data-maker="trinity"`, `#EAF6F1`; mint = Trinity's own Muse image model), or with OpenAI via Codex (white card, `data-maker="openai"`, `#fffdf8`; added 2026-10-15 on Jon's call so the three engines can be filtered apart). Each card also carries `<span class="maker-tag">Mockup</span>`, so colour isn't the only signal. Finals are always made with ChatGPT. Likeness is rough by design.
 - **Letters:** mockups use their own series per spread: **S07-M1, S07-M2, ...** Append-only, never renumber or reuse. Card markup: `<article class="card" id="S07-M1" data-kind="mockup" data-maker="ravyn" data-letter="S07-M1" data-check="Being checked" data-final="" data-summary="...">`. No `data-status` (mockups don't use the four labels).
 - **Image:** keep the mockup's own shape (e.g. 16:9) in `mockups/` (`mockups/s07-m1.jpg`). The thumbnail shows the whole picture with a dashed **2:1 crop guide** (centre line = fold), placed by JS from the image's real shape; the lightbox shows the same guide. Each card has a "Hide/Show crop guide" button.
 - **"See the final" slot:** every mockup card has `<p class="final-slot" data-final-slot>`. It reads "not made yet" while `data-final=""`; set `data-final="S07-H"` (a real Spread Options letter) and the slot becomes a link to `spread-options.html#S07-H`.
 - **Cap:** 2–3 mockups per spread per round.
 - **Checks: layout only** (fold, text sky, page edges), shown with the same check notes: green **Checks passed** or grey **Being checked** (default).
-- **Filters:** All, Ravyn, Trinity, Any favorite. Section hint: "N mockup(s) this round (cap 2–3)". The header count is computed from the cards.
+- **Filters:** All, Ravyn, Trinity, OpenAI, Any favorite. Section hint: "N mockup(s) this round (cap 2–3)". The header count is computed from the cards.
 - **Likes on mockups** go in `favorites.json` → `mockup_picks` (`{"T":[],"F":[],"R":[],"J":[],"L":[]}`, letters like `S07-M1`). They show as dots on the Mockups page only. **Mockups never feed the showcase**: a liked idea gets made as a ChatGPT final, which then goes on Spread Options with a normal letter.
 - The Mockups guide explains: what a mockup is, lavender = Ravyn / mint = Trinity, finals are ChatGPT, the 2–3 cap, layout-only checks, the dashed 2:1 box, dots don't reach the showcase, and the M-letter series.
 - **First mockup:** Ravyn's S07 scene test was briefly on the options page; on 2026-10-15 it moved to Mockups as **S07-M1** (image `mockups/s07-m1.jpg`), with no stub left behind. The next real S07 ChatGPT option after F (still reserved for the S07-E redo) takes **S07-G**, no skipped letter.
@@ -116,7 +116,7 @@ A reference copy of the rules in Python is at `/workspace/haj-batch/tmp/showcase
 2. Push the branch, then **fast-forward** `main` to it (e.g. `gh api -X PATCH repos/MyDigitalStudioz/Harlows-Accidental-Journey/git/refs/heads/main -f sha=<sha> -F force=false`). If `main` moved, rebase or redo your change on the new main; don't overwrite.
 3. Wait for the Pages build (`gh api repos/.../pages/builds/latest` → `built <sha>`).
 4. Fetch the live file with `?v=<short-sha>` and compare its size/SHA-256 with the committed file.
-5. Verify in a browser: the card count is unchanged unless you added cards (count `main article.card`; it's 163 as of 2026-10-15, after the S07 mockup moved to Mockups as S07-M1), the Mockups page count (2 as of 2026-10-15: S07-M1 Ravyn, S07-M2 Trinity via Codex), the nav works both ways on all three pages, only the four labels appear, no script errors, and it looks right at 390px wide.
+5. Verify in a browser: the card count is unchanged unless you added cards (count `main article.card`; it's 163 as of 2026-10-15, after the S07 mockup moved to Mockups as S07-M1), the Mockups page count (5 as of 2026-10-15 evening: S07-M1 Ravyn, S07-M2/M3/M4 + S10-M1 OpenAI via Codex), the nav works both ways on all three pages, only the four labels appear, no script errors, and it looks right at 390px wide.
 6. Only then share the link, with `?v=<short-sha>`.
 
 ## Never
