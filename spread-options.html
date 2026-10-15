@@ -167,7 +167,7 @@
   <div class="bar-compact">
     <label class="section-pick">Sections
       <select id="sectionJump" aria-label="Sections">
-        <option value="">Jump to…</option>
+        <option value="">Jump to section…</option>
         <option value="#S01">S01</option>
         <option value="#S02">S02</option>
         <option value="#S03">S03</option>
@@ -230,7 +230,7 @@
     <button class="fchip" data-filter="Banked">Banked</button>
     <button class="fchip" data-filter="Provisional">Provisional</button>
     <button class="fchip" data-filter="Candidate">Candidate</button>
-    <button class="fchip" data-filter="In-cap fallback">In-cap fallback</button>
+    <button class="fchip" data-filter="In-cap fallback" title="In-cap fallback" aria-label="In-cap fallback">In-cap</button>
     <button class="fchip" data-filter="Alternate">Alternate</button>
     <button class="fchip" data-filter="Blocked">Blocked</button>
     <button class="fchip" data-filter="In review">In review</button>
@@ -1250,8 +1250,10 @@ function onBarScroll(){
     stickybar.classList.remove('bar-hidden');
   }else if(togglesUnderBar()){
     stickybar.classList.add('bar-hidden');
+    closeFilterPanel();
   }else if(delta>8){
     stickybar.classList.add('bar-hidden');
+    closeFilterPanel();
   }else if(delta<-8){
     stickybar.classList.remove('bar-hidden');
   }
@@ -1356,6 +1358,8 @@ function applyFilter(name){
     opt.disabled=mark;
     opt.textContent=mark ? opt.dataset.label+' (0)' : opt.dataset.label;
   });
+  const sectionJump=document.getElementById('sectionJump');
+  if(sectionJump.selectedOptions[0] && sectionJump.selectedOptions[0].disabled) sectionJump.value='';
   const shown=document.querySelectorAll('main .card:not(.hidden-card)').length;
   const filtering=name!=='All';
   filterMeta.hidden=!filtering;
