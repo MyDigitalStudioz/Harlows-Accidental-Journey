@@ -259,8 +259,10 @@
   /* Who made the picture: white = ChatGPT (no attribute), tints = mockups */
   .card[data-maker="ravyn"]{ background:#F1EEF8; border-color:#d9d2ea; }
   .card[data-maker="trinity"]{ background:#EAF6F1; border-color:#cbe6da; }
+  .card[data-maker="openai"]{ background:#fffdf8; border-color:#ddd6c9; }
   .maker-sw{ display:inline-block; width:1.05rem; height:1.05rem; border-radius:4px; border:1px solid #cfc6b8; vertical-align:-.15rem; margin-right:.3rem; }
   .maker-sw.chatgpt{ background:#fff; } .maker-sw.ravyn{ background:#F1EEF8; border-color:#b9aed6; } .maker-sw.trinity{ background:#EAF6F1; border-color:#9fcfba; }
+.maker-sw.openai{ background:#fffdf8; border:1px solid #c9bfa8; }
   .card .maker-tag{ font-size:.74rem; font-weight:bold; letter-spacing:.03em; text-transform:uppercase;
            padding:.12rem .5rem; border-radius:20px; border:1px solid #b9aed6; background:#fff; color:#5b4a8a; }
   .card[data-maker="trinity"] .maker-tag{ border-color:#9fcfba; color:#2f6b52; }
@@ -298,11 +300,12 @@
   body{ border-top:5px solid #a58bd6; }
   header.hero{ background:linear-gradient(180deg,#ece5f8 0%,rgba(236,229,248,0) 100%); max-width:none; }
   .guide-btn{ background:#f3eefc; }
-  .fchip.maker-ravyn::before, .fchip.maker-trinity::before{ content:""; display:inline-block; width:.8rem; height:.8rem;
+  .fchip.maker-ravyn::before, .fchip.maker-trinity::before, .fchip.maker-openai::before{ content:""; display:inline-block; width:.8rem; height:.8rem;
            border-radius:3px; margin-right:.35rem; vertical-align:-.08rem; }
   .fchip.maker-ravyn::before{ background:#F1EEF8; border:1px solid #b9aed6; }
+.fchip.maker-openai::before{ background:#fffdf8; border:1px solid #c9bfa8; }
   .fchip.maker-trinity::before{ background:#EAF6F1; border:1px solid #9fcfba; }
-  .fchip.on.maker-ravyn::before, .fchip.on.maker-trinity::before{ border-color:#fff; }
+  .fchip.on.maker-ravyn::before, .fchip.on.maker-trinity::before, .fchip.on.maker-openai::before{ border-color:#fff; }
   /* Mockup thumbnails: whole picture + 2:1 crop guide */
   .mthumb{ position:relative; cursor:pointer; background:#ebe6f3; overflow:hidden; }
   .mthumb img.thumb{ aspect-ratio:auto; object-fit:contain; height:auto; }
@@ -359,11 +362,13 @@
 <div class="stickybar" id="stickybar">
   <nav class="jumpnav" aria-label="Jump to a spread">
     <a href="#S07">S07</a>
+    <a href="#S10">S10</a>
   </nav>
   <div class="filters" id="filterPanel" role="group" aria-label="Filter mockups">
     <button class="fchip on" data-filter="All">All</button>
     <button class="fchip maker-ravyn" data-filter="maker:ravyn">Ravyn</button>
     <button class="fchip maker-trinity" data-filter="maker:trinity">Trinity</button>
+    <button class="fchip maker-openai" data-filter="maker:openai">OpenAI</button>
     <button class="fchip fav" data-filter="Any favorite">Any favorite</button>
   </div>
 </div>
@@ -374,7 +379,7 @@
 <main class="wrap">
 <section id="S07">
   <h2>S07 &middot; Chester&#8217;s Chuckle &middot; Print pages 16&ndash;17</h2>
-  <p class="hint">2 mockups this round (cap 2&ndash;3) &mdash; <a href="spread-options.html#S07">see the S07 versions on Spread Options</a>.</p>
+  <p class="hint">4 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S07">see the S07 versions on Spread Options</a>.</p>
   <div class="grid">
     <article class="card" id="S07-M1" data-maker="ravyn" data-kind="mockup" data-letter="S07-M1" data-check="Being checked" data-final="" data-summary="Ravyn mockup — scene and layout test recreating S07-B from the cast refs. Likeness is rough by design. Brighter, glossier look; Chester&#x27;s head rides high into the text sky; made 16:9, so the dashed box shows the 2:1 page.">
       <div class="mthumb"><img class="thumb" src="mockups/s07-m1.jpg" alt="S07-M1 scene mockup by Ravyn" loading="lazy" data-render="mockups/s07-m1.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
@@ -386,7 +391,7 @@
         <p class="facts">Made by Ravyn 2026-10-15 with Ravyn&#x27;s own image tool from the cast reference images &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
       </div>
     </article>
-    <article class="card" id="S07-M2" data-maker="trinity" data-kind="mockup" data-letter="S07-M2" data-check="Being checked" data-final="" data-summary="Trinity mockup via Codex (same ChatGPT account, new door) — same S07 prompt and cast refs as S07-M1. Closest Harlow likeness of the mockups, glossy finish; horses big and crowding the top; 3:2, not 2:1. Likeness is rough by design.">
+    <article class="card" id="S07-M2" data-maker="openai" data-kind="mockup" data-letter="S07-M2" data-check="Being checked" data-final="" data-summary="Trinity mockup via Codex (same ChatGPT account, new door) — same S07 prompt and cast refs as S07-M1. Closest Harlow likeness of the mockups, glossy finish; horses big and crowding the top; 3:2, not 2:1. Likeness is rough by design.">
       <div class="mthumb"><img class="thumb" src="mockups/s07-m2.jpg" alt="S07-M2 scene mockup by Trinity" loading="lazy" data-render="mockups/s07-m2.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
       <div class="body">
         <div class="titlerow"><div class="lettercol"><span class="letter">S07-M2</span><span class="render-id">render: Trinity mockup (Codex)</span></div><span class="maker-tag">Mockup</span><span class="check ck-grey">Being checked</span></div>
@@ -394,6 +399,43 @@
         <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
         <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
         <p class="facts">Made by Trinity 2026-10-15 via Codex from the same S07 prompt and cast reference images as S07-M1 &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
+      </div>
+    </article>
+    <article class="card" id="S07-M3" data-maker="openai" data-kind="mockup" data-letter="S07-M3" data-check="Being checked" data-final="" data-summary="The S07-M2 Codex render cropped to the true 2:1 page from its native 3:2 &#8212; no stretch, proportions true. The text sky above Chester is thin; this is the usable shape of that render.">
+      <div class="mthumb"><img class="thumb" src="mockups/s07-m3.jpg" alt="S07-M3 scene mockup by Trinity (OpenAI)" loading="lazy" data-render="mockups/s07-m3.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S07-M3</span><span class="render-id">render: Trinity mockup (Codex), 2:1 crop</span></div><span class="maker-tag">Mockup</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">The S07-M2 Codex render cropped to the true 2:1 page from its native 3:2 &#8212; no stretch, proportions true. The text sky above Chester is thin; this is the usable shape of that render.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-15 via Codex; native 1536&#215;1024 render cropped to 1536&#215;768 &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
+      </div>
+    </article>
+    <article class="card" id="S07-M4" data-maker="openai" data-kind="mockup" data-letter="S07-M4" data-check="Being checked" data-final="" data-summary="Final-style test: the prompt carried the layout discipline &#8212; sky band baked in, Dynamite fully on the left, composed for the crop. Native 1774&#215;887 with true proportions; Chester still rides into the band, so his scale is the open S07 question.">
+      <div class="mthumb"><img class="thumb" src="mockups/s07-m4.jpg" alt="S07-M4 scene mockup by Trinity (OpenAI)" loading="lazy" data-render="mockups/s07-m4.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S07-M4</span><span class="render-id">render: Trinity mockup (Codex), final-style test</span></div><span class="maker-tag">Mockup</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Final-style test: the prompt carried the layout discipline &#8212; sky band baked in, Dynamite fully on the left, composed for the crop. Native 1774&#215;887 with true proportions; Chester still rides into the band, so his scale is the open S07 question.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-15 via Codex from the final-style S07 prompt + cast refs + Lois p07 ref &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="S10">
+  <h2>S10 &middot; Print pages 22&ndash;23</h2>
+  <p class="hint">1 mockup this round (cap 2&ndash;3) &mdash; <a href="spread-options.html#S10">see the S10 versions on Spread Options</a>.</p>
+  <div class="grid">
+    <article class="card" id="S10-M1" data-maker="openai" data-kind="mockup" data-letter="S10-M1" data-check="Being checked" data-final="" data-summary="The S10 beat every desk asked for: French Fry AWAKE in a play-bow, about to catch the pizza crust Philly tossed, Harlow watching delighted. Sunset alley, sky band held, native 1774&#215;887. Philly came out furry &#8212; canon is hairless, noted; likeness is rough by design.">
+      <div class="mthumb"><img class="thumb" src="mockups/s10-m1.jpg" alt="S10-M1 scene mockup by Trinity (OpenAI)" loading="lazy" data-render="mockups/s10-m1.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S10-M1</span><span class="render-id">render: Trinity mockup (Codex)</span></div><span class="maker-tag">Mockup</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">The S10 beat every desk asked for: French Fry AWAKE in a play-bow, about to catch the pizza crust Philly tossed, Harlow watching delighted. Sunset alley, sky band held, native 1774&#215;887. Philly came out furry &#8212; canon is hairless, noted; likeness is rough by design.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-15 via Codex from the S10 prompt + cast refs + Lois p10 ref &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
       </div>
     </article>
   </div>
@@ -421,7 +463,7 @@
     <ul class="lg-plain">
       <li><b>What a mockup is</b>A quick scene idea to try out the layout: where everyone stands and how the page feels. Faces and fur are rough by design.</li>
       <li><b>Who made it</b>The card color tells you.
-        <span class="lg-sw"><span><span class="maker-sw ravyn" aria-hidden="true"></span>Lavender = made by Ravyn</span><span><span class="maker-sw trinity" aria-hidden="true"></span>Mint = made by Trinity</span></span></li>
+        <span class="lg-sw"><span><span class="maker-sw ravyn" aria-hidden="true"></span>Lavender = made by Ravyn</span><span><span class="maker-sw trinity" aria-hidden="true"></span>Mint = made by Trinity</span><span><span class="maker-sw openai" aria-hidden="true"></span>White = made with OpenAI (via Codex)</span></span></li>
       <li><b>Finals</b>The finished page is always made with ChatGPT. When a mockup has one, its card shows a &#8220;See the final&#8221; link.</li>
       <li><b>How many</b>At most 2&ndash;3 mockups per spread in each round, so the page stays easy to look through.</li>
       <li><b>Checks</b>Mockups only get layout checks: nothing important in the middle fold, room in the sky for the words, and nothing cut off at the edges.
@@ -513,7 +555,7 @@ function showLb(){
   lbimg.onload=()=>placeCrop(lbimg, lbcrop);
   lbimg.src=img.dataset.render; lbimg.alt=card.dataset.letter+' scene mockup';
   if(lbimg.complete) placeCrop(lbimg, lbcrop);
-  lbcap.textContent=card.dataset.letter+' — Mockup ('+(card.dataset.maker==='trinity'?'Trinity':'Ravyn')+')';
+  lbcap.textContent=card.dataset.letter+' — Mockup ('+(card.dataset.maker==='trinity'?'Trinity':card.dataset.maker==='openai'?'OpenAI':'Ravyn')+')';
   lbsum.textContent=card.dataset.summary;
   const single=lbList.length===1;
   document.getElementById('prev').classList.toggle('hidden',single);
