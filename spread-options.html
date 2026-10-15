@@ -121,6 +121,14 @@
     .toggle button{ min-height:40px; }
     .filter-meta{ text-align:left; padding:.05rem 1rem .6rem; }
   }
+  @media (max-width:360px){
+    .bar-compact{ padding:.4rem .5rem; gap:.35rem; }
+    .section-pick{ gap:.3rem; flex:1 1 0; }
+    .section-pick select{ min-width:96px; padding:0 .25rem; }
+    .filter-ctl{ flex:0 1 auto; }
+    .filter-toggle{ min-width:96px; padding:0 .45rem; }
+    .filter-ctl.has-filter .filter-toggle{ padding-right:.4rem; }
+  }
   /* Lightbox — matches the showcase viewer */
   #lb{ position:fixed; inset:0; background:rgba(24,18,12,.94); display:none;
        align-items:center; justify-content:center; z-index:90; }
@@ -1380,10 +1388,29 @@ function applyFilter(name){
     emptyLine.hidden=true;
   }
 }
+function revealFilteredTop(){
+  filterIgnoreUntil=Math.max(filterIgnoreUntil, Date.now()+150);
+  stickybar.classList.remove('bar-hidden');
+  setScrollMargin();
+  const first=[...document.querySelectorAll('main section')].find(sec=>!sec.classList.contains('hidden-section'));
+  const target=!filterMeta.hidden ? filterMeta : first;
+  if(!target){
+    root.style.scrollBehavior='auto';
+    window.scrollTo(0, 0);
+    root.style.scrollBehavior='';
+    return;
+  }
+  const y=target.getBoundingClientRect().top + window.scrollY - stickybar.offsetHeight - 12;
+  const prev=root.style.scrollBehavior;
+  root.style.scrollBehavior='auto';
+  window.scrollTo(0, Math.max(0, y));
+  root.style.scrollBehavior=prev;
+}
 chips.forEach(ch=>ch.addEventListener('click',()=>{
   chips.forEach(c=>c.classList.remove('on')); ch.classList.add('on');
   applyFilter(ch.dataset.filter);
   if(mobileBar.matches) closeFilterPanel();
+  revealFilteredTop();
 }));
 filterClear.addEventListener('click', ()=>{
   const all=chips.find(c=>c.dataset.filter==='All');
@@ -1391,6 +1418,7 @@ filterClear.addEventListener('click', ()=>{
   all.classList.add('on');
   applyFilter('All');
   if(mobileBar.matches) closeFilterPanel();
+  revealFilteredTop();
 });
 
 // ---- As rendered / Print-ready toggle ----
