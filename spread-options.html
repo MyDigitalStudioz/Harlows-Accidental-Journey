@@ -167,7 +167,7 @@
   <div class="bar-compact">
     <label class="section-pick">Sections
       <select id="sectionJump" aria-label="Sections">
-        <option value="">Jump to section…</option>
+        <option value="">Sections…</option>
         <option value="#S01">S01</option>
         <option value="#S02">S02</option>
         <option value="#S03">S03</option>
@@ -1275,6 +1275,7 @@ const filterClear=document.getElementById('filterClear');
 const filterCtl=document.getElementById('filterCtl');
 function closeFilterPanel(){
   if(!stickybar.classList.contains('filters-open')) return;
+  filterIgnoreUntil=Date.now()+100;
   stickybar.classList.remove('filters-open');
   filterToggle.setAttribute('aria-expanded','false');
   setScrollMargin();
@@ -1365,7 +1366,9 @@ function applyFilter(name){
   filterMeta.hidden=!filtering;
   filterCtl.classList.toggle('has-filter', filtering);
   filterClear.hidden=!filtering;
-  filterToggleLabel.textContent=filtering ? 'Filter · '+name : 'Filter';
+  const chip=chips.find(c=>c.dataset.filter===name);
+  const short=chip ? chip.textContent.trim() : name;
+  filterToggleLabel.textContent=filtering ? 'Filter · '+short : 'Filter';
   if(filtering){
     showingLine.textContent='Showing '+shown+' of '+totalCards;
     emptyLine.hidden=shown!==0;
