@@ -1,0 +1,103 @@
+{
+  "_comment": "CURRENT FAVORITES ONLY \u2014 edit picks arrays (page letters as shown on this page). Re-bake into spread-options.html or paste into the FAVORITES block in the page script. Do not mark anything locked/final/banked/approved here.",
+  "people": {
+    "T": {
+      "name": "Trinity",
+      "color": "#0f766e",
+      "picks": [
+        "S01-I",
+        "S02-D",
+        "S03-D",
+        "S04-F",
+        "S05-D",
+        "S06-E",
+        "S08-J",
+        "S09-E",
+        "S10-D",
+        "S11-D",
+        "S12-H",
+        "S13-E",
+        "S14-E",
+        "S15-F",
+        "S16-G",
+        "S17-D",
+        "S18-F",
+        "S19-D",
+        "S20-C",
+        "S21-F",
+        "S23-G",
+        "S24-G"
+      ]
+    },
+    "F": {
+      "name": "Folio",
+      "color": "#7c3aed",
+      "picks": [
+        "S01-D",
+        "S02-D",
+        "S03-D",
+        "S04-E",
+        "S05-F",
+        "S06-E",
+        "S07-B",
+        "S08-K",
+        "S09-E",
+        "S10-C",
+        "S11-D",
+        "S12-C",
+        "S13-F",
+        "S14-C",
+        "S15-E",
+        "S16-E",
+        "S17-B",
+        "S18-F",
+        "S19-A",
+        "S20-A",
+        "S21-H",
+        "S22-I",
+        "S23-E",
+        "S24-I"
+      ]
+    },
+    "R": {
+      "name": "Ravyn",
+      "color": "#1a1a1a",
+      "picks": [
+        "S01-J",
+        "S02-D",
+        "S03-D",
+        "S04-E",
+        "S05-E",
+        "S06-F",
+        "S07-E",
+        "S08-K",
+        "S09-F",
+        "S10-D",
+        "S11-D",
+        "S12-F",
+        "S13-E",
+        "S14-E",
+        "S15-F",
+        "S16-E",
+        "S17-D",
+        "S18-F",
+        "S19-C",
+        "S20-D",
+        "S21-F",
+        "S22-I",
+        "S23-G",
+        "S24-H"
+      ]
+    },
+    "J": {
+      "name": "Jon",
+      "color": "#c9a227",
+      "picks": []
+    },
+    "L": {
+      "name": "Lois",
+      "color": "#e11d48",
+      "picks": []
+    }
+  }
+}
