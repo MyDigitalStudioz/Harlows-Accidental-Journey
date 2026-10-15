@@ -1191,6 +1191,18 @@ if(document.fonts && document.fonts.ready) document.fonts.ready.then(setScrollMa
 
 const mobileBar=window.matchMedia('(max-width: 640px)');
 let lastScrollY=window.scrollY;
+let pinned=false;
+let pinTimer=0;
+function pinBar(){
+  pinned=true;
+  stickybar.classList.remove('bar-hidden');
+  clearTimeout(pinTimer);
+  pinTimer=setTimeout(()=>{ pinned=false; lastScrollY=window.scrollY; }, 1500);
+}
+window.addEventListener('hashchange', pinBar);
+document.querySelectorAll('.jumpnav a').forEach(a=>{
+  a.addEventListener('click', ()=>{ if(!a.classList.contains('is-empty')) pinBar(); });
+});
 function togglesUnderBar(){
   const zone=stickybar.offsetHeight;
   return [...document.querySelectorAll('.toggle')].some(t=>{
@@ -1204,7 +1216,7 @@ function onBarScroll(){
     lastScrollY=window.scrollY;
     return;
   }
-  if(stickybar.classList.contains('filters-open')){
+  if(pinned || stickybar.classList.contains('filters-open')){
     stickybar.classList.remove('bar-hidden');
     lastScrollY=window.scrollY;
     return;
@@ -1257,7 +1269,7 @@ document.getElementById('sectionJump').addEventListener('change', function(){
   if(!val) return;
   const sec=document.querySelector(val);
   if(!sec || sec.classList.contains('hidden-section')) return;
-  stickybar.classList.remove('bar-hidden');
+  pinBar();
   setScrollMargin();
   if(location.hash===val) sec.scrollIntoView({behavior:'smooth', block:'start'});
   else location.hash=val;
