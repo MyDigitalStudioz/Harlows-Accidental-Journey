@@ -21,7 +21,15 @@ To link to one card, add its letter as an anchor: `spread-options.html#S05-G`. E
 - **The `render:` line** under a letter (`<span class="render-id">render: S05-E</span>`) is the name the picture had when it was first made, before it got its page letter. Add it whenever the two differ. Showcase images say `render: showcase pNN`.
 - **Images:** export each version as a **1400×700 JPEG** (2:1) into `spread-options/`, named in lower case after the letter (`spread-options/s05-g.jpg`). Point the card's `<img class="thumb">` `src` and `data-render` at it. Leave `data-print` empty.
 - **Print is parked.** The print-related bits (`data-print`, the "As rendered / Print-ready" toggle on older cards, the `print md5` facts, desat/print-file notes) stay as they are but dormant. Don't add new print variants or build on them until print is un-parked.
-- After adding cards, update the section hint ("N versions, oldest first") and the header total ("163 versions"), and check the card count (see Publish).
+- After adding cards, update the section hint ("N versions, oldest first") and the header total ("164 versions"), and check the card count (see Publish).
+
+## Who made it (card colour)
+
+- Card colour shows who made the picture: white = ChatGPT, lavender = Ravyn's mockup, mint = Trinity's mockup. Mockups are quick scene and layout tests; finals are made with ChatGPT.
+- Mark a mockup card with `data-maker="ravyn"` (light lavender-grey, `#F1EEF8`) or `data-maker="trinity"` (light mint, `#EAF6F1`) on the `<article class="card">`. ChatGPT cards get **no** `data-maker` attribute and stay white. Don't add the attribute to existing cards.
+- Mockups are for layout and mood. A mockup can still be picked (dots work the same, and the showcase rules apply as usual), but its final would be redone in ChatGPT.
+- Mockups use the normal labels (usually **Option**, grey **Being checked**) and the `render:` line reads `render: Ravyn mockup` / `render: Trinity mockup`. A mockup image may keep its own shape (e.g. 16:9) instead of 1400×700; the thumbnail crops to 2:1 and the lightbox shows it whole.
+- First mockup: **S07-G** (Ravyn, 2026-10-15). S07-F stays reserved for the queued S07-E redo.
 
 ## The four labels
 

@@ -257,6 +257,11 @@
   #close:hover{ background:linear-gradient(135deg,#2e2214 0%,#4a3a22 55%,#756030 100%); }
   @media (max-width:640px){ #prev{ left:8px; } #next{ right:8px; }
     #lb figcaption .t{ text-align:center; } }
+  /* Who made the picture: white = ChatGPT (no attribute), tints = mockups */
+  .card[data-maker="ravyn"]{ background:#F1EEF8; border-color:#d9d2ea; }
+  .card[data-maker="trinity"]{ background:#EAF6F1; border-color:#cbe6da; }
+  .maker-sw{ display:inline-block; width:1.05rem; height:1.05rem; border-radius:4px; border:1px solid #cfc6b8; vertical-align:-.15rem; margin-right:.3rem; }
+  .maker-sw.chatgpt{ background:#fff; } .maker-sw.ravyn{ background:#F1EEF8; border-color:#b9aed6; } .maker-sw.trinity{ background:#EAF6F1; border-color:#9fcfba; }
 </style>
 </head>
 <body>
@@ -264,7 +269,7 @@
   <p class="eyebrow">Harlow&#8217;s Accidental Journey</p>
   <h1>Spread Options</h1>
   <p class="sub">Harlow&#8217;s Accidental Journey &#8212; every version of every spread</p>
-  <p class="meta">163 versions &middot; generated 2026-10-15</p>
+  <p class="meta">164 versions &middot; generated 2026-10-15</p>
   <a class="backlink" href="index.html">&#8592; Back to the showcase</a>
   <div class="rule"></div>
   <div class="fav-key" aria-label="Who each colored initial means">
@@ -797,7 +802,7 @@
 </section>
 <section id="S07">
   <h2>S07 &middot; Print pages 16&ndash;17</h2>
-  <p class="hint">5 versions, oldest first &mdash; letters never renumber.</p>
+  <p class="hint">6 versions, oldest first &mdash; letters never renumber.</p>
   <div class="grid">
     <article class="card" id="S07-A" data-status="Needs a fix" data-letter="S07-A" data-summary="Chester chuckle r1 — the laugh landed, but Chester too big and central: muzzle ~x53% in the fold, ear tips ~y8–12% in the text band, cumulus in the sky." data-fav-count="0">
       <img class="thumb" src="spread-options/s07-a.jpg" alt="S07-A spread render" loading="lazy" data-render="spread-options/s07-a.jpg" data-print="">
@@ -842,6 +847,14 @@
         <p class="facts">Blocked (fold), redo queued (S07-F) &middot; Gate date not recorded</p>
       
         <div class="fav-dots" aria-label="Current favorites: Ravyn"><span class="fav-dot R" title="Ravyn">R</span></div>
+      </div>
+    </article>
+    <article class="card" id="S07-G" data-maker="ravyn" data-status="Option" data-check="Being checked" data-letter="S07-G" data-summary="Ravyn mockup (Grok Bot image tool, not ChatGPT) — scene and layout test recreating S07-B from cast refs. Brighter, glossier look; Harlow less dialed-in than the ChatGPT versions; Chester&#x27;s head rides high into the text sky; 16:9, not 2:1." data-fav-count="0">
+      <img class="thumb" src="spread-options/s07-g.jpg" alt="S07-G spread mockup (Ravyn mockup)" loading="lazy" data-render="spread-options/s07-g.jpg" data-print="">
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S07-G</span><span class="render-id">render: Ravyn mockup</span></div><span class="status st-opt">Option</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Ravyn mockup (Grok Bot image tool, not ChatGPT) — scene and layout test recreating S07-B from cast refs. Brighter, glossier look; Harlow less dialed-in than the ChatGPT versions; Chester&#x27;s head rides high into the text sky; 16:9, not 2:1.</p>
+        <p class="facts">Ravyn mockup &middot; made 2026-10-15 with Ravyn&#x27;s own image tool from the cast reference images &middot; layout and mood test; a final would be redone in ChatGPT &middot; S07-F stays reserved for the queued S07-E redo.</p>
       </div>
     </article>
   </div>
@@ -1977,6 +1990,9 @@
           <div class="lg-who"><span><span class="fav-dot T" aria-hidden="true">T</span> Trinity</span><span><span class="fav-dot F" aria-hidden="true">F</span> Folio</span><span><span class="fav-dot R" aria-hidden="true">R</span> Ravyn</span><span><span class="fav-dot J" aria-hidden="true">J</span> Jon</span><span><span class="fav-dot L" aria-hidden="true">L</span> Lois (Mom)</span></div></div></li>
       <li><div class="lg-key"><span class="lg-name">&#8216;render:&#8217; line</span><span class="lg-render">render: S01-K</span></div>
         <div>The name the picture had when it was first made, before it got its letter on this page.</div></li>
+      <li><div class="lg-key"><span class="lg-name">Card colour</span><span><span class="maker-sw chatgpt"></span><span class="maker-sw ravyn"></span><span class="maker-sw trinity"></span></span></div>
+        <div>Card colour shows who made the picture: white = ChatGPT, lavender = Ravyn&#x27;s mockup, mint = Trinity&#x27;s mockup. Mockups are quick scene and layout tests; finals are made with ChatGPT.
+          <div style="margin-top:.4rem">Mockups are for layout and mood. A mockup can still be picked, but its final would be redone in ChatGPT.</div></div></li>
     </ul>
   </div>
 </div>
