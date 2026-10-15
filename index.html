@@ -107,6 +107,20 @@
   .card .cap .capmain + span{ flex:none; overflow:visible; text-overflow:clip; }
   .card .cap span{ font-size:.85rem; opacity:.6; font-style:italic; white-space:nowrap;
        min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  /* Current favorites (showcase) — dots + letter link under each spread */
+  .fav-dot{ width:1.2rem; height:1.2rem; border-radius:50%; color:#fff; font-size:.7rem; font-weight:700;
+           font-family:system-ui,-apple-system,sans-serif; display:inline-flex; align-items:center; justify-content:center;
+           line-height:1; flex:none; box-shadow:0 1px 3px rgba(61,50,41,.28); }
+  .fav-dot.T{ background:#0f766e; } .fav-dot.F{ background:#7c3aed; } .fav-dot.R{ background:#1a1a1a; }
+  .fav-dot.J{ background:#c9a227; color:#1a1408; } .fav-dot.L{ background:#e11d48; }
+  [data-gallery="spreads"] .card .scmeta{ display:flex; align-items:center; justify-content:space-between; gap:.6rem;
+           padding:0 1rem .85rem; margin-top:-.35rem; }
+  [data-gallery="spreads"] .card .scdots{ display:flex; gap:.28rem; flex-wrap:wrap; min-height:1.2rem; }
+  [data-gallery="spreads"] .card .scdots .none{ font-size:.8rem; opacity:.55; font-style:italic; }
+  [data-gallery="spreads"] .card a.sclink{ color:var(--accent); font-weight:bold; text-decoration:none; font-size:.95rem;
+           white-space:nowrap; padding:.35rem .1rem; }
+  [data-gallery="spreads"] .card a.sclink:hover{ text-decoration:underline; }
+  #spreadGrid[aria-busy="true"]{ min-height:320px; }
   .pair{ display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
   #readtext{ position:absolute; bottom:16px; right:18px; color:#3d3229;
              background:linear-gradient(180deg,#fffefb 0%,#f3e7cd 100%);
@@ -341,10 +355,11 @@
 
 <section id="spreads">
   <div class="wrap">
-    <h2>Current Spreads</h2>
+    <h2>Current favorites</h2>
+    <p class="hint">One picture per spread &mdash; the current favorite from the colored dots on Spread Options. Tap the letter under a picture to see that version there.</p>
     <p class="hint">Tap any spread to view it big &mdash; then tap the large arrow buttons on the sides to move through them.</p>
     <p class="hint">Want to compare versions? <a href="spread-options.html">Every version of every spread &rarr;</a></p>
-    <div class="grid" data-gallery="spreads"></div>
+    <div class="grid" data-gallery="spreads" id="spreadGrid" aria-busy="true"></div>
   </div>
 </section>
 
@@ -504,12 +519,12 @@
 <script>
 const galleries={
   spreads:[
-    {src:"spreads/p01-harlow.jpg",     title:"Harlow at Home",           sub:"Page 1", pages:"Book pages 1–2"},
-    {src:"spreads/p02-mustang.jpg",    title:"The Silver Blue Mustang",  sub:"Page 2", pages:"Book pages 3–4"},
-    {src:"spreads/p03-marketplace.jpg",title:"The Farmers Market",       sub:"Page 3", pages:"Book pages 5–6"},
-    {src:"spreads/p04-sweet-pea.jpg",  title:"Sweet Pea's Muddy Puddle", sub:"Page 4", pages:"Book pages 7–8"},
-    {src:"spreads/p05-pond.jpg",       title:"Mama Fiona's Pond",        sub:"Page 5", pages:"Book pages 9–10"},
-    {src:"spreads/p06-donkeys.jpg",    title:"Molly, Albie & Dallas",    sub:"Page 6", pages:"Book pages 11–12"}
+    {src:"spreads/p01-harlow.jpg",     title:"Harlow at Home",           sub:"Page 1", pages:"Book pages 1–2", spread:1, letter:"S01-L", dots:[]},
+    {src:"spreads/p02-mustang.jpg",    title:"The Silver Blue Mustang",  sub:"Page 2", pages:"Book pages 3–4", spread:2, letter:"S02-F", dots:[]},
+    {src:"spreads/p03-marketplace.jpg",title:"The Farmers Market",       sub:"Page 3", pages:"Book pages 5–6", spread:3, letter:"S03-F", dots:[]},
+    {src:"spreads/p04-sweet-pea.jpg",  title:"Sweet Pea's Muddy Puddle", sub:"Page 4", pages:"Book pages 7–8", spread:4, letter:"S04-G", dots:[]},
+    {src:"spreads/p05-pond.jpg",       title:"Mama Fiona's Pond",        sub:"Page 5", pages:"Book pages 9–10", spread:5, letter:"S05-G", dots:[]},
+    {src:"spreads/p06-donkeys.jpg",    title:"Molly, Albie & Dallas",    sub:"Page 6", pages:"Book pages 11–12", spread:6, letter:"S06-H", dots:[]}
   ],
   coverd:[
     {src:"covers/option-d-front-v2.jpg", title:"Front Cover", sub:"Current"},
@@ -586,8 +601,10 @@ const spreadText=[
  {place:"Planned placement: upper band across the spread, above the donkeys.",
   text:"After a while, I realized I'd wandered far from Lois. Molly the donkey and her baby, Albie, trotted over, sensing I was lost. \u201CFeeling turned around, little guy?\u201D Molly chuckled. \u201CTake a look at our big ears \u2014 let them remind you to listen to your surroundings in tight spots.\u201D I swiveled my ears like radar dishes and caught the sound of people talking. \u201CThat's brilliant! Thank you, Molly!\u201D I called, nodding to her and Albie as I hurried toward the voices."}
 ];
-document.querySelectorAll('[data-gallery]').forEach(el=>{
+const FAV_NAMES={T:'Trinity',F:'Folio',R:'Ravyn',J:'Jon',L:'Lois'};
+function renderGallery(el){
   const items=galleries[el.dataset.gallery];
+  el.innerHTML='';
   items.forEach((s,i)=>{
     const d=document.createElement('div'); d.className='card'; d.tabIndex=0;
     d.setAttribute('role','button'); d.setAttribute('aria-label','View larger: '+s.title);
@@ -601,11 +618,84 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
     const pim=d.querySelector('img');
     if(s.pos) pim.style.objectPosition=s.pos;
     armImg(pim);
+    if(s.letter){
+      const m=document.createElement('div'); m.className='scmeta';
+      const dots=(s.dots||[]);
+      m.innerHTML='<span class="scdots" aria-label="'+(dots.length?'Picked by '+dots.map(w=>FAV_NAMES[w]).join(', '):'No picks yet')+'">'+
+        (dots.length?dots.map(w=>'<span class="fav-dot '+w+'" title="'+FAV_NAMES[w]+'">'+w+'</span>').join(''):'<span class="none">no picks yet</span>')+
+        '</span><a class="sclink" href="spread-options.html#'+s.letter+'" aria-label="See '+s.letter+' on Spread Options">'+s.letter+' &rarr;</a>';
+      m.querySelector('a').addEventListener('click',e=>e.stopPropagation());
+      m.querySelector('a').addEventListener('keydown',e=>e.stopPropagation());
+      d.appendChild(m);
+    }
     d.onclick=()=>openLb(el.dataset.gallery,i);
     d.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(el.dataset.gallery,i);} };
     el.appendChild(d);
   });
-});
+}
+document.querySelectorAll('[data-gallery]').forEach(el=>{ if(el.dataset.gallery!=='spreads') renderGallery(el); });
+
+// ---- Current favorites: one image per spread, computed at load from favorites.json + Spread Options statuses ----
+// Rules (in order): 1 Jon's pick (J) · 2 Lois's pick (L) · 3 most desk dots (T/F/R); tie -> keep SHOWCASE_SHOWING,
+// else Trinity's pick among the tied (then Folio's, then Ravyn's) · 4 no picks -> SHOWCASE_SHOWING, else Folio's pick, else skip.
+// A 'Needs a fix' card is never eligible. See SPREAD-OPTIONS-SYSTEM.md.
+const SHOWCASE_SHOWING={S01:'S01-L',S02:'S02-F',S03:'S03-F',S04:'S04-G',S05:'S05-G',S06:'S06-H'};
+const SPREAD_TITLES=["Harlow at Home","The Silver Blue Mustang","The Farmers Market","Sweet Pea's Muddy Puddle",
+  "Mama Fiona's Pond","Molly, Albie & Dallas","Chester's Chuckle","The Red Farm Truck","Lost in the City",
+  "Philly's Pizza Lesson","Penelope in Midtown Park","Otis the Coyote","Gideon on the Rooftops","Chippy and the Popcorn",
+  "The Hibernator","Edward's Big Hug","Jasmine at the Water Bowl","Babs the Crab","Finnegan the Shark",
+  "Pebbles the Lost Penguin","Helga's Pouch Ride","Mittens and Teddy","Home Again","Fireside with Little Mouse"];
+function pickShowcase(cards, people){
+  const bySpread={};
+  cards.forEach(c=>{ (bySpread[c.letter.slice(0,3)]=bySpread[c.letter.slice(0,3)]||[]).push(c); });
+  const picksOf=w=>(people[w]&&people[w].picks)||[];
+  const out=[];
+  Object.keys(bySpread).sort().forEach(sp=>{
+    const el=bySpread[sp].filter(c=>c.status!=='Needs a fix');
+    const elL=el.map(c=>c.letter);
+    const mine=w=>picksOf(w).filter(p=>elL.indexOf(p)>=0);
+    let choice=null, why='';
+    if(mine('J').length){ choice=mine('J')[0]; why="Jon's pick"; }
+    else if(mine('L').length){ choice=mine('L')[0]; why="Lois's pick"; }
+    else{
+      const cnt={}; elL.forEach(l=>{ cnt[l]=['T','F','R'].filter(w=>picksOf(w).indexOf(l)>=0).length; });
+      const m=Math.max(0,...Object.values(cnt));
+      if(m>0){
+        const tied=elL.filter(l=>cnt[l]===m);
+        if(tied.length===1){ choice=tied[0]; why='most desk dots'; }
+        else if(tied.indexOf(SHOWCASE_SHOWING[sp])>=0){ choice=SHOWCASE_SHOWING[sp]; why='tie, kept current'; }
+        else for(const w of ['T','F','R']){ const t=picksOf(w).filter(p=>tied.indexOf(p)>=0); if(t.length){ choice=t[0]; why='tie, '+people[w].name+"'s pick"; break; } }
+      }else if(elL.indexOf(SHOWCASE_SHOWING[sp])>=0){ choice=SHOWCASE_SHOWING[sp]; why='no picks, kept current'; }
+      else if(mine('F').length){ choice=mine('F')[0]; why="no picks, Folio's pick"; }
+    }
+    if(!choice) return;
+    const card=bySpread[sp].find(c=>c.letter===choice);
+    const n=parseInt(sp.slice(1),10);
+    out.push({src:card.src, title:SPREAD_TITLES[n-1]||('Spread '+n), sub:'Page '+n, pages:'Book pages '+(2*n-1)+'–'+(2*n),
+      spread:n, letter:choice, why:why, dots:['T','F','R','J','L'].filter(w=>picksOf(w).indexOf(choice)>=0)});
+  });
+  return out;
+}
+(function buildShowcase(){
+  const grid=document.getElementById('spreadGrid');
+  let done=false;
+  const finish=items=>{ if(done) return; done=true; if(items&&items.length) galleries.spreads=items;
+    renderGallery(grid); grid.removeAttribute('aria-busy'); window.showcasePicks=galleries.spreads.map(s=>[s.letter,s.why||'static']); };
+  setTimeout(()=>finish(null), 8000);
+  Promise.all([
+    fetch('spread-options.html',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return r.text(); }),
+    fetch('favorites.json',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return r.json(); })
+  ]).then(([html,fav])=>{
+    const doc=new DOMParser().parseFromString(html,'text/html');
+    const cards=[...doc.querySelectorAll('main article.card')].map(a=>{
+      const img=a.querySelector('img.thumb');
+      return {letter:a.dataset.letter, status:a.dataset.status,
+              src:(img&&(img.getAttribute('data-render')||img.getAttribute('src')))||''};
+    }).filter(c=>c.letter&&c.src);
+    if(!cards.length) throw 0;
+    finish(pickShowcase(cards, fav.people||{}));
+  }).catch(()=>finish(null));
+})();
 const totop=document.getElementById('totop');
 addEventListener('scroll', ()=>{ totop.classList.toggle('show', scrollY>600); }, {passive:true});
 totop.onclick=()=>window.scrollTo({top:0, behavior:'smooth'});
@@ -632,15 +722,16 @@ const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
 let gkey='spreads', cur=0;
 function openLb(key,i){ gkey=key; const items=galleries[key]; cur=(i+items.length)%items.length;
   lbimg.src=items[cur].src; lbimg.alt=items[cur].title;
-  lbcap.textContent=items[cur].title+' — '+items[cur].sub+(items[cur].pages?' · '+items[cur].pages.toLowerCase():'');
+  lbcap.textContent=items[cur].title+' — '+items[cur].sub+(items[cur].pages?' · '+items[cur].pages.toLowerCase():'')+(items[cur].letter?' · '+items[cur].letter:'');
   const single=items.length===1;
   document.getElementById('prev').classList.toggle('hidden',single);
   document.getElementById('next').classList.toggle('hidden',single);
   lbnum.textContent=single ? 'Tap × to close'
     : 'Image '+(cur+1)+' of '+items.length;
   lb.classList.add('open'); document.body.style.overflow='hidden';
-  document.getElementById('readtext').classList.toggle('hidden', key!=='spreads');
-  document.getElementById('fread').classList.toggle('hidden', key!=='spreads');
+  const hasText=key==='spreads' && !!spreadText[(items[cur].spread||cur+1)-1];
+  document.getElementById('readtext').classList.toggle('hidden', !hasText);
+  document.getElementById('fread').classList.toggle('hidden', !hasText);
   document.getElementById('textpanel').classList.remove('open'); }
 function closeLb(){ if(document.fullscreenElement) document.exitFullscreen();
   lb.classList.remove('zoomed'); lb.classList.remove('open'); document.body.style.overflow=''; }
@@ -699,7 +790,7 @@ giftmodal.addEventListener('click',e=>{ if(e.target===giftmodal) closeGift(); })
 addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeGift(); } });
 const textpanel=document.getElementById('textpanel');
 function openText(){
-  const s=galleries[gkey][cur], d=spreadText[cur];
+  const s=galleries[gkey][cur], d=spreadText[(s.spread||cur+1)-1]; if(!d) return;
   document.getElementById('tpTitle').textContent=s.title+' \u2014 '+s.sub;
   document.getElementById('tpPlace').textContent=d.place;
   document.getElementById('tpCopy').textContent=d.text;
