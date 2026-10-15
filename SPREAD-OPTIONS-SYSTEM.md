@@ -62,7 +62,7 @@ Every card has exactly one status, set in both `data-status` and the status chip
 
 **Plain notes:** a card can carry a short reason for Lois, written in plain words, e.g. `<p class="plain-note">Note: coat color off</p>` (placed before the `summary` paragraph). Use one on every Needs a fix card and on any Option card that was set aside for a reason.
 
-The **"What do these labels mean?"** button (in the filter chips; on phones also under the color key) opens the plain-English guide. If you change a label, update the guide panel (`#labelGuide`) too.
+The **"What do these labels mean?"** button (one button only, right under the dot legend at every width, on both Spread Options and Mockups; don't add a second copy in the filter chips) opens the plain-English guide. If you change a label, update the guide panel (`#labelGuide`) too.
 
 Filter chips: All, Candidate, Option, Needs a fix, Jon's yes, plus the favorites filters (Any favorite, 2+ picks, T, F, R, J, L).
 
