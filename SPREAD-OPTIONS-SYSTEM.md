@@ -12,7 +12,7 @@ This guide is for whoever maintains the Harlow's Accidental Journey review pages
 | Favorites data (read by all three pages at load time) | https://mydigitalstudioz.github.io/Harlows-Accidental-Journey/favorites.json | `favorites.json` |
 
 **Three pages, one nav.** Every page links to the other two and highlights the one you're on:
-- Showcase: the existing top bar keeps its look; after the section links there's a thin divider, then **Showcase** (current, bold + underlined) · **Spread Options** · **Mockups**. (The older "Mock-ups" link in that bar is the title-treatments section on the showcase, not the Mockups page.)
+- Showcase: the existing top bar keeps its look; after the section links there's a thin divider, then **Showcase** (current, bold + underlined) · **Spread Options** · **Mockups**. (The older "Title designs" link in that bar is the title-treatments section on the showcase, not the Mockups page.)
 - Spread Options and Mockups: a `<nav class="pagenav">` pill row under the header meta; the current page's pill is filled with the page accent (`aria-current="page"`).
 - **Page tints** (same layout, small identity accent, art stays the focus): Showcase unchanged (cream, rust accent `#b3541e`). Spread Options = soft warm band (5px `#e3a76f` top border + faint peach header gradient `#fbeedd`), rust accent. Mockups = lavender band (5px `#a58bd6` + header gradient `#ece5f8`), lavender paper `#f8f6fc`, accent `#6d4fa8`.
 
@@ -41,7 +41,7 @@ To link to one card, add its letter as an anchor: `spread-options.html#S05-G`. E
 - **Filters:** All, Ravyn, Trinity, Any favorite. Section hint: "N mockup(s) this round (cap 2–3)". The header count is computed from the cards.
 - **Likes on mockups** go in `favorites.json` → `mockup_picks` (`{"T":[],"F":[],"R":[],"J":[],"L":[]}`, letters like `S07-M1`). They show as dots on the Mockups page only. **Mockups never feed the showcase**: a liked idea gets made as a ChatGPT final, which then goes on Spread Options with a normal letter.
 - The Mockups guide explains: what a mockup is, lavender = Ravyn / mint = Trinity, finals are ChatGPT, the 2–3 cap, layout-only checks, the dashed 2:1 box, dots don't reach the showcase, and the M-letter series.
-- **First mockup:** Ravyn's S07 scene test was briefly S07-G on Spread Options; on 2026-10-15 it moved to Mockups as **S07-M1** (image now `mockups/s07-m1.jpg`). It was removed from Spread Options with no stub, so **G is free again**: the next real S07 ChatGPT option after F (still reserved for the S07-E redo) takes **S07-G**, no skipped letter.
+- **First mockup:** Ravyn's S07 scene test was briefly on the options page; on 2026-10-15 it moved to Mockups as **S07-M1** (image `mockups/s07-m1.jpg`), with no stub left behind. The next real S07 ChatGPT option after F (still reserved for the S07-E redo) takes **S07-G**, no skipped letter.
 
 ## The four labels
 
