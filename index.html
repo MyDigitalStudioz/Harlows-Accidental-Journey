@@ -121,6 +121,7 @@
            white-space:nowrap; padding:.35rem .1rem; }
   [data-gallery="spreads"] .card a.sclink:hover{ text-decoration:underline; }
   #spreadGrid[aria-busy="true"]{ min-height:320px; }
+  [data-gallery="spreads"] .card .scskip{ padding:0 1rem .8rem; margin-top:-.45rem; font-size:.8rem; font-style:italic; color:#8a3418; opacity:.85; }
   .pair{ display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
   #readtext{ position:absolute; bottom:16px; right:18px; color:#3d3229;
              background:linear-gradient(180deg,#fffefb 0%,#f3e7cd 100%);
@@ -627,6 +628,7 @@ function renderGallery(el){
       m.querySelector('a').addEventListener('click',e=>e.stopPropagation());
       m.querySelector('a').addEventListener('keydown',e=>e.stopPropagation());
       d.appendChild(m);
+      if(s.skipped){ const h=document.createElement('p'); h.className='scskip'; h.textContent='a pick was skipped: needs a fix'; d.appendChild(h); }
     }
     d.onclick=()=>openLb(el.dataset.gallery,i);
     d.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(el.dataset.gallery,i);} };
@@ -636,16 +638,16 @@ function renderGallery(el){
 document.querySelectorAll('[data-gallery]').forEach(el=>{ if(el.dataset.gallery!=='spreads') renderGallery(el); });
 
 // ---- Current favorites: one image per spread, computed at load from favorites.json + Spread Options statuses ----
-// Rules (in order): 1 Jon's pick (J) · 2 Lois's pick (L) · 3 most desk dots (T/F/R); tie -> keep SHOWCASE_SHOWING,
-// else Trinity's pick among the tied (then Folio's, then Ravyn's) · 4 no picks -> SHOWCASE_SHOWING, else Folio's pick, else skip.
+// Rules (in order): 1 Jon's pick (J) · 2 Lois's pick (L) · 3 most desk dots (T/F/R); tie -> keep favorites.json "showing",
+// else Trinity's pick among the tied (then Folio's, then Ravyn's) · 4 no picks -> "showing", else Folio's pick, else skip.
 // A 'Needs a fix' card is never eligible. See SPREAD-OPTIONS-SYSTEM.md.
-const SHOWCASE_SHOWING={S01:'S01-L',S02:'S02-F',S03:'S03-F',S04:'S04-G',S05:'S05-G',S06:'S06-H'};
 const SPREAD_TITLES=["Harlow at Home","The Silver Blue Mustang","The Farmers Market","Sweet Pea's Muddy Puddle",
   "Mama Fiona's Pond","Molly, Albie & Dallas","Chester's Chuckle","The Red Farm Truck","Lost in the City",
   "Philly's Pizza Lesson","Penelope in Midtown Park","Otis the Coyote","Gideon on the Rooftops","Chippy and the Popcorn",
   "The Hibernator","Edward's Big Hug","Jasmine at the Water Bowl","Babs the Crab","Finnegan the Shark",
   "Pebbles the Lost Penguin","Helga's Pouch Ride","Mittens and Teddy","Home Again","Fireside with Little Mouse"];
-function pickShowcase(cards, people){
+function pickShowcase(cards, people, SHOWCASE_SHOWING){
+  SHOWCASE_SHOWING=SHOWCASE_SHOWING||{};
   const bySpread={};
   cards.forEach(c=>{ (bySpread[c.letter.slice(0,3)]=bySpread[c.letter.slice(0,3)]||[]).push(c); });
   const picksOf=w=>(people[w]&&people[w].picks)||[];
@@ -668,11 +670,12 @@ function pickShowcase(cards, people){
       }else if(elL.indexOf(SHOWCASE_SHOWING[sp])>=0){ choice=SHOWCASE_SHOWING[sp]; why='no picks, kept current'; }
       else if(mine('F').length){ choice=mine('F')[0]; why="no picks, Folio's pick"; }
     }
+    const skipped=['T','F','R','J','L'].some(w=>picksOf(w).some(p=>p.slice(0,3)===sp && bySpread[sp].some(c=>c.letter===p && c.status==='Needs a fix')));
     if(!choice) return;
     const card=bySpread[sp].find(c=>c.letter===choice);
     const n=parseInt(sp.slice(1),10);
     out.push({src:card.src, title:SPREAD_TITLES[n-1]||('Spread '+n), sub:'Page '+n, pages:'Book pages '+(2*n-1)+'–'+(2*n),
-      spread:n, letter:choice, why:why, dots:['T','F','R','J','L'].filter(w=>picksOf(w).indexOf(choice)>=0)});
+      spread:n, letter:choice, why:why, skipped:skipped, dots:['T','F','R','J','L'].filter(w=>picksOf(w).indexOf(choice)>=0)});
   });
   return out;
 }
@@ -693,7 +696,7 @@ function pickShowcase(cards, people){
               src:(img&&(img.getAttribute('data-render')||img.getAttribute('src')))||''};
     }).filter(c=>c.letter&&c.src);
     if(!cards.length) throw 0;
-    finish(pickShowcase(cards, fav.people||{}));
+    finish(pickShowcase(cards, fav.people||{}, fav.showing||{}));
   }).catch(()=>finish(null));
 })();
 const totop=document.getElementById('totop');

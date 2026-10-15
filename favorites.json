@@ -1,5 +1,5 @@
 {
-  "_comment": "CURRENT FAVORITES ONLY \u2014 edit picks arrays (page letters as shown on this page). Re-bake into spread-options.html or paste into the FAVORITES block in the page script. Do not mark anything locked/final/banked/approved here.",
+  "_comment": "CURRENT FAVORITES ONLY — edit picks arrays (page letters as shown on Spread Options). Both pages read this file at load time. \"showing\" = the image each spread shows on the showcase right now (the tie-break baseline): whoever changes picks also refreshes \"showing\" for that spread in the same edit. Do not mark anything locked/final/banked/approved here.",
   "people": {
     "T": {
       "name": "Trinity",
@@ -99,5 +99,31 @@
       "color": "#e11d48",
       "picks": []
     }
+  },
+  "showing": {
+    "S01": "S01-I",
+    "S02": "S02-D",
+    "S03": "S03-D",
+    "S04": "S04-E",
+    "S05": "S05-D",
+    "S06": "S06-E",
+    "S07": "S07-B",
+    "S08": "S08-K",
+    "S09": "S09-E",
+    "S10": "S10-D",
+    "S11": "S11-D",
+    "S12": "S12-H",
+    "S13": "S13-E",
+    "S14": "S14-E",
+    "S15": "S15-F",
+    "S16": "S16-E",
+    "S17": "S17-D",
+    "S18": "S18-F",
+    "S19": "S19-D",
+    "S20": "S20-C",
+    "S21": "S21-F",
+    "S22": "S22-I",
+    "S23": "S23-G",
+    "S24": "S24-G"
   }
 }
