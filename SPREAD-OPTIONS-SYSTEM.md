@@ -116,7 +116,7 @@ A reference copy of the rules in Python is at `/workspace/haj-batch/tmp/showcase
 2. Push the branch, then **fast-forward** `main` to it (e.g. `gh api -X PATCH repos/MyDigitalStudioz/Harlows-Accidental-Journey/git/refs/heads/main -f sha=<sha> -F force=false`). If `main` moved, rebase or redo your change on the new main; don't overwrite.
 3. Wait for the Pages build (`gh api repos/.../pages/builds/latest` → `built <sha>`).
 4. Fetch the live file with `?v=<short-sha>` and compare its size/SHA-256 with the committed file.
-5. Verify in a browser: the card count is unchanged unless you added cards (count `main article.card`; it's 163 as of 2026-10-15, after the S07 mockup moved to Mockups as S07-M1), the Mockups page count (1 as of 2026-10-15), the nav works both ways on all three pages, only the four labels appear, no script errors, and it looks right at 390px wide.
+5. Verify in a browser: the card count is unchanged unless you added cards (count `main article.card`; it's 163 as of 2026-10-15, after the S07 mockup moved to Mockups as S07-M1), the Mockups page count (2 as of 2026-10-15: S07-M1 Ravyn, S07-M2 Trinity via Codex), the nav works both ways on all three pages, only the four labels appear, no script errors, and it looks right at 390px wide.
 6. Only then share the link, with `?v=<short-sha>`.
 
 ## Never
