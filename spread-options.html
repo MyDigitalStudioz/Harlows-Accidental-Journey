@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Spread Options — Harlow's Accidental Journey</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23b3541e'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='18' fill='%23faf6ee'%3EH%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta name="description" content="Every version of every spread for Harlow's Accidental Journey — review page.">
 <style>
   :root{
@@ -95,10 +95,19 @@
     .section-pick select{ flex:1; min-width:0; min-height:40px; font-family:Georgia,'Times New Roman',serif;
            font-size:1rem; color:var(--ink); background:#fff; border:1px solid var(--soft);
            border-radius:8px; padding:0 .45rem; }
-    .filter-toggle{ flex:none; min-height:40px; padding:0 1rem; font-family:Georgia,'Times New Roman',serif;
-           font-size:.95rem; cursor:pointer; background:#fff; color:var(--ink);
-           border:1px solid var(--soft); border-radius:8px; box-shadow:0 2px 6px rgba(61,50,41,.08); }
-    .filter-toggle[aria-expanded="true"], .filter-toggle.has-filter{
+    .filter-ctl{ display:flex; flex:none; align-items:stretch; }
+    .filter-clear[hidden]{ display:none !important; }
+    .filter-toggle{ flex:none; min-height:40px; padding:0 .85rem; font-family:Georgia,'Times New Roman',serif;
+           font-size:.86rem; line-height:1; cursor:pointer; background:#fff; color:var(--ink);
+           border:1px solid var(--soft); border-radius:8px; box-shadow:0 2px 6px rgba(61,50,41,.08);
+           white-space:nowrap; }
+    .filter-clear{ display:none; min-width:40px; min-height:40px; padding:0 .55rem; font-family:Georgia,'Times New Roman',serif;
+           font-size:1.15rem; line-height:1; cursor:pointer; color:#fff;
+           background:var(--accent); border:1px solid var(--accent); border-left:0;
+           border-radius:0 8px 8px 0; }
+    .filter-ctl.has-filter .filter-toggle{ border-radius:8px 0 0 8px; padding-right:.55rem; }
+    .filter-ctl.has-filter .filter-clear{ display:inline-flex; align-items:center; justify-content:center; }
+    .filter-toggle[aria-expanded="true"], .filter-ctl.has-filter .filter-toggle{
            background:var(--accent); border-color:var(--accent); color:#fff; }
     .jumpnav{ display:none; }
     .filters{ display:none; padding:.15rem 1rem .65rem; gap:.65rem; }
@@ -183,7 +192,10 @@
         <option value="#S24">S24</option>
       </select>
     </label>
-    <button type="button" class="filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="filterPanel">Filter</button>
+    <div class="filter-ctl" id="filterCtl">
+      <button type="button" class="filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="filterPanel"><span id="filterToggleLabel">Filter</span></button>
+      <button type="button" class="filter-clear" id="filterClear" hidden aria-label="Clear filter">&times;</button>
+    </div>
   </div>
   <nav class="jumpnav" aria-label="Jump to a spread">
     <a href="#S01">S01</a>
@@ -223,11 +235,11 @@
     <button class="fchip" data-filter="PASS">PASS</button>
     <button class="fchip" data-filter="PASS with nits">PASS with nits</button>
   </div>
-  <p class="filter-meta" id="filterMeta" hidden>
-    <span class="showing" id="showingLine"></span>
-    <span class="nomatch" id="emptyLine" hidden>No versions match this filter</span>
-  </p>
 </div>
+<p class="filter-meta" id="filterMeta" hidden>
+  <span class="showing" id="showingLine"></span>
+  <span class="nomatch" id="emptyLine" hidden>No versions match this filter</span>
+</p>
 <main class="wrap">
 <section id="S01">
   <h2>S01 &middot; Print pages 4&ndash;5</h2>
@@ -1216,13 +1228,14 @@ function onBarScroll(){
     lastScrollY=window.scrollY;
     return;
   }
-  if(pinned || stickybar.classList.contains('filters-open')){
-    stickybar.classList.remove('bar-hidden');
-    lastScrollY=window.scrollY;
-    return;
-  }
   const y=window.scrollY;
   const delta=y-lastScrollY;
+  if(delta>8) closeFilterPanel();
+  if(pinned){
+    stickybar.classList.remove('bar-hidden');
+    lastScrollY=y;
+    return;
+  }
   const stuck=stickybar.getBoundingClientRect().top<=1;
   if(!stuck || y<8){
     stickybar.classList.remove('bar-hidden');
@@ -1246,6 +1259,15 @@ mobileBar.addEventListener('change', ()=>{
 });
 
 const filterToggle=document.getElementById('filterToggle');
+const filterToggleLabel=document.getElementById('filterToggleLabel');
+const filterClear=document.getElementById('filterClear');
+const filterCtl=document.getElementById('filterCtl');
+function closeFilterPanel(){
+  if(!stickybar.classList.contains('filters-open')) return;
+  stickybar.classList.remove('filters-open');
+  filterToggle.setAttribute('aria-expanded','false');
+  setScrollMargin();
+}
 filterToggle.addEventListener('click', ()=>{
   const open=stickybar.classList.toggle('filters-open');
   filterToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
@@ -1313,22 +1335,39 @@ function applyFilter(name){
   });
   document.querySelectorAll('#sectionJump option').forEach(opt=>{
     if(!opt.value) return;
+    if(!opt.dataset.label) opt.dataset.label=opt.textContent;
     const sec=document.querySelector(opt.value);
-    opt.disabled=!sec || sec.classList.contains('hidden-section');
+    const empty=!sec || sec.classList.contains('hidden-section');
+    const mark=name!=='All' && empty;
+    opt.disabled=mark;
+    opt.textContent=mark ? opt.dataset.label+' (0)' : opt.dataset.label;
   });
   const shown=document.querySelectorAll('main .card:not(.hidden-card)').length;
   const filtering=name!=='All';
   filterMeta.hidden=!filtering;
-  filterToggle.classList.toggle('has-filter', filtering);
+  filterCtl.classList.toggle('has-filter', filtering);
+  filterClear.hidden=!filtering;
+  filterToggleLabel.textContent=filtering ? 'Filter · '+name : 'Filter';
   if(filtering){
     showingLine.textContent='Showing '+shown+' of '+totalCards;
     emptyLine.hidden=shown!==0;
+  }else{
+    showingLine.textContent='';
+    emptyLine.hidden=true;
   }
 }
 chips.forEach(ch=>ch.addEventListener('click',()=>{
   chips.forEach(c=>c.classList.remove('on')); ch.classList.add('on');
   applyFilter(ch.dataset.filter);
+  if(mobileBar.matches) closeFilterPanel();
 }));
+filterClear.addEventListener('click', ()=>{
+  const all=chips.find(c=>c.dataset.filter==='All');
+  chips.forEach(c=>c.classList.remove('on'));
+  all.classList.add('on');
+  applyFilter('All');
+  if(mobileBar.matches) closeFilterPanel();
+});
 
 // ---- As rendered / Print-ready toggle ----
 document.querySelectorAll('.card').forEach(card=>{
