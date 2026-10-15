@@ -262,6 +262,15 @@
   .card[data-maker="trinity"]{ background:#EAF6F1; border-color:#cbe6da; }
   .maker-sw{ display:inline-block; width:1.05rem; height:1.05rem; border-radius:4px; border:1px solid #cfc6b8; vertical-align:-.15rem; margin-right:.3rem; }
   .maker-sw.chatgpt{ background:#fff; } .maker-sw.ravyn{ background:#F1EEF8; border-color:#b9aed6; } .maker-sw.trinity{ background:#EAF6F1; border-color:#9fcfba; }
+  .card .maker-tag{ font-size:.74rem; font-weight:bold; letter-spacing:.03em; text-transform:uppercase;
+           padding:.12rem .5rem; border-radius:20px; border:1px solid #b9aed6; background:#fff; color:#5b4a8a; }
+  .card[data-maker="trinity"] .maker-tag{ border-color:#9fcfba; color:#2f6b52; }
+  #labelGuide .lg-sub{ font-size:1.2rem; margin:1.3rem 0 .6rem; padding-top:1rem; border-top:1px solid var(--soft); }
+  #labelGuide ul.lg-makers{ gap:.5rem; }
+  #labelGuide ul.lg-makers li{ display:flex; align-items:center; gap:.6rem; grid-template-columns:none;
+           font-size:1.05rem; padding-bottom:0; border-bottom:none; }
+  #labelGuide ul.lg-makers .maker-sw{ width:1.4rem; height:1.4rem; margin-right:0; flex:none; }
+  #labelGuide .lg-makers-note{ font-size:1rem; font-style:italic; opacity:.8; margin-top:.7rem; }
 </style>
 </head>
 <body>
@@ -852,7 +861,7 @@
     <article class="card" id="S07-G" data-maker="ravyn" data-status="Option" data-check="Being checked" data-letter="S07-G" data-summary="Ravyn mockup (Grok Bot image tool, not ChatGPT) — scene and layout test recreating S07-B from cast refs. Brighter, glossier look; Harlow less dialed-in than the ChatGPT versions; Chester&#x27;s head rides high into the text sky; 16:9, not 2:1." data-fav-count="0">
       <img class="thumb" src="spread-options/s07-g.jpg" alt="S07-G spread mockup (Ravyn mockup)" loading="lazy" data-render="spread-options/s07-g.jpg" data-print="">
       <div class="body">
-        <div class="titlerow"><div class="lettercol"><span class="letter">S07-G</span><span class="render-id">render: Ravyn mockup</span></div><span class="status st-opt">Option</span><span class="check ck-grey">Being checked</span></div>
+        <div class="titlerow"><div class="lettercol"><span class="letter">S07-G</span><span class="render-id">render: Ravyn mockup</span></div><span class="maker-tag">Mockup</span><span class="status st-opt">Option</span><span class="check ck-grey">Being checked</span></div>
         <p class="summary">Ravyn mockup (Grok Bot image tool, not ChatGPT) — scene and layout test recreating S07-B from cast refs. Brighter, glossier look; Harlow less dialed-in than the ChatGPT versions; Chester&#x27;s head rides high into the text sky; 16:9, not 2:1.</p>
         <p class="facts">Ravyn mockup &middot; made 2026-10-15 with Ravyn&#x27;s own image tool from the cast reference images &middot; layout and mood test; a final would be redone in ChatGPT &middot; S07-F stays reserved for the queued S07-E redo.</p>
       </div>
@@ -1990,10 +1999,14 @@
           <div class="lg-who"><span><span class="fav-dot T" aria-hidden="true">T</span> Trinity</span><span><span class="fav-dot F" aria-hidden="true">F</span> Folio</span><span><span class="fav-dot R" aria-hidden="true">R</span> Ravyn</span><span><span class="fav-dot J" aria-hidden="true">J</span> Jon</span><span><span class="fav-dot L" aria-hidden="true">L</span> Lois (Mom)</span></div></div></li>
       <li><div class="lg-key"><span class="lg-name">&#8216;render:&#8217; line</span><span class="lg-render">render: S01-K</span></div>
         <div>The name the picture had when it was first made, before it got its letter on this page.</div></li>
-      <li><div class="lg-key"><span class="lg-name">Card colour</span><span><span class="maker-sw chatgpt"></span><span class="maker-sw ravyn"></span><span class="maker-sw trinity"></span></span></div>
-        <div>Card colour shows who made the picture: white = ChatGPT, lavender = Ravyn&#x27;s mockup, mint = Trinity&#x27;s mockup. Mockups are quick scene and layout tests; finals are made with ChatGPT.
-          <div style="margin-top:.4rem">Mockups are for layout and mood. A mockup can still be picked, but its final would be redone in ChatGPT.</div></div></li>
     </ul>
+    <h3 class="lg-sub">Who made the picture</h3>
+    <ul class="lg-makers">
+      <li><span class="maker-sw chatgpt" aria-hidden="true"></span><span>White = made by ChatGPT.</span></li>
+      <li><span class="maker-sw ravyn" aria-hidden="true"></span><span>Lavender = made by Ravyn (quick mockup).</span></li>
+      <li><span class="maker-sw trinity" aria-hidden="true"></span><span>Mint = made by Trinity (quick mockup).</span></li>
+    </ul>
+    <p class="lg-makers-note">Mockups are quick scene ideas; the finished page is made with ChatGPT.</p>
   </div>
 </div>
 <script>

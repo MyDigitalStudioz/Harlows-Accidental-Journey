@@ -26,9 +26,10 @@ To link to one card, add its letter as an anchor: `spread-options.html#S05-G`. E
 ## Who made it (card colour)
 
 - Card colour shows who made the picture: white = ChatGPT, lavender = Ravyn's mockup, mint = Trinity's mockup. Mockups are quick scene and layout tests; finals are made with ChatGPT.
-- Mark a mockup card with `data-maker="ravyn"` (light lavender-grey, `#F1EEF8`) or `data-maker="trinity"` (light mint, `#EAF6F1`) on the `<article class="card">`. ChatGPT cards get **no** `data-maker` attribute and stay white. Don't add the attribute to existing cards.
+- Mark a mockup card with `data-maker="ravyn"` (light lavender-grey, `#F1EEF8`) or `data-maker="trinity"` (light mint, `#EAF6F1`) on the `<article class="card">`. Also put `<span class="maker-tag">Mockup</span>` first in the card's status row (before the label), so mockups aren't marked by colour alone. ChatGPT cards get **no** `data-maker` attribute and stay white. Don't add the attribute to existing cards.
 - Mockups are for layout and mood. A mockup can still be picked (dots work the same, and the showcase rules apply as usual), but its final would be redone in ChatGPT.
 - Mockups use the normal labels (usually **Option**, grey **Being checked**) and the `render:` line reads `render: Ravyn mockup` / `render: Trinity mockup`. A mockup image may keep its own shape (e.g. 16:9) instead of 1400×700; the thumbnail crops to 2:1 and the lightbox shows it whole.
+- The label guide has a short **Who made the picture** section: White = made by ChatGPT. Lavender = made by Ravyn (quick mockup). Mint = made by Trinity (quick mockup). "Mockups are quick scene ideas; the finished page is made with ChatGPT." Keep it that short.
 - First mockup: **S07-G** (Ravyn, 2026-10-15). S07-F stays reserved for the queued S07-E redo.
 
 ## The four labels
