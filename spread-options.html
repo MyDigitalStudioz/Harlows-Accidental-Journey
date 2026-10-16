@@ -2901,26 +2901,26 @@ fetch('favorites.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
   .culltag{ display:none; font-size:.78rem; font-weight:bold; padding:.18rem .5rem; border-radius:999px; color:#fff; }
   .card.marked-keep .culltag{ display:inline-block; background:#1d7a4c; }
   .card.marked-remove .culltag{ display:inline-block; background:#b3352c; }
-  #cullbar{ position:fixed; left:0; right:0; bottom:0; z-index:60; background:#f4f0fa; color:#3a3350;
+  #cullbar{ position:fixed; left:0; right:0; bottom:0; z-index:60; background:#f7ecd7; color:#3d3229;
     display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; padding:.42rem .6rem calc(.42rem + env(safe-area-inset-bottom));
-    box-shadow:0 -1px 10px rgba(70,55,120,.18); border-top:1.5px solid #cfc4e4; font-size:.88rem; }
+    box-shadow:0 -1px 10px rgba(61,50,41,.18); border-top:1.5px solid #dcc7a0; font-size:.88rem; }
   #cullbar.hiddenbar{ display:none; }
   #cullpill{ position:fixed; right:.6rem; bottom:calc(.6rem + env(safe-area-inset-bottom)); z-index:60; display:none;
     font:inherit; font-size:.85rem; font-weight:bold; padding:.5rem .8rem; border-radius:999px;
-    border:1.5px solid #6d5ba8; background:#f4f0fa; color:#3a3350; box-shadow:0 2px 10px rgba(70,55,120,.25); cursor:pointer; }
+    border:1.5px solid #b3541e; background:#f7ecd7; color:#3d3229; box-shadow:0 2px 10px rgba(61,50,41,.25); cursor:pointer; }
   #cullpill.show{ display:block; }
   #cullbar .counts{ flex:1 1 11rem; line-height:1.25; }
-  #cullbar button{ font:inherit; font-size:.84rem; padding:.4rem .6rem; border-radius:9px; border:1.5px solid #b7a9d6; background:#fff; color:#3a3350; cursor:pointer; }
-  #cullbar button.primary{ background:#6d5ba8; border-color:#6d5ba8; color:#fff; font-weight:bold; }
-  #cullbar button.fchip.on{ background:#6d5ba8; border-color:#6d5ba8; color:#fff; font-weight:bold; }
+  #cullbar button{ font:inherit; font-size:.84rem; padding:.4rem .6rem; border-radius:9px; border:1.5px solid #d9bd8f; background:#fff; color:#3d3229; cursor:pointer; }
+  #cullbar button.primary{ background:#b3541e; border-color:#b3541e; color:#fff; font-weight:bold; }
+  #cullbar button.fchip.on{ background:#b3541e; border-color:#b3541e; color:#fff; font-weight:bold; }
   body{ padding-bottom:4.8rem; }
   .cullpanel{ position:fixed; inset:0; z-index:70; background:rgba(20,16,10,.72); display:none; align-items:center; justify-content:center; padding:1rem; }
   .cullpanel.open{ display:flex; }
-  .cullpanel .box{ background:#fff; color:#3a3350; border-radius:14px; max-width:34rem; width:100%; padding:1.1rem; max-height:88vh; overflow:auto; }
-  .cullpanel textarea{ width:100%; min-height:8rem; font:inherit; font-size:.92rem; padding:.6rem; border-radius:9px; border:1.5px solid #b7a9d6; }
+  .cullpanel .box{ background:#fff; color:#3d3229; border-radius:14px; max-width:34rem; width:100%; padding:1.1rem; max-height:88vh; overflow:auto; }
+  .cullpanel textarea{ width:100%; min-height:8rem; font:inherit; font-size:.92rem; padding:.6rem; border-radius:9px; border:1.5px solid #d9bd8f; }
   .cullpanel .row{ display:flex; gap:.5rem; margin-top:.7rem; flex-wrap:wrap; }
   .cullpanel .row button{ flex:1; font:inherit; padding:.55rem; border-radius:9px; border:1.5px solid #b9b0a0; background:#fff; cursor:pointer; }
-  .cullpanel .row button.primary{ background:#6d5ba8; border-color:#6d5ba8; color:#fff; font-weight:bold; }
+  .cullpanel .row button.primary{ background:#b3541e; border-color:#b3541e; color:#fff; font-weight:bold; }
   .cullpanel .row button.on{ background:#1d7a4c; border-color:#1d7a4c; color:#fff; font-weight:bold; }
 </style>
 <div id="cullbar" role="region" aria-label="My keep and remove marks">

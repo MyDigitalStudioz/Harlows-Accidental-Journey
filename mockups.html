@@ -333,10 +333,10 @@
   #labelGuide ul.lg-plain li b{ display:block; margin-bottom:.15rem; }
   #labelGuide .lg-sw{ display:inline-flex; gap:.6rem; flex-wrap:wrap; margin-top:.3rem; }
   @media (max-width:640px){
-    .bar-compact{ display:none !important; }
-    .jumpnav{ display:flex; justify-content:center; }
-    .filters{ display:flex; padding:.35rem 1rem .6rem; gap:.45rem; justify-content:center; }
-    .stickybar{ position:static; }
+    .bar-compact{ display:flex !important; }
+    .jumpnav{ display:none; }
+    .filters{ display:none; padding:.35rem 1rem .6rem; gap:.45rem; justify-content:center; }
+    .stickybar.filters-open .filters{ display:flex; }
   }
 </style>
 </head>
@@ -363,9 +363,67 @@
   <button type="button" class="guide-btn guide-btn-hero" data-guide aria-haspopup="dialog" aria-controls="labelGuide">What do these labels mean?</button>
 </header>
 <div class="stickybar" id="stickybar">
+  <div class="bar-compact">
+    <label class="section-pick">Sections
+      <select id="sectionJump" aria-label="Sections">
+        <option value="">Sections…</option>
+        <option value="#COVERS">Covers</option>
+        <option value="#S01">S01</option>
+        <option value="#S02">S02</option>
+        <option value="#S03">S03</option>
+        <option value="#S04">S04</option>
+        <option value="#S05">S05</option>
+        <option value="#S06">S06</option>
+        <option value="#S07">S07</option>
+        <option value="#S08">S08</option>
+        <option value="#S09">S09</option>
+        <option value="#S10">S10</option>
+        <option value="#S11">S11</option>
+        <option value="#S12">S12</option>
+        <option value="#S13">S13</option>
+        <option value="#S14">S14</option>
+        <option value="#S15">S15</option>
+        <option value="#S16">S16</option>
+        <option value="#S17">S17</option>
+        <option value="#S18">S18</option>
+        <option value="#S19">S19</option>
+        <option value="#S20">S20</option>
+        <option value="#S21">S21</option>
+        <option value="#S22">S22</option>
+        <option value="#S23">S23</option>
+        <option value="#S24">S24</option>
+      </select>
+    </label>
+    <div class="filter-ctl" id="filterCtl">
+      <button type="button" class="filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="filterPanel"><span class="filter-mark" aria-hidden="true">&#9662;</span><span id="filterToggleLabel">Filter</span></button>
+    </div>
+  </div>
   <nav class="jumpnav" aria-label="Jump to a spread">
+    <a href="#COVERS">Covers</a>
+    <a href="#S01">S01</a>
+    <a href="#S02">S02</a>
+    <a href="#S03">S03</a>
+    <a href="#S04">S04</a>
+    <a href="#S05">S05</a>
+    <a href="#S06">S06</a>
     <a href="#S07">S07</a>
+    <a href="#S08">S08</a>
+    <a href="#S09">S09</a>
     <a href="#S10">S10</a>
+    <a href="#S11">S11</a>
+    <a href="#S12">S12</a>
+    <a href="#S13">S13</a>
+    <a href="#S14">S14</a>
+    <a href="#S15">S15</a>
+    <a href="#S16">S16</a>
+    <a href="#S17">S17</a>
+    <a href="#S18">S18</a>
+    <a href="#S19">S19</a>
+    <a href="#S20">S20</a>
+    <a href="#S21">S21</a>
+    <a href="#S22">S22</a>
+    <a href="#S23">S23</a>
+    <a href="#S24">S24</a>
   </nav>
   <div class="filters" id="filterPanel" role="group" aria-label="Filter mockups">
     <button class="fchip on" data-filter="All">All</button>
@@ -2814,5 +2872,27 @@ window.addEventListener('load', ()=>{ setScrollMargin(); if(location.hash){ cons
 })();
 </script>
 
+
+<script>
+(function(){
+  var bar = document.getElementById('stickybar');
+  var toggle = document.getElementById('filterToggle');
+  if(bar && toggle){
+    toggle.addEventListener('click', function(){
+      var open = bar.classList.toggle('filters-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+  var jump = document.getElementById('sectionJump');
+  if(jump){
+    jump.addEventListener('change', function(){
+      var val = this.value; if(!val) return;
+      var sec = document.querySelector(val);
+      if(!sec) return;
+      sec.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
+})();
+</script>
 </body>
 </html>
