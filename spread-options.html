@@ -2889,5 +2889,123 @@ fetch('favorites.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
   window.openLabelGuide=openGuide; window.closeLabelGuide=closeGuide;
 })();
 </script>
+<style id="cull-css">
+  .cullrow{ display:flex; gap:.45rem; margin-top:.6rem; }
+  .cullrow button{ flex:1; font:inherit; font-size:.85rem; padding:.42rem .3rem; border-radius:8px; border:1.5px solid #b9b0a0; background:#fff; cursor:pointer; }
+  .cullrow button.on-keep{ background:#1d7a4c; border-color:#1d7a4c; color:#fff; font-weight:bold; }
+  .cullrow button.on-remove{ background:#b3352c; border-color:#b3352c; color:#fff; font-weight:bold; }
+  .card.marked-keep{ outline:3px solid #1d7a4c; outline-offset:-3px; }
+  .card.marked-remove{ outline:3px solid #b3352c; outline-offset:-3px; }
+  .card.marked-remove .mthumb img{ opacity:.45; }
+  .culltag{ display:none; font-size:.78rem; font-weight:bold; padding:.18rem .5rem; border-radius:999px; color:#fff; }
+  .card.marked-keep .culltag{ display:inline-block; background:#1d7a4c; }
+  .card.marked-remove .culltag{ display:inline-block; background:#b3352c; }
+  #cullbar{ position:fixed; left:0; right:0; bottom:0; z-index:60; background:#221d15; color:#f3ead8;
+    display:flex; align-items:center; gap:.6rem; padding:.55rem .8rem calc(.55rem + env(safe-area-inset-bottom));
+    box-shadow:0 -2px 14px rgba(0,0,0,.35); font-size:.92rem; }
+  #cullbar .counts{ flex:1; line-height:1.25; }
+  #cullbar button{ font:inherit; font-size:.88rem; padding:.5rem .8rem; border-radius:9px; border:1.5px solid #c9bfa8; background:#fffdf8; color:#221d15; cursor:pointer; }
+  #cullbar button.primary{ background:#c9a227; border-color:#c9a227; font-weight:bold; }
+  body{ padding-bottom:4.4rem; }
+  #cullpanel{ position:fixed; inset:0; z-index:70; background:rgba(20,16,10,.72); display:none; align-items:center; justify-content:center; padding:1rem; }
+  #cullpanel.open{ display:flex; }
+  #cullpanel .box{ background:#fffdf8; color:#221d15; border-radius:14px; max-width:34rem; width:100%; padding:1.1rem; }
+  #cullpanel textarea{ width:100%; min-height:9rem; font:inherit; font-size:.92rem; padding:.6rem; border-radius:9px; border:1.5px solid #c9bfa8; }
+  #cullpanel .row{ display:flex; gap:.5rem; margin-top:.7rem; }
+  #cullpanel .row button{ flex:1; font:inherit; padding:.55rem; border-radius:9px; border:1.5px solid #b9b0a0; background:#fff; cursor:pointer; }
+  #cullpanel .row button.primary{ background:#c9a227; border-color:#c9a227; font-weight:bold; }
+</style>
+<div id="cullbar" role="region" aria-label="My keep and remove marks">
+  <div class="counts" id="cullcounts">No marks yet — tap Keep or Remove on any card.</div>
+  <button type="button" id="cullcopy" class="primary">Copy my list</button>
+  <button type="button" id="cullclear">Clear marks</button>
+</div>
+<div id="cullpanel" role="dialog" aria-label="Your cull list">
+  <div class="box">
+    <strong>Your list</strong>
+    <p style="margin:.4rem 0 .6rem">Copy this and paste it to Trinity in chat — she'll do the rest.</p>
+    <textarea id="culltext" readonly></textarea>
+    <div class="row">
+      <button type="button" id="cullcopy2" class="primary">Copy</button>
+      <button type="button" id="cullclose">Close</button>
+    </div>
+  </div>
+</div>
+<script id="cull-js">
+(function(){
+  var PAGE = /spread-options/.test(location.pathname) ? "Spread Options page" : "Mockups page";
+  var KEY = "cull::" + location.pathname;
+  var marks = {};
+  try { marks = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { marks = {}; }
+  var countsEl = document.getElementById("cullcounts");
+
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch(e){} }
+  function paint(card){
+    var L = card.getAttribute("data-letter"); var v = marks[L];
+    card.classList.toggle("marked-keep", v === "keep");
+    card.classList.toggle("marked-remove", v === "remove");
+    var tag = card.querySelector(".culltag");
+    if (tag) tag.textContent = v === "keep" ? "✓ Keeping" : (v === "remove" ? "✕ Remove" : "");
+    card.querySelectorAll(".cullrow button").forEach(function(b){
+      b.classList.toggle("on-keep", b.getAttribute("data-act") === "keep" && v === "keep");
+      b.classList.toggle("on-remove", b.getAttribute("data-act") === "remove" && v === "remove");
+    });
+  }
+  function refresh(){
+    var k = [], r = [];
+    Object.keys(marks).forEach(function(L){ (marks[L] === "keep" ? k : r).push(L); });
+    k.sort(); r.sort();
+    countsEl.textContent = (k.length + r.length) === 0
+      ? "No marks yet — tap Keep or Remove on any card."
+      : k.length + " keep" + (k.length === 1 ? "" : "s") + " · " + r.length + " remove" + (r.length === 1 ? "" : "s") + " marked";
+    return { keep: k, remove: r };
+  }
+  function listText(){
+    var s = refresh();
+    var d = new Date();
+    var when = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    var out = ["My cull list — " + PAGE + " — " + when];
+    out.push("REMOVE: " + (s.remove.length ? s.remove.join(", ") : "—"));
+    out.push("KEEP: " + (s.keep.length ? s.keep.join(", ") : "—"));
+    return out.join("\n");
+  }
+  function doCopy(){
+    var t = listText();
+    function show(){ document.getElementById("culltext").value = t; document.getElementById("cullpanel").classList.add("open"); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(show, show);
+    } else { show(); }
+  }
+
+  document.querySelectorAll(".card[data-letter]").forEach(function(card){
+    var body = card.querySelector(".body") || card;
+    var row = document.createElement("div"); row.className = "cullrow";
+    var bk = document.createElement("button"); bk.type = "button"; bk.setAttribute("data-act", "keep"); bk.textContent = "✓ Keep";
+    var br = document.createElement("button"); br.type = "button"; br.setAttribute("data-act", "remove"); br.textContent = "✕ Remove";
+    row.appendChild(bk); row.appendChild(br); body.appendChild(row);
+    var tag = document.createElement("span"); tag.className = "culltag";
+    var title = card.querySelector(".titlerow") || body; title.appendChild(tag);
+    row.addEventListener("click", function(ev){
+      var b = ev.target.closest("button"); if (!b) return;
+      var L = card.getAttribute("data-letter"); var act = b.getAttribute("data-act");
+      if (marks[L] === act) { delete marks[L]; } else { marks[L] = act; }
+      save(); paint(card); refresh();
+    });
+    paint(card);
+  });
+  refresh();
+  document.getElementById("cullcopy").addEventListener("click", doCopy);
+  document.getElementById("cullcopy2").addEventListener("click", doCopy);
+  document.getElementById("cullclose").addEventListener("click", function(){ document.getElementById("cullpanel").classList.remove("open"); });
+  document.getElementById("cullclear").addEventListener("click", function(){
+    if (!Object.keys(marks).length) return;
+    if (!confirm("Clear all your Keep/Remove marks on this page?")) return;
+    marks = {}; save();
+    document.querySelectorAll(".card[data-letter]").forEach(paint);
+    refresh();
+  });
+})();
+</script>
+
 </body>
 </html>
