@@ -2896,48 +2896,95 @@ fetch('favorites.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
   .cullrow button.on-remove{ background:#b3352c; border-color:#b3352c; color:#fff; font-weight:bold; }
   .card.marked-keep{ outline:3px solid #1d7a4c; outline-offset:-3px; }
   .card.marked-remove{ outline:3px solid #b3352c; outline-offset:-3px; }
-  .card.marked-remove .mthumb img{ opacity:.45; }
+  .card.marked-remove .mthumb img, .card.marked-remove > img.thumb{ opacity:.45; }
+  .card.cull-hidden{ display:none; }
   .culltag{ display:none; font-size:.78rem; font-weight:bold; padding:.18rem .5rem; border-radius:999px; color:#fff; }
   .card.marked-keep .culltag{ display:inline-block; background:#1d7a4c; }
   .card.marked-remove .culltag{ display:inline-block; background:#b3352c; }
   #cullbar{ position:fixed; left:0; right:0; bottom:0; z-index:60; background:#221d15; color:#f3ead8;
-    display:flex; align-items:center; gap:.6rem; padding:.55rem .8rem calc(.55rem + env(safe-area-inset-bottom));
-    box-shadow:0 -2px 14px rgba(0,0,0,.35); font-size:.92rem; }
-  #cullbar .counts{ flex:1; line-height:1.25; }
-  #cullbar button{ font:inherit; font-size:.88rem; padding:.5rem .8rem; border-radius:9px; border:1.5px solid #c9bfa8; background:#fffdf8; color:#221d15; cursor:pointer; }
+    display:flex; align-items:center; gap:.45rem; flex-wrap:wrap; padding:.5rem .7rem calc(.5rem + env(safe-area-inset-bottom));
+    box-shadow:0 -2px 14px rgba(0,0,0,.35); font-size:.9rem; }
+  #cullbar .counts{ flex:1 1 11rem; line-height:1.25; }
+  #cullbar button{ font:inherit; font-size:.85rem; padding:.45rem .65rem; border-radius:9px; border:1.5px solid #c9bfa8; background:#fffdf8; color:#221d15; cursor:pointer; }
   #cullbar button.primary{ background:#c9a227; border-color:#c9a227; font-weight:bold; }
-  body{ padding-bottom:4.4rem; }
-  #cullpanel{ position:fixed; inset:0; z-index:70; background:rgba(20,16,10,.72); display:none; align-items:center; justify-content:center; padding:1rem; }
-  #cullpanel.open{ display:flex; }
-  #cullpanel .box{ background:#fffdf8; color:#221d15; border-radius:14px; max-width:34rem; width:100%; padding:1.1rem; }
-  #cullpanel textarea{ width:100%; min-height:9rem; font:inherit; font-size:.92rem; padding:.6rem; border-radius:9px; border:1.5px solid #c9bfa8; }
-  #cullpanel .row{ display:flex; gap:.5rem; margin-top:.7rem; }
-  #cullpanel .row button{ flex:1; font:inherit; padding:.55rem; border-radius:9px; border:1.5px solid #b9b0a0; background:#fff; cursor:pointer; }
-  #cullpanel .row button.primary{ background:#c9a227; border-color:#c9a227; font-weight:bold; }
+  #cullbar button.fchip.on{ background:#756030; border-color:#c9a227; color:#fff; font-weight:bold; }
+  body{ padding-bottom:5.2rem; }
+  .cullpanel{ position:fixed; inset:0; z-index:70; background:rgba(20,16,10,.72); display:none; align-items:center; justify-content:center; padding:1rem; }
+  .cullpanel.open{ display:flex; }
+  .cullpanel .box{ background:#fffdf8; color:#221d15; border-radius:14px; max-width:34rem; width:100%; padding:1.1rem; max-height:88vh; overflow:auto; }
+  .cullpanel textarea{ width:100%; min-height:8rem; font:inherit; font-size:.92rem; padding:.6rem; border-radius:9px; border:1.5px solid #c9bfa8; }
+  .cullpanel .row{ display:flex; gap:.5rem; margin-top:.7rem; flex-wrap:wrap; }
+  .cullpanel .row button{ flex:1; font:inherit; padding:.55rem; border-radius:9px; border:1.5px solid #b9b0a0; background:#fff; cursor:pointer; }
+  .cullpanel .row button.primary{ background:#c9a227; border-color:#c9a227; font-weight:bold; }
+  .cullpanel .row button.on{ background:#1d7a4c; border-color:#1d7a4c; color:#fff; font-weight:bold; }
 </style>
 <div id="cullbar" role="region" aria-label="My keep and remove marks">
   <div class="counts" id="cullcounts">No marks yet — tap Keep or Remove on any card.</div>
-  <button type="button" id="cullcopy" class="primary">Copy my list</button>
-  <button type="button" id="cullclear">Clear marks</button>
+  <button type="button" class="fchip on" data-filter="all">All</button>
+  <button type="button" class="fchip" data-filter="keep">Keeps</button>
+  <button type="button" class="fchip" data-filter="remove">Removes</button>
+  <button type="button" class="fchip" data-filter="unmarked">Unmarked</button>
+  <button type="button" id="cullsend" class="primary">Send my list</button>
+  <button type="button" id="cullrestore">Restore</button>
+  <button type="button" id="cullclear">Clear</button>
 </div>
-<div id="cullpanel" role="dialog" aria-label="Your cull list">
+<div id="cullpanel-send" class="cullpanel" role="dialog" aria-label="Send your cull list">
   <div class="box">
-    <strong>Your list</strong>
-    <p style="margin:.4rem 0 .6rem">Copy this and paste it to Trinity in chat — she'll do the rest.</p>
-    <textarea id="culltext" readonly></textarea>
+    <strong>Send your list</strong>
+    <p style="margin:.4rem 0 .2rem">Who is marking? (remembered on this device)</p>
+    <div class="row" id="cullwho">
+      <button type="button" data-name="Jon">Jon</button>
+      <button type="button" data-name="Lois">Lois</button>
+    </div>
+    <textarea id="culltext" readonly style="margin-top:.7rem"></textarea>
     <div class="row">
-      <button type="button" id="cullcopy2" class="primary">Copy</button>
+      <button type="button" id="cullshare" class="primary">Share…</button>
+      <button type="button" id="cullcopy2">Copy</button>
       <button type="button" id="cullclose">Close</button>
+    </div>
+    <p style="margin:.6rem 0 0; font-size:.85rem; opacity:.75">Send it to Trinity (chat, Messages or Mail). Nothing is removed until the list is sent — and removed cards move to a “Removed” section, letter kept, so a wrong tap can always be undone.</p>
+  </div>
+</div>
+<div id="cullpanel-restore" class="cullpanel" role="dialog" aria-label="Restore marks from a list">
+  <div class="box">
+    <strong>Restore marks from a list</strong>
+    <p style="margin:.4rem 0 .6rem">Paste a list you sent before, and the cards will be marked again on this device.</p>
+    <textarea id="cullrestore-text" placeholder="REMOVE: S03-M2, S07-M4&#10;KEEP: S01-M5"></textarea>
+    <div class="row">
+      <button type="button" id="cullrestore-apply" class="primary">Apply marks</button>
+      <button type="button" id="cullrestore-close">Close</button>
     </div>
   </div>
 </div>
 <script id="cull-js">
 (function(){
-  var PAGE = /spread-options/.test(location.pathname) ? "Spread Options page" : "Mockups page";
+  var BUILD = "2026-10-16";
+  var IS_SO = /spread-options/.test(location.pathname);
+  var PAGE = IS_SO ? "Spread Options page" : "Mockups page";
   var KEY = "cull::" + location.pathname;
+  var NKEY = KEY + "::name";
   var marks = {};
   try { marks = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { marks = {}; }
+  var who = ""; try { who = localStorage.getItem(NKEY) || ""; } catch(e) {}
   var countsEl = document.getElementById("cullcounts");
+  var favByLetter = {}, showingSet = {};
+  fetch("favorites.json", { cache: "no-store" }).then(function(r){ return r.json(); }).then(function(f){
+    var people = IS_SO ? (f.people || {}) : (f.mockup_people || f.mockup_picks_people || {});
+    if (!IS_SO && f.mockup_picks) {
+      // mockup_picks may be { T: [letters], ... } or a people-shaped object
+      people = {};
+      Object.keys(f.mockup_picks).forEach(function(k){
+        var v = f.mockup_picks[k];
+        people[k] = Array.isArray(v) ? { name: k, picks: v } : v;
+      });
+    }
+    Object.keys(people).forEach(function(k){
+      var p = people[k] || {}; var nm = p.name || k;
+      (p.picks || []).forEach(function(L){ (favByLetter[L] = favByLetter[L] || []).push(nm); });
+    });
+    if (IS_SO && f.showing) Object.keys(f.showing).forEach(function(s){ showingSet[f.showing[s]] = true; });
+    refresh();
+  }).catch(function(){});
 
   function save(){ try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch(e){} }
   function paint(card){
@@ -2951,6 +2998,14 @@ fetch('favorites.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
       b.classList.toggle("on-remove", b.getAttribute("data-act") === "remove" && v === "remove");
     });
   }
+  function applyFilter(){
+    var f = document.querySelector("#cullbar .fchip.on").getAttribute("data-filter");
+    document.querySelectorAll(".card[data-letter]").forEach(function(card){
+      var v = marks[card.getAttribute("data-letter")];
+      var show = f === "all" || (f === "keep" && v === "keep") || (f === "remove" && v === "remove") || (f === "unmarked" && !v);
+      card.classList.toggle("cull-hidden", !show);
+    });
+  }
   function refresh(){
     var k = [], r = [];
     Object.keys(marks).forEach(function(L){ (marks[L] === "keep" ? k : r).push(L); });
@@ -2960,21 +3015,25 @@ fetch('favorites.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
       : k.length + " keep" + (k.length === 1 ? "" : "s") + " · " + r.length + " remove" + (r.length === 1 ? "" : "s") + " marked";
     return { keep: k, remove: r };
   }
+  function flag(L){
+    var notes = [];
+    if (favByLetter[L] && favByLetter[L].length) notes.push("has picks: " + favByLetter[L].join(", "));
+    if (showingSet[L]) notes.push("currently showing on the showcase");
+    return notes.length ? " ⚠ " + notes.join("; ") : "";
+  }
   function listText(){
     var s = refresh();
-    var d = new Date();
-    var when = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    var out = ["My cull list — " + PAGE + " — " + when];
-    out.push("REMOVE: " + (s.remove.length ? s.remove.join(", ") : "—"));
+    var when = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    var out = ["Cull list — " + (who || "(name not set)") + " — " + PAGE + " — " + when + " — page build " + BUILD];
+    out.push("REMOVE: " + (s.remove.length ? s.remove.map(function(L){ return L + flag(L); }).join(", ") : "—"));
     out.push("KEEP: " + (s.keep.length ? s.keep.join(", ") : "—"));
     return out.join("\n");
   }
-  function doCopy(){
-    var t = listText();
-    function show(){ document.getElementById("culltext").value = t; document.getElementById("cullpanel").classList.add("open"); }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(t).then(show, show);
-    } else { show(); }
+  function syncWho(){
+    document.querySelectorAll("#cullwho button").forEach(function(b){
+      b.classList.toggle("on", b.getAttribute("data-name") === who);
+    });
+    document.getElementById("culltext").value = listText();
   }
 
   document.querySelectorAll(".card[data-letter]").forEach(function(card){
@@ -2989,20 +3048,62 @@ fetch('favorites.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
       var b = ev.target.closest("button"); if (!b) return;
       var L = card.getAttribute("data-letter"); var act = b.getAttribute("data-act");
       if (marks[L] === act) { delete marks[L]; } else { marks[L] = act; }
-      save(); paint(card); refresh();
+      save(); paint(card); refresh(); applyFilter();
     });
     paint(card);
   });
   refresh();
-  document.getElementById("cullcopy").addEventListener("click", doCopy);
-  document.getElementById("cullcopy2").addEventListener("click", doCopy);
-  document.getElementById("cullclose").addEventListener("click", function(){ document.getElementById("cullpanel").classList.remove("open"); });
+  document.querySelectorAll("#cullbar .fchip").forEach(function(chip){
+    chip.addEventListener("click", function(){
+      document.querySelectorAll("#cullbar .fchip").forEach(function(c){ c.classList.remove("on"); });
+      chip.classList.add("on"); applyFilter();
+    });
+  });
+  document.getElementById("cullsend").addEventListener("click", function(){
+    syncWho(); document.getElementById("cullpanel-send").classList.add("open");
+  });
+  document.querySelectorAll("#cullwho button").forEach(function(b){
+    b.addEventListener("click", function(){
+      who = b.getAttribute("data-name");
+      try { localStorage.setItem(NKEY, who); } catch(e) {}
+      syncWho();
+    });
+  });
+  document.getElementById("cullshare").addEventListener("click", function(){
+    var t = listText();
+    if (navigator.share) { navigator.share({ title: "My cull list", text: t }).catch(function(){}); }
+    else if (navigator.clipboard) { navigator.clipboard.writeText(t).then(function(){ alert("Copied — paste it to Trinity."); }); }
+  });
+  document.getElementById("cullcopy2").addEventListener("click", function(){
+    var t = listText();
+    if (navigator.clipboard) { navigator.clipboard.writeText(t).then(function(){ alert("Copied — paste it to Trinity."); }); }
+  });
+  document.getElementById("cullclose").addEventListener("click", function(){ document.getElementById("cullpanel-send").classList.remove("open"); });
+  document.getElementById("cullrestore").addEventListener("click", function(){ document.getElementById("cullpanel-restore").classList.add("open"); });
+  document.getElementById("cullrestore-close").addEventListener("click", function(){ document.getElementById("cullpanel-restore").classList.remove("open"); });
+  document.getElementById("cullrestore-apply").addEventListener("click", function(){
+    var t = document.getElementById("cullrestore-text").value || "";
+    var applied = 0;
+    t.split(/\n/).forEach(function(line){
+      var m = line.match(/^\s*(REMOVE|KEEP)\s*:\s*(.+)$/i); if (!m) return;
+      var act = m[1].toLowerCase() === "remove" ? "remove" : "keep";
+      m[2].split(",").forEach(function(part){
+        var L = (part.match(/[A-Z]{2}-\d+|[A-Z]+\d*-\d+|S\d\d-[A-Z]+\d*/i) || [part.trim()])[0].trim().toUpperCase();
+        if (L && document.getElementById(L)) { marks[L] = act; applied++; }
+      });
+    });
+    save();
+    document.querySelectorAll(".card[data-letter]").forEach(paint);
+    refresh(); applyFilter();
+    document.getElementById("cullpanel-restore").classList.remove("open");
+    alert(applied ? ("Restored " + applied + " mark" + (applied === 1 ? "" : "s") + ".") : "No matching cards found in that list.");
+  });
   document.getElementById("cullclear").addEventListener("click", function(){
     if (!Object.keys(marks).length) return;
     if (!confirm("Clear all your Keep/Remove marks on this page?")) return;
     marks = {}; save();
     document.querySelectorAll(".card[data-letter]").forEach(paint);
-    refresh();
+    refresh(); applyFilter();
   });
 })();
 </script>
