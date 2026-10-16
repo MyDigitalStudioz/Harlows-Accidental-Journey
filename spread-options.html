@@ -2901,21 +2901,26 @@ fetch('favorites.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
   .culltag{ display:none; font-size:.78rem; font-weight:bold; padding:.18rem .5rem; border-radius:999px; color:#fff; }
   .card.marked-keep .culltag{ display:inline-block; background:#1d7a4c; }
   .card.marked-remove .culltag{ display:inline-block; background:#b3352c; }
-  #cullbar{ position:fixed; left:0; right:0; bottom:0; z-index:60; background:#221d15; color:#f3ead8;
-    display:flex; align-items:center; gap:.45rem; flex-wrap:wrap; padding:.5rem .7rem calc(.5rem + env(safe-area-inset-bottom));
-    box-shadow:0 -2px 14px rgba(0,0,0,.35); font-size:.9rem; }
+  #cullbar{ position:fixed; left:0; right:0; bottom:0; z-index:60; background:#f4f0fa; color:#3a3350;
+    display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; padding:.42rem .6rem calc(.42rem + env(safe-area-inset-bottom));
+    box-shadow:0 -1px 10px rgba(70,55,120,.18); border-top:1.5px solid #cfc4e4; font-size:.88rem; }
+  #cullbar.hiddenbar{ display:none; }
+  #cullpill{ position:fixed; right:.6rem; bottom:calc(.6rem + env(safe-area-inset-bottom)); z-index:60; display:none;
+    font:inherit; font-size:.85rem; font-weight:bold; padding:.5rem .8rem; border-radius:999px;
+    border:1.5px solid #6d5ba8; background:#f4f0fa; color:#3a3350; box-shadow:0 2px 10px rgba(70,55,120,.25); cursor:pointer; }
+  #cullpill.show{ display:block; }
   #cullbar .counts{ flex:1 1 11rem; line-height:1.25; }
-  #cullbar button{ font:inherit; font-size:.85rem; padding:.45rem .65rem; border-radius:9px; border:1.5px solid #c9bfa8; background:#fffdf8; color:#221d15; cursor:pointer; }
-  #cullbar button.primary{ background:#c9a227; border-color:#c9a227; font-weight:bold; }
-  #cullbar button.fchip.on{ background:#756030; border-color:#c9a227; color:#fff; font-weight:bold; }
-  body{ padding-bottom:5.2rem; }
+  #cullbar button{ font:inherit; font-size:.84rem; padding:.4rem .6rem; border-radius:9px; border:1.5px solid #b7a9d6; background:#fff; color:#3a3350; cursor:pointer; }
+  #cullbar button.primary{ background:#6d5ba8; border-color:#6d5ba8; color:#fff; font-weight:bold; }
+  #cullbar button.fchip.on{ background:#6d5ba8; border-color:#6d5ba8; color:#fff; font-weight:bold; }
+  body{ padding-bottom:4.8rem; }
   .cullpanel{ position:fixed; inset:0; z-index:70; background:rgba(20,16,10,.72); display:none; align-items:center; justify-content:center; padding:1rem; }
   .cullpanel.open{ display:flex; }
-  .cullpanel .box{ background:#fffdf8; color:#221d15; border-radius:14px; max-width:34rem; width:100%; padding:1.1rem; max-height:88vh; overflow:auto; }
-  .cullpanel textarea{ width:100%; min-height:8rem; font:inherit; font-size:.92rem; padding:.6rem; border-radius:9px; border:1.5px solid #c9bfa8; }
+  .cullpanel .box{ background:#fff; color:#3a3350; border-radius:14px; max-width:34rem; width:100%; padding:1.1rem; max-height:88vh; overflow:auto; }
+  .cullpanel textarea{ width:100%; min-height:8rem; font:inherit; font-size:.92rem; padding:.6rem; border-radius:9px; border:1.5px solid #b7a9d6; }
   .cullpanel .row{ display:flex; gap:.5rem; margin-top:.7rem; flex-wrap:wrap; }
   .cullpanel .row button{ flex:1; font:inherit; padding:.55rem; border-radius:9px; border:1.5px solid #b9b0a0; background:#fff; cursor:pointer; }
-  .cullpanel .row button.primary{ background:#c9a227; border-color:#c9a227; font-weight:bold; }
+  .cullpanel .row button.primary{ background:#6d5ba8; border-color:#6d5ba8; color:#fff; font-weight:bold; }
   .cullpanel .row button.on{ background:#1d7a4c; border-color:#1d7a4c; color:#fff; font-weight:bold; }
 </style>
 <div id="cullbar" role="region" aria-label="My keep and remove marks">
@@ -2927,7 +2932,9 @@ fetch('favorites.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
   <button type="button" id="cullsend" class="primary">Send my list</button>
   <button type="button" id="cullrestore">Restore</button>
   <button type="button" id="cullclear">Clear</button>
+  <button type="button" id="cullhide">Hide ▾</button>
 </div>
+<button type="button" id="cullpill">✓✕ Cull tools</button>
 <div id="cullpanel-send" class="cullpanel" role="dialog" aria-label="Send your cull list">
   <div class="box">
     <strong>Send your list</strong>
@@ -3098,6 +3105,19 @@ fetch('favorites.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
     document.getElementById("cullpanel-restore").classList.remove("open");
     alert(applied ? ("Restored " + applied + " mark" + (applied === 1 ? "" : "s") + ".") : "No matching cards found in that list.");
   });
+  var bar = document.getElementById("cullbar"), pill = document.getElementById("cullpill");
+  var HKEY = KEY + "::hidden";
+  function setHidden(h){
+    bar.classList.toggle("hiddenbar", h);
+    var s = refresh();
+    pill.textContent = "✓✕ Cull (" + (s.keep.length + s.remove.length) + " marked)";
+    pill.classList.toggle("show", h);
+    try { localStorage.setItem(HKEY, h ? "1" : ""); } catch(e){}
+  }
+  document.getElementById("cullhide").addEventListener("click", function(){ setHidden(true); });
+  pill.addEventListener("click", function(){ setHidden(false); });
+  var startHidden = false; try { startHidden = !!localStorage.getItem(HKEY); } catch(e){}
+  setHidden(startHidden);
   document.getElementById("cullclear").addEventListener("click", function(){
     if (!Object.keys(marks).length) return;
     if (!confirm("Clear all your Keep/Remove marks on this page?")) return;
