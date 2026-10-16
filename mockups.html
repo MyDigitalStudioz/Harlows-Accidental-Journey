@@ -259,13 +259,16 @@
   /* Who made the picture: white = ChatGPT (no attribute), tints = mockups */
   .card[data-maker="ravyn"]{ background:#F1EEF8; border-color:#d9d2ea; }
   .card[data-maker="trinity"]{ background:#EAF6F1; border-color:#cbe6da; }
+  [data-maker="trinity2"]{ background:#C9EDDC; border-color:#9fd8bd; }
   .card[data-maker="openai"]{ background:#fffdf8; border-color:#ddd6c9; }
   .maker-sw{ display:inline-block; width:1.05rem; height:1.05rem; border-radius:4px; border:1px solid #cfc6b8; vertical-align:-.15rem; margin-right:.3rem; }
   .maker-sw.chatgpt{ background:#fff; } .maker-sw.ravyn{ background:#F1EEF8; border-color:#b9aed6; } .maker-sw.trinity{ background:#EAF6F1; border-color:#9fcfba; }
+.maker-sw.trinity2{ background:#C9EDDC; border-color:#6fb894; }
 .maker-sw.openai{ background:#fffdf8; border:1px solid #c9bfa8; }
   .card .maker-tag{ font-size:.74rem; font-weight:bold; letter-spacing:.03em; text-transform:uppercase;
            padding:.12rem .5rem; border-radius:20px; border:1px solid #b9aed6; background:#fff; color:#5b4a8a; }
   .card[data-maker="trinity"] .maker-tag{ border-color:#9fcfba; color:#2f6b52; }
+  [data-maker="trinity2"] .maker-tag{ border-color:#6fb894; color:#1d5c40; }
   #labelGuide .lg-sub{ font-size:1.2rem; margin:1.3rem 0 .6rem; padding-top:1rem; border-top:1px solid var(--soft); }
   #labelGuide ul.lg-makers{ gap:.5rem; }
   #labelGuide ul.lg-makers li{ display:flex; align-items:center; gap:.6rem; grid-template-columns:none;
@@ -560,7 +563,7 @@
   </section>
 <section id="S01">
   <h2>S01 &middot; Print pages 4&ndash;5</h2>
-  <p class="hint">4 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S01">see the S01 versions on Spread Options</a>.</p>
+  <p class="hint">6 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S01">see the S01 versions on Spread Options</a>.</p>
   <div class="grid">
     <article class="card" id="S01-M1" data-maker="trinity" data-kind="mockup" data-letter="S01-M1" data-check="Being checked" data-final="" data-summary="Porch morning, first take: painted sky band reads as a flat cream pad (19% top), chin-scratch beat not yet in. Layout scout only.">
       <div class="mthumb"><img class="thumb" src="mockups/s01-m1.jpg" alt="S01-M1 scene mockup by Trinity" loading="lazy" data-render="mockups/s01-m1.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
@@ -602,12 +605,32 @@
         <p class="facts">Made by Trinity 2026-10-15 with Trinity&#x27;s image tool from the cast reference images + Lois&#x27;s own page reference &middot; finish not representative &mdash; finals are painted separately &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
       </div>
     </article>
+    <article class="card" id="S01-M5" data-maker="trinity2" data-kind="mockup" data-letter="S01-M5" data-check="Being checked" data-final="" data-summary="Opening porch, recipe run: Lois in the doorway, Harlow looking up at her, empty picket fence, bowl on the boards.">
+      <div class="mthumb"><img class="thumb" src="mockups/s01-m5.jpg" alt="S01-M5 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s01-m5.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S01-M5</span><span class="render-id">render: S01-RA (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Opening porch, recipe run: Lois in the doorway, Harlow looking up at her, empty picket fence, bowl on the boards.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
+    <article class="card" id="S01-M6" data-maker="trinity2" data-kind="mockup" data-letter="S01-M6" data-check="Being checked" data-final="" data-summary="Same porch a moment later: Harlow mid-stretch with a playful grin, Lois laughing in the doorway.">
+      <div class="mthumb"><img class="thumb" src="mockups/s01-m6.jpg" alt="S01-M6 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s01-m6.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S01-M6</span><span class="render-id">render: S01-RB (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Same porch a moment later: Harlow mid-stretch with a playful grin, Lois laughing in the doorway.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
   </div>
 </section>
 
 <section id="S02">
   <h2>S02 &middot; Print pages 6&ndash;7</h2>
-  <p class="hint">4 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S02">see the S02 versions on Spread Options</a>.</p>
+  <p class="hint">6 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S02">see the S02 versions on Spread Options</a>.</p>
   <div class="grid">
     <article class="card" id="S02-M1" data-maker="trinity" data-kind="mockup" data-letter="S02-M1" data-check="Being checked" data-final="" data-summary="The hop-in: Lois laughing left, Harlow mid-hop into the blue-gray Mustang interior right, both clear of the middle. Ravyn carries this one forward — badges to remove at final stage.">
       <div class="mthumb"><img class="thumb" src="mockups/s02-m1.jpg" alt="S02-M1 scene mockup by Trinity" loading="lazy" data-render="mockups/s02-m1.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
@@ -649,12 +672,32 @@
         <p class="facts">Made by Trinity 2026-10-15 with Trinity&#x27;s image tool from the cast reference images + Lois&#x27;s own page reference &middot; finish not representative &mdash; finals are painted separately &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
       </div>
     </article>
+    <article class="card" id="S02-M5" data-maker="trinity2" data-kind="mockup" data-letter="S02-M5" data-check="Being checked" data-final="" data-summary="Mustang ride, recipe run: Lois driving the pale-blue convertible, Harlow riding tall in the passenger seat, ears streaming. Interior pale silvery blue-gray, as locked.">
+      <div class="mthumb"><img class="thumb" src="mockups/s02-m5.jpg" alt="S02-M5 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s02-m5.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S02-M5</span><span class="render-id">render: S02-RA (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Mustang ride, recipe run: Lois driving the pale-blue convertible, Harlow riding tall in the passenger seat, ears streaming. Interior pale silvery blue-gray, as locked.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
+    <article class="card" id="S02-M6" data-maker="trinity2" data-kind="mockup" data-letter="S02-M6" data-check="Being checked" data-final="" data-summary="Head-on through the windshield: Lois waving big, Harlow deadpan beside her.">
+      <div class="mthumb"><img class="thumb" src="mockups/s02-m6.jpg" alt="S02-M6 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s02-m6.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S02-M6</span><span class="render-id">render: S02-RB (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Head-on through the windshield: Lois waving big, Harlow deadpan beside her.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
   </div>
 </section>
 
 <section id="S03">
   <h2>S03 &middot; Print pages 8&ndash;9</h2>
-  <p class="hint">3 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S03">see the S03 versions on Spread Options</a>.</p>
+  <p class="hint">5 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S03">see the S03 versions on Spread Options</a>.</p>
   <div class="grid">
     <article class="card" id="S03-M1" data-maker="trinity" data-kind="mockup" data-letter="S03-M1" data-check="Being checked" data-final="" data-summary="Strawberry stand with Nero awake and an extra cat — drift; superseded by TM3.">
       <div class="mthumb"><img class="thumb" src="mockups/s03-m1.jpg" alt="S03-M1 scene mockup by Trinity" loading="lazy" data-render="mockups/s03-m1.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
@@ -686,12 +729,32 @@
         <p class="facts">Made by Trinity 2026-10-15 with Trinity&#x27;s image tool from the cast reference images + Lois&#x27;s own page reference &middot; finish not representative &mdash; finals are painted separately &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
       </div>
     </article>
+    <article class="card" id="S03-M4" data-maker="trinity2" data-kind="mockup" data-letter="S03-M4" data-check="Being checked" data-final="" data-summary="Farm stand, recipe run: Harlow sneaking a strawberry with a guilty side-glance, Lois laughing, Nero asleep on a crate.">
+      <div class="mthumb"><img class="thumb" src="mockups/s03-m4.jpg" alt="S03-M4 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s03-m4.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S03-M4</span><span class="render-id">render: S03-RA (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Farm stand, recipe run: Harlow sneaking a strawberry with a guilty side-glance, Lois laughing, Nero asleep on a crate.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
+    <article class="card" id="S03-M5" data-maker="trinity2" data-kind="mockup" data-letter="S03-M5" data-check="Being checked" data-final="" data-summary="Harlow hidden in the tomato crate, Nero asleep on the lid, Lois looking around for him.">
+      <div class="mthumb"><img class="thumb" src="mockups/s03-m5.jpg" alt="S03-M5 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s03-m5.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S03-M5</span><span class="render-id">render: S03-RB (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Harlow hidden in the tomato crate, Nero asleep on the lid, Lois looking around for him.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
   </div>
 </section>
 
 <section id="S04">
   <h2>S04 &middot; Print pages 10&ndash;11</h2>
-  <p class="hint">3 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S04">see the S04 versions on Spread Options</a>.</p>
+  <p class="hint">5 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S04">see the S04 versions on Spread Options</a>.</p>
   <div class="grid">
     <article class="card" id="S04-M1" data-maker="trinity" data-kind="mockup" data-letter="S04-M1" data-check="Being checked" data-final="" data-summary="Mud-garden jump-back, first take; cream pad at top. TM3 carries it cleaner.">
       <div class="mthumb"><img class="thumb" src="mockups/s04-m1.jpg" alt="S04-M1 scene mockup by Trinity" loading="lazy" data-render="mockups/s04-m1.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
@@ -723,12 +786,32 @@
         <p class="facts">Made by Trinity 2026-10-15 with Trinity&#x27;s image tool from the cast reference images + Lois&#x27;s own page reference &middot; finish not representative &mdash; finals are painted separately &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
       </div>
     </article>
+    <article class="card" id="S04-M4" data-maker="trinity2" data-kind="mockup" data-letter="S04-M4" data-check="Being checked" data-final="" data-summary="Mud puddle, recipe run: Sweet Pea wallowing blissfully, Harlow horrified at the edge — this fur does not do mud.">
+      <div class="mthumb"><img class="thumb" src="mockups/s04-m4.jpg" alt="S04-M4 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s04-m4.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S04-M4</span><span class="render-id">render: S04-RA (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Mud puddle, recipe run: Sweet Pea wallowing blissfully, Harlow horrified at the edge — this fur does not do mud.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
+    <article class="card" id="S04-M5" data-maker="trinity2" data-kind="mockup" data-letter="S04-M5" data-check="Being checked" data-final="" data-summary="Harlow mid shake-off at the puddle edge, Sweet Pea cheering from the mud.">
+      <div class="mthumb"><img class="thumb" src="mockups/s04-m5.jpg" alt="S04-M5 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s04-m5.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S04-M5</span><span class="render-id">render: S04-RB (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Harlow mid shake-off at the puddle edge, Sweet Pea cheering from the mud.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
   </div>
 </section>
 
 <section id="S05">
   <h2>S05 &middot; Print pages 12&ndash;13</h2>
-  <p class="hint">3 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S05">see the S05 versions on Spread Options</a>.</p>
+  <p class="hint">5 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S05">see the S05 versions on Spread Options</a>.</p>
   <div class="grid">
     <article class="card" id="S05-M1" data-maker="trinity" data-kind="mockup" data-letter="S05-M1" data-check="Being checked" data-final="" data-summary="Pond wash, face-splash beat; cream pad at top. Strong direction, TM3 refines it.">
       <div class="mthumb"><img class="thumb" src="mockups/s05-m1.jpg" alt="S05-M1 scene mockup by Trinity" loading="lazy" data-render="mockups/s05-m1.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
@@ -760,12 +843,32 @@
         <p class="facts">Made by Trinity 2026-10-15 with Trinity&#x27;s image tool from the cast reference images + Lois&#x27;s own page reference &middot; finish not representative &mdash; finals are painted separately &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
       </div>
     </article>
+    <article class="card" id="S05-M4" data-maker="trinity2" data-kind="mockup" data-letter="S05-M4" data-check="Being checked" data-final="" data-summary="Pond, recipe run: Fiona (emerald head) leading her three ducklings — bow on the small front one — Harlow splashing in the shallows.">
+      <div class="mthumb"><img class="thumb" src="mockups/s05-m4.jpg" alt="S05-M4 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s05-m4.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S05-M4</span><span class="render-id">render: S05-RA (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Pond, recipe run: Fiona (emerald head) leading her three ducklings — bow on the small front one — Harlow splashing in the shallows.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
+    <article class="card" id="S05-M5" data-maker="trinity2" data-kind="mockup" data-letter="S05-M5" data-check="Being checked" data-final="" data-summary="Harlow in a full soak-and-shake at the pond, Fiona calmly amused, ducklings beside her.">
+      <div class="mthumb"><img class="thumb" src="mockups/s05-m5.jpg" alt="S05-M5 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s05-m5.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S05-M5</span><span class="render-id">render: S05-RB (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Harlow in a full soak-and-shake at the pond, Fiona calmly amused, ducklings beside her.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
   </div>
 </section>
 
 <section id="S06">
   <h2>S06 &middot; Print pages 14&ndash;15</h2>
-  <p class="hint">3 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S06">see the S06 versions on Spread Options</a>.</p>
+  <p class="hint">5 mockups over two rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S06">see the S06 versions on Spread Options</a>.</p>
   <div class="grid">
     <article class="card" id="S06-M1" data-maker="trinity" data-kind="mockup" data-letter="S06-M1" data-check="Being checked" data-final="" data-summary="Nose-to-nose in the pasture: Molly brown, Albie white, Dallas small — the family reads right. Fold checked clean.">
       <div class="mthumb"><img class="thumb" src="mockups/s06-m1.jpg" alt="S06-M1 scene mockup by Trinity" loading="lazy" data-render="mockups/s06-m1.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
@@ -797,12 +900,32 @@
         <p class="facts">Made by Trinity 2026-10-15 with Trinity&#x27;s image tool from the cast reference images + Lois&#x27;s own page reference &middot; finish not representative &mdash; finals are painted separately &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
       </div>
     </article>
+    <article class="card" id="S06-M4" data-maker="trinity2" data-kind="mockup" data-letter="S06-M4" data-check="Being checked" data-final="" data-summary="Donkeys, recipe run: adult Molly chuckling, Albie in front of her, Harlow listening at left, tiny Dallas at her feet, windmill low left.">
+      <div class="mthumb"><img class="thumb" src="mockups/s06-m4.jpg" alt="S06-M4 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s06-m4.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S06-M4</span><span class="render-id">render: S06-RA (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Donkeys, recipe run: adult Molly chuckling, Albie in front of her, Harlow listening at left, tiny Dallas at her feet, windmill low left.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
+    <article class="card" id="S06-M5" data-maker="trinity2" data-kind="mockup" data-letter="S06-M5" data-check="Being checked" data-final="" data-summary="Nose-to-nose on the left page: Harlow and Molly, Albie peeking between the legs of Molly, Dallas tiny at right.">
+      <div class="mthumb"><img class="thumb" src="mockups/s06-m5.jpg" alt="S06-M5 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s06-m5.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S06-M5</span><span class="render-id">render: S06-RB (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Nose-to-nose on the left page: Harlow and Molly, Albie peeking between the legs of Molly, Dallas tiny at right.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
   </div>
 </section>
 
 <section id="S07">
   <h2>S07 &middot; Chester&#8217;s Chuckle &middot; Print pages 16&ndash;17</h2>
-  <p class="hint">7 mockups over four rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S07">see the S07 versions on Spread Options</a>.</p>
+  <p class="hint">9 mockups over four rounds (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S07">see the S07 versions on Spread Options</a>.</p>
   <div class="grid">
     <article class="card" id="S07-M1" data-maker="ravyn" data-kind="mockup" data-letter="S07-M1" data-check="Being checked" data-final="" data-summary="Ravyn mockup — scene and layout test recreating S07-B from the cast refs. Likeness is rough by design. Brighter, glossier look; Chester&#x27;s head rides high into the text sky; made 16:9, so the dashed box shows the 2:1 page.">
       <div class="mthumb"><img class="thumb" src="mockups/s07-m1.jpg" alt="S07-M1 scene mockup by Ravyn" loading="lazy" data-render="mockups/s07-m1.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
@@ -874,12 +997,32 @@
         <p class="facts">Made by Trinity 2026-10-15 with Trinity&#x27;s image tool from the cast reference images + Lois&#x27;s own page reference &middot; finish not representative &mdash; finals are painted separately &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
       </div>
     </article>
+    <article class="card" id="S07-M8" data-maker="trinity2" data-kind="mockup" data-letter="S07-M8" data-check="Being checked" data-final="" data-summary="Pasture fence, recipe run: the head of Chester low and small over the rail toward Harlow, Dynamite tiny in the far background.">
+      <div class="mthumb"><img class="thumb" src="mockups/s07-m8.jpg" alt="S07-M8 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s07-m8.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S07-M8</span><span class="render-id">render: S07-RA (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Pasture fence, recipe run: the head of Chester low and small over the rail toward Harlow, Dynamite tiny in the far background.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
+    <article class="card" id="S07-M9" data-maker="trinity2" data-kind="mockup" data-letter="S07-M9" data-check="Being checked" data-final="" data-summary="Harlow on the bottom rail of the fence chuckling up at Chester, head resting low over the top rail.">
+      <div class="mthumb"><img class="thumb" src="mockups/s07-m9.jpg" alt="S07-M9 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s07-m9.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S07-M9</span><span class="render-id">render: S07-RB (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Harlow on the bottom rail of the fence chuckling up at Chester, head resting low over the top rail.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
   </div>
 </section>
 
 <section id="S08">
   <h2>S08 &middot; Print pages 18&ndash;19</h2>
-  <p class="hint">5 mockups over one round (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S08">see the S08 versions on Spread Options</a>.</p>
+  <p class="hint">7 mockups over one round (cap 2&ndash;3 per round) &mdash; <a href="spread-options.html#S08">see the S08 versions on Spread Options</a>.</p>
   <div class="grid">
     <article class="card" id="S08-M1" data-maker="trinity" data-kind="mockup" data-letter="S08-M1" data-check="Being checked" data-final="" data-summary="Truck day, first take: door lettering lands on the fold. TM3/TM4 fix the geometry.">
       <div class="mthumb"><img class="thumb" src="mockups/s08-m1.jpg" alt="S08-M1 scene mockup by Trinity" loading="lazy" data-render="mockups/s08-m1.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
@@ -929,6 +1072,26 @@
         <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
         <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
         <p class="facts">Made by Trinity 2026-10-15 with Trinity&#x27;s image tool from the cast reference images + Lois&#x27;s own page reference &middot; finish not representative &mdash; finals are painted separately &middot; layout-only check (fold, text sky, edges) &middot; a final would be made in ChatGPT.</p>
+      </div>
+    </article>
+    <article class="card" id="S08-M6" data-maker="trinity2" data-kind="mockup" data-letter="S08-M6" data-check="Being checked" data-final="" data-summary="Farrelli truck, recipe run: Paco by the truck, Harlow peeking from a bed crate, Farrelli Farms lettering on the door — the one place lettering belongs.">
+      <div class="mthumb"><img class="thumb" src="mockups/s08-m6.jpg" alt="S08-M6 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s08-m6.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S08-M6</span><span class="render-id">render: S08-RA (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Farrelli truck, recipe run: Paco by the truck, Harlow peeking from a bed crate, Farrelli Farms lettering on the door — the one place lettering belongs.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
+      </div>
+    </article>
+    <article class="card" id="S08-M7" data-maker="trinity2" data-kind="mockup" data-letter="S08-M7" data-check="Being checked" data-final="" data-summary="Wrong Ride energy: Harlow popping out of the rear crate with an uh-oh face as the truck rolls, Paco trotting alongside.">
+      <div class="mthumb"><img class="thumb" src="mockups/s08-m7.jpg" alt="S08-M7 recipe-run spread by Trinity" loading="lazy" data-render="mockups/s08-m7.jpg"><div class="crop-guide on" aria-hidden="true"><span class="crop-label">2:1 page</span></div></div>
+      <div class="body">
+        <div class="titlerow"><div class="lettercol"><span class="letter">S08-M7</span><span class="render-id">render: S08-RB (Trinity recipe run)</span></div><span class="maker-tag">Recipe run</span><span class="check ck-grey">Being checked</span></div>
+        <p class="summary">Wrong Ride energy: Harlow popping out of the rear crate with an uh-oh face as the truck rolls, Paco trotting alongside.</p>
+        <p class="final-slot" data-final-slot>See the final: <span class="none">not made yet</span></p>
+        <button type="button" class="crop-toggle" aria-pressed="true">Hide crop guide</button>
+        <p class="facts">Made by Trinity 2026-10-16 with Trinity&#x27;s image tool, from the approved character portraits + the exact character recipes &middot; this run&#x27;s finish is the point &mdash; judge it like a real version &middot; layout check (fold, text sky, edges) still applies</p>
       </div>
     </article>
   </div>
@@ -1678,7 +1841,7 @@
     <ul class="lg-plain">
       <li><b>What a mockup is</b>A quick scene idea to try out the layout: where everyone stands and how the page feels. Faces and fur are rough by design.</li>
       <li><b>Who made it</b>The card color tells you.
-        <span class="lg-sw"><span><span class="maker-sw ravyn" aria-hidden="true"></span>Lavender = made by Ravyn</span><span><span class="maker-sw trinity" aria-hidden="true"></span>Mint = made by Trinity</span><span><span class="maker-sw openai" aria-hidden="true"></span>White = made with OpenAI (via Codex)</span></span></li>
+        <span class="lg-sw"><span><span class="maker-sw ravyn" aria-hidden="true"></span>Lavender = made by Ravyn</span><span><span class="maker-sw trinity" aria-hidden="true"></span>Mint = made by Trinity</span><span><span class="maker-sw trinity2" aria-hidden="true"></span>Darker mint = Trinity&#x27;s new recipe run (Oct 16) &mdash; made from the approved portraits + the exact character recipes</span><span><span class="maker-sw openai" aria-hidden="true"></span>White = made with OpenAI (via Codex)</span></span></li>
       <li><b>Finals</b>The finished page is always made with ChatGPT. When a mockup has one, its card shows a &#8220;See the final&#8221; link.</li>
       <li><b>How many</b>At most 2&ndash;3 mockups per spread in each round, so the page stays easy to look through.</li>
       <li><b>Checks</b>Mockups only get layout checks: nothing important in the middle fold, room in the sky for the words, and nothing cut off at the edges.
