@@ -3328,15 +3328,16 @@ function txBuild(card){
   const ov = document.createElement('div');
   ov.className = 'text-overlay';
   let inner = '<div class="tx-band" style="height:' + T.g + '%"></div>';
-  const mk = (txt, style) => '<div class="tx-page" style="' + style + '">' + txt.replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</div>';
+  const esc = (s) => s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const mk = (lines, style) => '<div class="tx-page" style="' + style + '">' + lines.map(esc).join('<br>') + '</div>';
   if(T.m === 'S15'){
     const lines = txLines(m[1], 0.38);
-    inner += mk(lines.join('<br>'), 'left:57.5%;width:38%;top:3%');
+    inner += mk(lines, 'left:57.5%;width:38%;top:3%');
   } else {
     const lines = txLines(m[1], 0.445);
-    if(T.m === 'L' || T.m === 'LR') inner += mk(lines.slice(0, T.m === 'L' ? lines.length : T.ll).join('<br>'), 'left:2.5%;width:44.5%;top:5.9%');
-    if(T.m === 'R') inner += mk(lines.join('<br>'), 'left:53%;width:44.5%;top:5.9%');
-    if(T.m === 'LR') inner += mk(lines.slice(T.ll).join('<br>'), 'left:53%;width:44.5%;top:5.9%');
+    if(T.m === 'L' || T.m === 'LR') inner += mk(lines.slice(0, T.m === 'L' ? lines.length : T.ll), 'left:2.5%;width:44.5%;top:5.9%');
+    if(T.m === 'R') inner += mk(lines, 'left:53%;width:44.5%;top:5.9%');
+    if(T.m === 'LR') inner += mk(lines.slice(T.ll), 'left:53%;width:44.5%;top:5.9%');
   }
   ov.innerHTML = inner;
   wrap.appendChild(ov);
