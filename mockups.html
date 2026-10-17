@@ -3641,10 +3641,10 @@ function txBuild(card){
     const lines = txLines(m[1], 0.38);
     inner += mk(lines, 'left:57.5%;width:38%;top:3%');
   } else {
-    const lines = txLines(m[1], 0.445);
-    if(T.m === 'L' || T.m === 'LR') inner += mk(lines.slice(0, T.m === 'L' ? lines.length : T.ll), 'left:2.5%;width:44.5%;top:5.9%');
-    if(T.m === 'R') inner += mk(lines, 'left:53%;width:44.5%;top:5.9%');
-    if(T.m === 'LR') inner += mk(lines.slice(T.ll), 'left:53%;width:44.5%;top:5.9%');
+    const lines = txLines(m[1], 0.4412);
+    if(T.m === 'L' || T.m === 'LR') inner += mk(lines.slice(0, T.m === 'L' ? lines.length : T.ll), 'left:2.94%;width:44.12%;top:5.9%');
+    if(T.m === 'R') inner += mk(lines, 'left:52.94%;width:44.12%;top:5.9%');
+    if(T.m === 'LR') inner += mk(lines.slice(T.ll), 'left:52.94%;width:44.12%;top:5.9%');
   }
   ov.innerHTML = inner;
   thumb.appendChild(ov);
@@ -3660,7 +3660,7 @@ document.querySelectorAll('.card').forEach(c => {
   b.textContent = 'Show text';
   cropBtn.after(b);
   b.addEventListener('click', async () => {
-    try { await document.fonts.ready; } catch(e) {}
+    try { await document.fonts.load('17px Andika'); await document.fonts.ready; } catch(e) {}
     txBuild(c);
     const ov = c.querySelector('.text-overlay');
     if(!ov) return;
