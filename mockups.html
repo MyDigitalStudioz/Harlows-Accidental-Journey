@@ -154,7 +154,7 @@
   .fav-dot.F{ background:#7c3aed; }
   .fav-dot.R{ background:#1a1a1a; }
   .fav-dot.J{ background:#c9a227; color:#1a1408; }
-  .fav-dot.L{ background:#e11d48; }
+  .fav-dot.L{ background:#e11d48; }   .fav-dot.P{ background:#2563eb; }
   .filters.fav-filters{ padding-top:0; border-top:none; }
   .fchip.fav{ border-style:dashed; }
   @media (max-width:640px){
@@ -366,7 +366,7 @@
     <span class="fk"><span class="fav-dot F" aria-hidden="true">F</span> Folio</span>
     <span class="fk"><span class="fav-dot R" aria-hidden="true">R</span> Ravyn</span>
     <span class="fk"><span class="fav-dot J" aria-hidden="true">J</span> Jon</span>
-    <span class="fk"><span class="fav-dot L" aria-hidden="true">L</span> Lois</span>
+    <span class="fk"><span class="fav-dot L" aria-hidden="true">L</span> Lois</span>     <span class="fk"><span class="fav-dot P" aria-hidden="true">P</span> Pixel</span>
     <span class="fav-key-note">Dots here = which scene ideas people like (helps choose what to make as a final). They don&#8217;t change the showcase.</span>
   </div>
   <button type="button" class="guide-btn guide-btn-hero" data-guide aria-haspopup="dialog" aria-controls="labelGuide">What do these labels mean?</button>
@@ -3369,7 +3369,7 @@ document.querySelectorAll('.card[data-kind="mockup"]').forEach(c=>{
 });
 // ---- Filters ----
 const FAVORITES={};
-const FAV_ORDER=['T','F','R','J','L'];
+const FAV_ORDER=['T','F','R','J','L','P'];
 const chips=[...document.querySelectorAll('.fchip')];
 const filterMeta=document.getElementById('filterMeta'), showingLine=document.getElementById('showingLine'), emptyLine=document.getElementById('emptyLine');
 const totalCards=document.querySelectorAll('main .card').length;
@@ -3405,7 +3405,7 @@ function renderFavDots(){
     body.appendChild(d);
   });
 }
-const NAMES={T:'Trinity',F:'Folio',R:'Ravyn',J:'Jon',L:'Lois'};
+const NAMES={T:'Trinity',F:'Folio',R:'Ravyn',J:'Jon',L:'Lois',P:'Pixel'};
 fetch('favorites.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
   if(!j) return; const mp=j.mockup_picks||{};
   FAV_ORDER.forEach(w=>{ FAVORITES[w]=Array.isArray(mp[w])?mp[w]:[]; });
