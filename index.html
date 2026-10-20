@@ -368,6 +368,15 @@
     <p class="hint">Tap any spread to view it big &mdash; then tap the large arrow buttons on the sides to move through them.</p>
     <p class="hint">Want to compare versions? <a href="spread-options.html">Every version of every spread &rarr;</a></p>
     <div class="grid" data-gallery="spreads" id="spreadGrid" aria-busy="true"></div>
+    <div class="logodrawer-wrap">
+      <button class="revealbtn" id="prevToggle" aria-expanded="false" aria-controls="prevDrawer">Reveal previous favorites &#9662;</button>
+      <div class="logodrawer" id="prevDrawer">
+        <div class="drawerinner">
+          <p class="hint">The favorites as they stood before the final pass (Oct 20, 2026) &mdash; kept here so each new version is easy to compare against the one it replaced. Tap any picture to view it big.</p>
+          <div class="grid" data-gallery="previous" id="prevGrid"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -526,6 +535,7 @@
 
 <script>
 const galleries={
+  previous:[],
   spreads:[
     {src:"spreads/p01-harlow.jpg",     title:"Harlow at Home",           sub:"Page 1", pages:"Book pages 1–2", spread:1, letter:"S01-L", dots:[]},
     {src:"spreads/p02-mustang.jpg",    title:"The Silver Blue Mustang",  sub:"Page 2", pages:"Book pages 3–4", spread:2, letter:"S02-F", dots:[]},
@@ -707,6 +717,16 @@ function pickShowcase(cards, people, SHOWCASE_SHOWING){
     }).filter(c=>c.letter&&c.src);
     if(!cards.length) throw 0;
     finish(pickShowcase(cards, fav.people||{}, fav.showing||{}));
+    const prevMap=(fav.previous&&fav.previous.showing)||{};
+    const prevItems=[];
+    Object.keys(prevMap).sort().forEach(sp=>{
+      const card=cards.find(c=>c.letter===prevMap[sp]);
+      if(!card) return;
+      const n=parseInt(sp.slice(1),10);
+      prevItems.push({src:card.src, title:SPREAD_TITLES[n-1]||('Spread '+n), sub:'Page '+n, pages:'Book pages '+(2*n-1)+'\u2013'+(2*n),
+        spread:n, letter:card.letter, dots:['T','F','R','J','L'].filter(w=>(((fav.people||{})[w]||{}).picks||[]).indexOf(card.letter)>=0)});
+    });
+    if(prevItems.length){ galleries.previous=prevItems; renderGallery(document.getElementById('prevGrid')); }
   }).catch(()=>finish(null));
 })();
 const totop=document.getElementById('totop');
@@ -929,6 +949,12 @@ castToggle.onclick=()=>{
   const open=castDrawer.classList.toggle('open');
   castToggle.setAttribute('aria-expanded',open);
   castToggle.innerHTML=open?'Hide cast members &#9652;':'Reveal cast members &#9662;';
+};
+const prevToggle=document.getElementById('prevToggle'), prevDrawer=document.getElementById('prevDrawer');
+prevToggle.onclick=()=>{
+  const open=prevDrawer.classList.toggle('open');
+  prevToggle.setAttribute('aria-expanded',open);
+  prevToggle.innerHTML=open?'Hide previous favorites &#9652;':'Reveal previous favorites &#9662;';
 };
 document.addEventListener('keydown',e=>{
   if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
