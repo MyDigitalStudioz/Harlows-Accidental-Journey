@@ -58,10 +58,11 @@ body.guides-on .seam-guide{display:block}
 #lbseam{display:none}
 #lbfig.seam-on #lbseam{display:block}
 #lbseamToggle{margin:0;box-shadow:0 3px 12px rgba(0,0,0,.45)}
-/* Jon 2026-10-21 (later): overlay mode — the toggle lives in its own row
-   under the caption bar, off the picture. Fullscreen/.zoomed pin the row
-   to the figure's bottom-left, below the letterboxed image, as before. */
-#lbseamrow{margin-top:10px;text-align:left}
+/* Jon 2026-10-21 (later still): overlay mode — the toggle row is pinned
+   to the very bottom-left corner of the viewport (fixed, 14px), the same
+   corner it takes in fullscreen, instead of floating under the caption.
+   Fullscreen/.zoomed keep the figure pin on the next rule, untouched. */
+#lbseamrow{position:fixed;left:14px;bottom:14px;margin:0;z-index:4}
 #lbfig:fullscreen #lbseamrow,#lbfig:-webkit-full-screen #lbseamrow,#lb.zoomed #lbseamrow{position:absolute;left:10px;bottom:10px;margin:0;z-index:4}
 </style></head><body>
 <header><h1>Revised Versions — Final Pass V2</h1>
