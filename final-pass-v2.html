@@ -64,9 +64,45 @@ body.guides-on .seam-guide{display:block}
    Fullscreen/.zoomed keep the figure pin on the next rule, untouched. */
 #lbseamrow{position:fixed;left:14px;bottom:14px;margin:0;z-index:4}
 #lbfig:fullscreen #lbseamrow,#lbfig:-webkit-full-screen #lbseamrow,#lb.zoomed #lbseamrow{position:absolute;left:10px;bottom:10px;margin:0;z-index:4}
+
+/* Section jump nav + back-to-top (Jon 2026-10-21) — mirrors Spread Options'
+   .jumpnav strip: italic section links on a translucent cream bar, sticky
+   under this page's sticky header (top set by the nav script below). */
+.jumpnav{position:sticky;top:0;z-index:4;background:rgba(250,246,238,.96);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border-bottom:1px solid #e3d5bd;display:flex;flex-wrap:wrap;gap:.35rem .8rem;justify-content:center;padding:.6rem 1rem .55rem}
+.jumpnav a{color:#2b2118;text-decoration:none;font-size:.9rem;font-style:italic;white-space:nowrap;padding:.15rem .1rem}
+.jumpnav a:hover{color:#7a4f21;text-decoration:underline}
+#toTop{position:fixed;right:14px;bottom:14px;width:46px;height:46px;border-radius:50%;background:#f5e9d5;color:#2b2118;border:1px solid #7a4f21;font-family:Georgia,serif;font-size:1.3rem;line-height:1;cursor:pointer;box-shadow:0 3px 12px rgba(60,40,10,.35);z-index:40;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease,visibility .25s}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:#f4ca5e}
 </style></head><body>
 <header><h1>Revised Versions — Final Pass V2</h1>
 <p>67 cards — all 24 spreads: the keepers, bases and donors from Jon + Lois's full review call (Oct 21, 2026). The hopefully-final round — new generations post on this page, after their base card. The gold caption band marks the current best version of each spread. V1 keeps every earlier version, untouched: <a href="final-pass.html" style="color:#f5e9d5">the V1 page</a>. The full board (all versions ever) is still on Spread Options.</p><button type="button" id="seamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button></header>
+<nav class="jumpnav" id="jumpnav" aria-label="Jump to a spread">
+  <a href="#S01">S01</a>
+  <a href="#S02">S02</a>
+  <a href="#S03">S03</a>
+  <a href="#S04">S04</a>
+  <a href="#S05">S05</a>
+  <a href="#S06">S06</a>
+  <a href="#S07">S07</a>
+  <a href="#S08">S08</a>
+  <a href="#S09">S09</a>
+  <a href="#S10">S10</a>
+  <a href="#S11">S11</a>
+  <a href="#S12">S12</a>
+  <a href="#S13">S13</a>
+  <a href="#S14">S14</a>
+  <a href="#S15">S15</a>
+  <a href="#S16">S16</a>
+  <a href="#S17">S17</a>
+  <a href="#S18">S18</a>
+  <a href="#S19">S19</a>
+  <a href="#S20">S20</a>
+  <a href="#S21">S21</a>
+  <a href="#S22">S22</a>
+  <a href="#S23">S23</a>
+  <a href="#S24">S24</a>
+</nav>
 <main>
 <figure class="card">
 <div class="imgwrap"><img src="spread-options/s01-q.jpg" alt="S01-Q" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
@@ -459,6 +495,74 @@ document.getElementById('seamToggle').addEventListener('click',function(){var on
     if(e.key==='ArrowLeft') step(-1);
     if(e.key==='ArrowRight') step(1);
   });
+})();
+</script>
+
+<button type="button" id="toTop" aria-label="Back to top" title="Back to top">&#8593;</button>
+
+<script>
+// Section jump nav + back-to-top (Jon 2026-10-21). The nav mirrors Spread
+// Options' jump strip. V2 cards are a flat run of figures (no per-spread
+// sections in the markup), so this script tags the first card of each spread
+// with its S## id at runtime and smooth-scrolls with the sticky chrome
+// (header + strip) offset. File markup stays untouched, so the card-posting
+// helpers are unaffected.
+(function(){
+  var header=document.querySelector('header'), nav=document.getElementById('jumpnav'),
+      btn=document.getElementById('toTop'), lb=document.getElementById('lb');
+  var seen={};
+  Array.prototype.forEach.call(document.querySelectorAll('main figure.card'),function(fig){
+    var tag=fig.querySelector('.tag'); if(!tag) return;
+    var m=/^S(\d{2})-/.exec(tag.textContent.replace(/^\s+|\s+$/g,'')); if(!m) return;
+    var code='S'+m[1];
+    if(!seen[code]){ seen[code]=1; if(!fig.id) fig.id=code; }
+  });
+  function stick(){ if(nav&&header) nav.style.top=header.offsetHeight+'px'; }
+  stick();
+  window.addEventListener('resize',stick);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(stick);
+  function chromeH(){ return (header?header.offsetHeight:0)+(nav?nav.offsetHeight:0); }
+  var settleTimers=[];
+  function clearSettle(){ settleTimers.forEach(clearTimeout); settleTimers=[]; }
+  ['wheel','touchstart'].forEach(function(ev){
+    window.addEventListener(ev,clearSettle,{passive:true});
+  });
+  function alignTo(el,behavior){
+    var y=el.getBoundingClientRect().top+window.scrollY-chromeH()-8;
+    window.scrollTo({top:y<0?0:y,behavior:behavior});
+  }
+  function jumpTo(code){
+    var el=document.getElementById(code); if(!el) return;
+    clearSettle();
+    alignTo(el,'smooth');
+    // Lazy images above the target keep loading and push it down; re-align
+    // a few times as the layout settles (cancelled if Jon scrolls himself).
+    [500,1200,2200].forEach(function(ms){
+      settleTimers.push(setTimeout(function(){
+        if(Math.abs(el.getBoundingClientRect().top-(chromeH()+8))>6) alignTo(el,'auto');
+      },ms));
+    });
+  }
+  if(nav) nav.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var a=e.target.closest('a[href^="#S"]'); if(!a) return;
+    e.preventDefault();
+    var code=a.getAttribute('href').slice(1);
+    jumpTo(code);
+    try{ history.replaceState(null,'','#'+code); }catch(_){}
+  });
+  if(/^#S\d{2}$/.test(location.hash||'')){
+    var h=location.hash.slice(1);
+    setTimeout(function(){ jumpTo(h); },80);
+  }
+  function upd(){
+    var show=window.scrollY>600&&!(lb&&lb.classList.contains('open'));
+    btn.classList.toggle('show',show);
+  }
+  window.addEventListener('scroll',upd,{passive:true});
+  upd();
+  btn.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+  if(lb&&window.MutationObserver) new MutationObserver(upd).observe(lb,{attributes:true,attributeFilter:['class']});
 })();
 </script>
 </body></html>
