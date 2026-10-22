@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revised Versions — Harlow Final Pass V3 (Oct 22)</title>
+<style>
+body{margin:0;font-family:Georgia,serif;background:#faf6ee;color:#2b2118}
+header{position:sticky;top:0;background:linear-gradient(180deg,#7d560f,#4e3409);color:#f5e9d5;padding:12px 16px;z-index:5}
+header h1{margin:0;font-size:20px} header p{margin:4px 0 0;font-size:13.5px;opacity:.85}
+main{max-width:860px;margin:0 auto;padding:10px 10px 40px}
+.card{margin:0 0 22px;background:#fff;border:1px solid #e3d5bd;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(60,40,10,.08)}
+.card img{width:100%;display:block}
+.card figcaption{padding:10px 14px 12px;font-size:15.5px;line-height:1.45}
+.card.v2new{border-color:#d9a62e;box-shadow:0 2px 10px rgba(190,140,20,.35)}
+.card.v2new figcaption{background:linear-gradient(180deg,#f9dc8a,#f4ca5e)}
+.tag{font-weight:bold;background:#7a4f21;color:#fff;border-radius:6px;padding:2px 8px;font-size:14px}
+.kind{font-style:italic;color:#7a4f21;margin-left:6px}
+section#REMOVED h2{font-size:19px;margin:30px 0 6px}
+section#REMOVED .hint{font-weight:normal;font-size:14px;opacity:.7}
+section#REMOVED .how{font-size:14px;opacity:.85;margin:0 0 10px;line-height:1.45}
+section#REMOVED summary{cursor:pointer;color:#7a4f21;font-size:15.5px;margin:0 0 16px}
+section#REMOVED figure{opacity:.94}
+
+.imgwrap{position:relative}
+.seam-guide{position:absolute;inset:0;pointer-events:none;display:none}
+body.guides-on .seam-guide{display:block}
+.seam-guide .band{position:absolute;top:0;bottom:0;left:44%;width:12%;background:rgba(255,196,0,.13);border-left:1px dashed rgba(122,79,33,.65);border-right:1px dashed rgba(122,79,33,.65)}
+.seam-guide .line{position:absolute;top:0;bottom:0;left:50%;border-left:2px dashed rgba(255,255,255,.95);filter:drop-shadow(0 0 2px rgba(30,20,10,.85))}
+.seam-guide .seam-label{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-family:Georgia,serif;font-size:11px;font-style:italic;color:#fff;background:rgba(43,33,24,.65);padding:1px 8px;border-radius:9px;letter-spacing:.04em;white-space:nowrap}
+.seam-btn{margin-top:10px;font-family:Georgia,serif;font-size:14px;cursor:pointer;background:#f5e9d5;color:#2b2118;border:1px solid #7a4f21;border-radius:8px;padding:6px 14px;min-height:36px}
+.lulu-btn{margin-left:8px}
+/* Lulu spread guide (Jon 2026-10-21) — transparent overlay matching his Lulu
+   project's guideline template: bleed/trim edge rectangle, per-page text-safe
+   rectangles, center fold line and a lightly shaded gutter band. Geometry
+   measured off his snapshot (1317x663; proportions map 1:1 onto each card
+   image): edge x .8%/99.1%, y 1.8%/98.0%; safe-left x 3.6-46.4%, safe-right
+   x 53.5-96.3%, safe y 7.4-92.5%; fold x 50.0%; gutter x 46.4-53.5%.
+   Overlay divs are injected at runtime (see the Lulu script before </body>),
+   so card markup is untouched. Independent of the seam guide: body.lulu-on
+   keys the card overlays, #lbfig.lulu-on keys the viewer's — either, both
+   or neither guide can be on. */
+.lulu-guide{position:absolute;inset:0;pointer-events:none;display:none}
+body.lulu-on .card .lulu-guide{display:block}
+.lulu-guide .edge{position:absolute;left:.8%;right:.9%;top:1.8%;bottom:2%;border:1px solid rgba(0,175,195,.85)}
+.lulu-guide .safe{position:absolute;top:7.4%;bottom:7.5%;width:42.8%;border:1.5px solid rgba(0,195,210,.9)}
+.lulu-guide .safe.l{left:3.6%}
+.lulu-guide .safe.r{left:53.5%}
+.lulu-guide .gutter{position:absolute;top:0;bottom:0;left:46.4%;width:7.1%;background:rgba(230,60,40,.10)}
+.lulu-guide .fold{position:absolute;top:0;bottom:0;left:50%;border-left:1px solid rgba(0,175,195,.85)}
+.lulu-guide .lulu-label{position:absolute;font-family:Georgia,serif;font-size:10px;font-style:italic;letter-spacing:.05em;white-space:nowrap;line-height:1.7;padding:0 6px;border-radius:8px;color:#e2f9fb;background:rgba(8,84,96,.55)}
+.lulu-guide .lulu-label.sl{left:4.2%;top:8.4%}
+.lulu-guide .lulu-label.sr{left:54.1%;top:8.4%}
+.lulu-guide .lulu-label.gu{left:50%;top:2.7%;transform:translateX(-50%);color:#ffe9e2;background:rgba(150,40,25,.55)}
+#lblulu{display:none}
+#lbfig.lulu-on #lblulu{display:block}
+#lbluluToggle{margin:0 0 0 8px;box-shadow:0 3px 12px rgba(0,0,0,.45)}
+
+.card img{cursor:zoom-in}
+#lb{position:fixed;inset:0;overflow-y:auto;background:rgba(24,18,12,.94);display:none;align-items:center;justify-content:center;z-index:50;padding:14px;box-sizing:border-box}
+#lb.open{display:flex}
+#lbfig{margin:0;max-width:min(1100px,94vw);text-align:center;position:relative}
+#lbimg{max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#lbcapbar{color:#f5efe2;margin-top:.9rem;font-size:1.02rem;line-height:1.45;display:flex;align-items:center;justify-content:center;gap:12px}
+#lbcapbar .t{display:flex;flex-direction:column;text-align:left}
+#lbnum{display:block;font-size:.88rem;opacity:.65;margin-top:.25rem}
+#lbcap .kind{color:#e3c878}
+#close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#221910 0%,#3a2d1b 55%,#5e4a24 100%);border:1px solid rgba(94,74,36,.65);color:#faf6ee;font-size:1.3rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18);line-height:1;z-index:2}
+#fs{position:absolute;bottom:14px;right:14px;width:42px;height:42px;border-radius:50%;background:#faf6ee;border:none;color:#3d3229;font-size:1.15rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.4);line-height:1;z-index:2}
+#lb .nav{width:38px;height:38px;border-radius:50%;cursor:pointer;flex:none;background:#faf6ee;border:none;color:#3d3229;font-size:1.5rem;font-weight:bold;box-shadow:0 3px 12px rgba(0,0,0,.4);line-height:1;padding-bottom:3px}
+.fnav,.fclose{display:none}
+#lb.zoomed{padding:0}
+#lbfig:fullscreen,#lbfig:-webkit-full-screen,#lb.zoomed #lbfig{width:100vw;height:100vh;max-width:100vw;background:#000;display:flex;align-items:center;justify-content:center}
+#lbfig:fullscreen #lbimg,#lbfig:-webkit-full-screen #lbimg,#lb.zoomed #lbimg{width:100vw;height:100vh;max-width:100vw;max-height:100vh;object-fit:contain;border-radius:0;box-shadow:none}
+#lbfig:fullscreen #lbcapbar,#lbfig:-webkit-full-screen #lbcapbar,#lb.zoomed #lbcapbar{display:none}
+#lbfig:fullscreen .fnav,#lbfig:-webkit-full-screen .fnav,#lb.zoomed .fnav{display:block;position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.6rem;font-weight:bold;cursor:pointer;z-index:3;line-height:1;padding-bottom:3px}
+#lbfig:fullscreen #fprev,#lbfig:-webkit-full-screen #fprev,#lb.zoomed #fprev{left:16px}
+#lbfig:fullscreen #fnext,#lbfig:-webkit-full-screen #fnext,#lb.zoomed #fnext{right:16px}
+#lbfig:fullscreen .fclose,#lbfig:-webkit-full-screen .fclose,#lb.zoomed .fclose{display:block;position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.35rem;cursor:pointer;z-index:3;line-height:1}
+@media (max-width:600px){#lbimg{max-height:62vh}}
+/* Lightbox seam guide (Jon 2026-10-21): #lbwrap shrink-wraps the image;
+   #lbseam display is keyed to #lbfig.seam-on only — the id rules outrank the
+   cards' body.guides-on .seam-guide rules, so viewer and page guides never
+   couple. Inner band/line/label reuse the cards' .seam-guide child styles. */
+#lbwrap{position:relative;display:inline-block;line-height:0;max-width:100%}
+#lbseam{display:none}
+#lbfig.seam-on #lbseam{display:block}
+#lbseamToggle{margin:0;box-shadow:0 3px 12px rgba(0,0,0,.45)}
+/* Jon 2026-10-21 (later still): overlay mode — the toggle row is pinned
+   to the very bottom-left corner of the viewport (fixed, 14px), the same
+   corner it takes in fullscreen, instead of floating under the caption.
+   Fullscreen/.zoomed keep the figure pin on the next rule, untouched. */
+#lbseamrow{position:fixed;left:14px;bottom:14px;margin:0;z-index:4}
+#lbfig:fullscreen #lbseamrow,#lbfig:-webkit-full-screen #lbseamrow,#lb.zoomed #lbseamrow{position:absolute;left:10px;bottom:10px;margin:0;z-index:4}
+
+/* Section jump nav + back-to-top (Jon 2026-10-21) — mirrors Spread Options'
+   .jumpnav strip: italic section links on a translucent cream bar, sticky
+   under this page's sticky header (top set by the nav script below). */
+.jumpnav{position:sticky;top:0;z-index:4;background:rgba(250,246,238,.96);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border-bottom:1px solid #e3d5bd;display:flex;flex-wrap:wrap;gap:.35rem .8rem;justify-content:center;padding:.6rem 1rem .55rem}
+.jumpnav a{color:#2b2118;text-decoration:none;font-size:.9rem;font-style:italic;white-space:nowrap;padding:.15rem .1rem}
+.jumpnav a:hover{color:#7a4f21;text-decoration:underline}
+#toTop{position:fixed;right:14px;bottom:14px;width:46px;height:46px;border-radius:50%;background:#f5e9d5;color:#2b2118;border:1px solid #7a4f21;font-family:Georgia,serif;font-size:1.3rem;line-height:1;cursor:pointer;box-shadow:0 3px 12px rgba(60,40,10,.35);z-index:40;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease,visibility .25s}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:#f4ca5e}
+/* Mobile Sections dropdown (Jon 2026-10-21) — mirrors Spread Options'
+   .bar-compact / .section-pick pattern: at <=640px the inline strip links
+   hide and a Sections <select> shows instead (same breakpoint). */
+.bar-compact{display:none}
+@media (max-width:640px){
+.jumpnav>a{display:none}
+.bar-compact{display:flex;align-items:center;flex-wrap:nowrap;gap:.6rem;width:100%}
+.section-pick{display:flex;align-items:center;gap:.45rem;flex:1 1 auto;min-width:0;font-size:.92rem;font-style:italic;white-space:nowrap;color:#2b2118}
+.section-pick select{flex:1 1 auto;min-width:120px;width:0;min-height:40px;font-family:Georgia,'Times New Roman',serif;font-size:1rem;color:#2b2118;background:#fff;border:1px solid #e3d5bd;border-radius:8px;padding:0 .45rem}
+}
+@media (max-width:360px){
+.bar-compact{gap:.35rem}
+.section-pick{gap:.3rem;flex:1 1 0}
+.section-pick select{min-width:96px;padding:0 .25rem}
+}
+</style></head><body>
+<header><h1>Revised Versions — Final Pass V3</h1>
+<p>94 cards — all 24 spreads. This is Jon's V3 working copy, copied in full from Final Pass V2 on Oct 22, 2026, for narrowing down and further tweaks. Final Pass V2 stays exactly as it is for Lois: <a href="final-pass-v2.html" style="color:#f5e9d5">the V2 page</a>. The gold caption band marks the current best version of each spread. V1 keeps every earlier version, untouched: <a href="final-pass.html" style="color:#f5e9d5">the V1 page</a>. The full board (all versions ever) is still on Spread Options.</p><button type="button" id="seamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button><button type="button" id="luluToggle" class="seam-btn lulu-btn" aria-pressed="false">Show Lulu guide</button></header>
+<nav class="jumpnav" id="jumpnav" aria-label="Jump to a spread">
+  <div class="bar-compact">
+    <label class="section-pick">Sections
+      <select id="sectionJump" aria-label="Sections">
+        <option value="">Sections…</option>
+        <option value="S01">S01</option>
+        <option value="S02">S02</option>
+        <option value="S03">S03</option>
+        <option value="S04">S04</option>
+        <option value="S05">S05</option>
+        <option value="S06">S06</option>
+        <option value="S07">S07</option>
+        <option value="S08">S08</option>
+        <option value="S09">S09</option>
+        <option value="S10">S10</option>
+        <option value="S11">S11</option>
+        <option value="S12">S12</option>
+        <option value="S13">S13</option>
+        <option value="S14">S14</option>
+        <option value="S15">S15</option>
+        <option value="S16">S16</option>
+        <option value="S17">S17</option>
+        <option value="S18">S18</option>
+        <option value="S19">S19</option>
+        <option value="S20">S20</option>
+        <option value="S21">S21</option>
+        <option value="S22">S22</option>
+        <option value="S23">S23</option>
+        <option value="S24">S24</option>
+      </select>
+    </label>
+  </div>
+  <a href="#S01">S01</a>
+  <a href="#S02">S02</a>
+  <a href="#S03">S03</a>
+  <a href="#S04">S04</a>
+  <a href="#S05">S05</a>
+  <a href="#S06">S06</a>
+  <a href="#S07">S07</a>
+  <a href="#S08">S08</a>
+  <a href="#S09">S09</a>
+  <a href="#S10">S10</a>
+  <a href="#S11">S11</a>
+  <a href="#S12">S12</a>
+  <a href="#S13">S13</a>
+  <a href="#S14">S14</a>
+  <a href="#S15">S15</a>
+  <a href="#S16">S16</a>
+  <a href="#S17">S17</a>
+  <a href="#S18">S18</a>
+  <a href="#S19">S19</a>
+  <a href="#S20">S20</a>
+  <a href="#S21">S21</a>
+  <a href="#S22">S22</a>
+  <a href="#S23">S23</a>
+  <a href="#S24">S24</a>
+</nav>
+<main>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s01-q.jpg" alt="S01-Q" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S01-Q</span> <span class="kind">V2 base</span><br>Jon + Lois: the base. Harlow waits on the third board but sits in front of the door — the new version scoots him middle-right, off the door and clear of the seam. The city stays.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s01-r.jpg" alt="S01-R" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S01-R</span> <span class="kind">V2 · third-panel fix — Harlow off the door</span><br>Candidate — awaiting desk gate · Harlow sits middle-right in the third panel with the open door clear beside him; everything else carries Q.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s01-s.jpg" alt="S01-S" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S01-S</span> <span class="kind">V2 · kitchen panel — friendlier, fluffier Harlow; slimmer fence</span><br>Candidate — awaiting desk gate · Jon's fix on R: third panel is the kitchen now — no doorway — Harlow friendlier and fluffier like panels 1–2, and the fence is rebuilt slimmer, less wood; everything else carries R.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s02-r.jpg" alt="S02-R" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S02-R</span> <span class="kind">V2 keeper</span><br>Jon + Lois: good — keeper as is.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s02-s.jpg" alt="S02-S" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S02-S</span> <span class="kind">V2 · Jon's fave recomposed — blue-gray interior, Lois behind the windshield</span><br>Candidate — awaiting desk gate · Jon's preferred S02 composition (golden wheat fields) rebuilt with the two locks: pale silvery blue-gray interior (no red) and Lois's head fully behind the windshield.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s02-t.jpg" alt="S02-T" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S02-T</span> <span class="kind">V2 · Harlow tilted + happier — S02-S expression pass</span><br>Candidate — awaiting desk gate · Jon liked S02-S as-is and asked for one more take: Harlow's face with the little head tilt from the other version and a little more excitement — he's setting out on the journey. Everything else carries S unchanged.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s02-u.jpg" alt="S02-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S02-U</span> <span class="kind">V2 · Harlow super excited — S02-T expression pass</span><br>Candidate — awaiting desk gate · Jon called S02-T almost perfect and asked for one more take with Harlow super excited, smiley and happy — he's setting out on the journey. The tilt, the car, the interior and Lois carry T unchanged.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s02-v.jpg" alt="S02-V" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S02-V</span> <span class="kind">V2 · Mixed background — S02-U background pass</span><br>Candidate — awaiting desk gate · Jon loves S02-U and Harlow's face in it; the one change is the background — U's wall-to-wall golden field becomes a mixture in S02-R's spirit: golden field broken up with green meadow, trees, stone walls and wildflower edges on both sides. Harlow's super-excited face, Lois, the car and the interior carry U unchanged.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s02-w.jpg" alt="S02-W" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S02-W</span> <span class="kind">V2 · Style correction — U's hand, V's mixed background</span><br>Candidate — awaiting desk gate · Jon's call on V: the mixed background was right but the finish drifted too glossy and photographic against the book's look. W re-renders the same frame governed directly by S02-U's master — the matte storybook illustration hand across foreground and background alike. Harlow's super-excited face, Lois, the car and the interior carry unchanged. V stays posted.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s02-x.jpg" alt="S02-X" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S02-X</span> <span class="kind">V2 · Region edit — U's own pixels, mixed countryside fields</span><br>Candidate — awaiting desk gate · Jon's ruling: region-edit U itself — foreground stays U's pixels, only the fields change. The car, Harlow's super-excited face, Lois and the road are byte-identical S02-U (diff-proven); only the field bands were repainted in U's hand with the mixture — golden field kept, meadow, trees and stone walls added. Trinity's whole-frame inspection vs U: PASS. U, V and W stay posted.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s03-o.jpg" alt="S03-O" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S03-O</span> <span class="kind">V2 keeper</span><br>Jon + Lois: good — keeper. Nero is good on his crate; if text needs room, he can go on one crate.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s03-p.jpg" alt="S03-P" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S03-P</span> <span class="kind">V2 · Nero on one crate + Lois likeness pass</span><br>Jon's yes · O recomposed with two changes: Nero sits on one crate (lower — more room for the right-side text), and Lois's face is dialed to her reference portrait. Everything else carries O.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s04-m.jpg" alt="S04-M" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S04-M</span> <span class="kind">V2 keeper</span><br>Jon + Lois: we like — keeper as is.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s05-m.jpg" alt="S05-M" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S05-M</span> <span class="kind">V2 keeper</span><br>Jon + Lois: we like — keeper as is.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s05-n.jpg" alt="S05-N" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S05-N</span> <span class="kind">V2 · drier Harlow, ducklings as individuals</span><br>Candidate — awaiting desk gate · M polished: Harlow's coat is plush and mostly dry (light spray only), the three ducklings are individuals — the bow duckling front-center and smallest, her sisters distinct — and the proportions are unsquashed. Fiona and the pond carry M.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s05-o.jpg" alt="S05-O" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S05-O</span> <span class="kind">V2 · a little wetter — light dampness, first shake</span><br>Candidate — awaiting desk gate · N with Jon's wetness dial at ~25%: plush coat, lightly damp ear, ruff and tail tips, a small scatter of first-shake droplets on and off the tail — between dry N and the soaked M shake. Ducklings and Fiona carry N.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s06-n.jpg" alt="S06-N" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S06-N</span> <span class="kind">V2 base</span><br>Jon + Lois: liked better of the options — the new version zooms out a bit for text room above the scene, and Dallas moves off the fence to the bottom-right grass.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s06-p.jpg" alt="S06-P" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S06-P</span> <span class="kind">V2 · zoom-out — Dallas on the grass</span><br>Candidate — awaiting desk gate · wider framing leaves real headroom for text; Dallas sits bottom-right on the grass in his bell collar, watching the ride.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s06-q.jpg" alt="S06-Q" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S06-Q</span> <span class="kind">V2 · animals spread off the seam</span><br>Candidate — awaiting desk gate · P with the cast spread off the seam: Albie and Harlow left, open meadow at the fold, Molly and Dallas right. (Jon accepted two small disclosures 2026-10-21: a wisp of Albie's tail plume touches the band's edge — tails are fine under his fold rule — and Molly sits a touch larger than in P.)</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s06-r.jpg" alt="S06-R" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S06-R</span> <span class="kind">V2 · pair nearer, Molly right</span><br>Candidate — awaiting desk gate · Jon's follow-up to Q: the riding pair sits left and nearer (reading bigger by closeness alone), Molly bigger and shifted right so her muzzle clears the seam band, background trees thinned. Q stays posted as the closed record.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s07-r.jpg" alt="S07-R" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S07-R</span> <span class="kind">V2 base</span><br>Jon + Lois: the direction. Chester's laugh and head-up pose are the ones; Harlow's look and pose are right, and he's a little smaller. New version: Dynamite smaller, legs right, moved back-right out of the fold. (T, U, V, W, X, Y, N and Z do not carry to V2.)</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s07-aa.jpg" alt="S07-AA" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S07-AA</span> <span class="kind">V2 · R direction — Dynamite smaller, back-right, hooves fixed</span><br>Candidate — awaiting desk gate · Chester laughing with his head up, Harlow in R's pose; Dynamite smaller at the back-right on four flared, lit bronze-capped hooves (bell-shaped flare disclosed).</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s07-ac.jpg" alt="S07-AC" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S07-AC</span> <span class="kind">V2 · Jon's pick — OldRef1 posted whole</span><br>Candidate — awaiting desk gate · Jon chose this frame whole (OldRef1, his own Dynamite reference): Dynamite large, center, on his back with his eyes open. Disclosed: at 3x the hooves are the reference's own glossy brown caps — Jon inspected the crops and chose the frame as-is over a hoof fix. Dynamite's face center (x54.1%) sits inside the fold band — not a Harlow/Lois main, so no fold-rule fail; stated for the desks' stricter read.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s07-ad.jpg" alt="S07-AD" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S07-AD</span> <span class="kind">V2 · Dynamite back on the hill — off AC</span><br>Candidate — awaiting desk gate · Jon-directed restage of his AC pick: Dynamite keeps the rolling pose but moves back onto a low hill behind the fence — face center x66.0%, clear of the fold band (AC: x54.1%, inside it). Chester now laughs out loud in full (AC's was a modest grin). Hooves: wording 1 repeated the bronze cups and was re-rolled; wording 2 reads dark charcoal at leg width — 3x crops in the desk package for the desks' own read.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s07-ae.jpg" alt="S07-AE" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S07-AE</span> <span class="kind">V2 · Harlow as Jon's reference, Chester lowered — off AD</span><br>Candidate — awaiting desk gate · Jon-directed restage of AD: Harlow matches the reference crop Jon supplied — standing, head up, open-mouth laugh, gaze up-left, tail curled high. Chester sits lower for text headroom — ear tips y9.5% (AD: y2.2%) — with his full laugh unchanged. The hill is a gentler swell; Dynamite stays behind the fence, face center x64.6%, clear of the fold band. Hooves read dark charcoal at leg width — 3x crops in the desk package for the desks' own read.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s08-u.jpg" alt="S08-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S08-U</span> <span class="kind">V2 keeper</span><br>Jon + Lois: the favorite — Harlow's expression and Paco both liked; keeper as is. Its loader (back of the man's head) is the model for the new V alt.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s08-v.jpg" alt="S08-V" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S08-V</span> <span class="kind">V2 donor</span><br>Jon + Lois: donor — Paco's placement here, in front of the front passenger wheel, is the target for the new alt, which also needs text headroom on top and U's loader.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s08-w.jpg" alt="S08-W" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S08-W</span> <span class="kind">V2 · alt — Paco at the wheel, U's loader</span><br>Candidate — awaiting desk gate · the new alt on the V2 bases: Paco near-black at the front passenger wheel, loader seen from behind, all heads below the text line.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s08-x.jpg" alt="S08-X" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S08-X</span> <span class="kind">V2 · back-of-truck loading (Jon's reference)</span><br>Candidate — awaiting desk gate · Jon's reference recomposed from the back of the truck: the loader lifts Harlow's (empty) crate at the tailgate, produce crates stacked at the bed front, Paco near-black looking back — truck proportions corrected and Harlow at true cat scale. Door lettering is layout-set, so the panel ships clean.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s08-y.jpg" alt="S08-Y" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S08-Y</span> <span class="kind">V2 · tight tailgate crop — lettered door</span><br>Candidate — awaiting desk gate · Jon's close-crop take recomposed tight: truck big in frame, loader reduced to gloved arms at the right edge, and the door lettering painted IN — 'Farrelli Farms', read letter-by-letter at 3x (Jon's override of the clean-door rule for this version only). Harlow's scale correction overshot small — head 0.47× Paco's by width, 0.67× by height — disclosed in the package.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s08-z.jpg" alt="S08-Z" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S08-Z</span> <span class="kind">V2 · Y revised — Paco out of the seam, Harlow bigger</span><br>Candidate — awaiting desk gate · Jon's two fixes on Y landed: Paco shifted left, face center x38% — clear of the seam band — gaze still locked up at Harlow; Harlow bigger in the crate at true cat scale (head ratio ≈0.6–0.7× Paco's across measures — disclosed in the package). The 'Farrelli Farms' door sign is fully readable at 3x, Paco's lowered head clear of it.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s09-r.jpg" alt="S09-R" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-R</span> <span class="kind">V2 base</span><br>Jon + Lois: without the cobblestone street, R is better — the base. Two new versions: Nala stretched out long on the step (like S09-M), cats looking more toward Harlow, Harlow right a bit and looking more toward the truck, text room kept; plus a flipped alt — Harlow turned around, looking at the cats.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s09-s.jpg" alt="S09-S" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-S</span> <span class="kind">V2 · Nala stretched, Harlow toward the truck</span><br>Candidate — awaiting desk gate · R's stoop in full daylight: Nala lounges long on the step, KitKat above, both watching Harlow; Harlow stands right of R's spot, gaze on the departing truck.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s09-v.jpg" alt="S09-V" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-V</span> <span class="kind">V2 · alt — Nala's true colors, Harlow on the truck</span><br>Candidate — awaiting desk gate · U with two fixes: Nala's coat matches her character portrait (darker, richer rosettes — U had her too pale), and Harlow's gaze is on the departing truck, not off-frame. The stretch and the stoop carry U.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s09-w.jpg" alt="S09-W" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-W</span> <span class="kind">V2 · alt — Harlow turned to the truck, clear of the seam</span><br>Candidate — awaiting desk gate · V with one change (Jon's note): Harlow's body is turned fully toward the departing truck, head tilted as he watches it leave, and the whole cat sits right of the center seam. Nala's portrait-true coat, the stretch and the stoop carry V.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s09-x.jpg" alt="S09-X" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-X</span> <span class="kind">V2 · style remake — W's staging in the keeper's polished hand</span><br>Candidate — awaiting desk gate · Jon's call on W: the staging was great, the finish was watercolor. X re-renders W's staging in the book's polished hand, governed directly off the keeper S09-R; Trinity compared it against R at whole frame and passed it. Harlow turned to the truck, right of the seam; Nala's stretch and portrait-true coat, KitKat and the stoop carry W. Disclosed: the light leans warm-golden, and Harlow's tail plume clears the seam band by 0.2 pt (his face sits ~16 pts clear).</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s09-t.jpg" alt="S09-T" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-T</span> <span class="kind">V2 · Flip alt — Harlow turned to the cats</span><br>Candidate — awaiting desk gate · The alternate staging of S09-S: Harlow turned around to face KitKat and Nala on the steps, trading looks with them while the truck leaves without him.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s10-k.jpg" alt="S10-K" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S10-K</span> <span class="kind">V2 keeper</span><br>Jon + Lois: the alley look is the favorite — good, keeper as is.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s11-k.jpg" alt="S11-K" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S11-K</span> <span class="kind">V2 keeper</span><br>Jon + Lois: favorite version, great look — keep as is.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s12-q.jpg" alt="S12-Q" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-Q</span> <span class="kind">V2 base</span><br>Jon + Lois: the base — the new version fixes the text area; them looking at each other stays.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s12-r.jpg" alt="S12-R" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-R</span> <span class="kind">V2 · text-area fix — the mutual gaze kept</span><br>Candidate — awaiting desk gate · Otis and Harlow hold eye contact; all heads now sit below the text lines on both pages.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s12-s.jpg" alt="S12-S" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-S</span> <span class="kind">V2 · clean generation — bigger Otis, native ground</span><br>Candidate — awaiting desk gate · Jon approved the composite's Otis size but not its mended ground; this fresh render paints the same sizes with clean native pavement throughout. The composite stays banked, unposted.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s12-u.jpg" alt="S12-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-U</span> <span class="kind">V2 · clean re-render — governed off Q, Jon's reset</span><br>Candidate — awaiting desk gate · Jon ruled the S12 chain after Q had drifted and read cobbled next to the base; U re-renders Q's own brief governed directly off Q's frame — S and the composites left out entirely — and Trinity's whole-frame inspection passed it in Q's hand. Disclosed: the size ask landed at half strength (Otis ≈11% wider, stature flat; Harlow ≈ Q's size) and Otis's ear tips ride at y14.6%, ≈ Q's own ear height — the desks' Show-text proof decides.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s13-j.jpg" alt="S13-J" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S13-J</span> <span class="kind">V2 keeper</span><br>Jon + Lois: like the shot with the ballpark in the background — keep this.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s14-k.jpg" alt="S14-K" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S14-K</span> <span class="kind">V2 base</span><br>Jon + Lois: the best — the new version brings Harlow's eyeline down onto Chippy the squirrel, and scoots the guinea pig in the bucket a little right, off the center.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s14-l.jpg" alt="S14-L" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S14-L</span> <span class="kind">V2 · eyeline fix — bucket moved right</span><br>Candidate — awaiting desk gate · Harlow's gaze lands on Chippy; the bucket group sits right with breathing room from the fold.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s15-m.jpg" alt="S15-M" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S15-M</span> <span class="kind">V2 base</span><br>Jon + Lois: we like — the new version removes the blue foam fingers (both of them), gives Hibernator his costume paw back for the near-high-five, moves him a touch left, zooms out a bit for text room, and makes the clouds fluffier, less like puzzle pieces.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s15-n.jpg" alt="S15-N" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S15-N</span> <span class="kind">V2 · foam fingers removed — costume paw back</span><br>Candidate — awaiting desk gate · No foam fingers anywhere — Hibernator's glove paw and Harlow's plain paw almost meet; Hibernator a touch left, framing a bit wider, clouds soft.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s15-o.jpg" alt="S15-O" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S15-O</span> <span class="kind">V2 · Harlow right, clear of the seam</span><br>Candidate — awaiting desk gate · N with Harlow moved right, well clear of the seam — the paws keep the almost-high-five feeling without meeting. Hibernator and the ballpark carry N.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s15-p.jpg" alt="S15-P" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S15-P</span> <span class="kind">V2 · laughing Harlow, softer clouds</span><br>Candidate — awaiting desk gate · O with a different Harlow reaction — a joyful laugh with eyes crinkled nearly shut — and the clouds softened to wispy, feathered edges. Staging and Hibernator carry O.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s15-q.jpg" alt="S15-Q" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S15-Q</span> <span class="kind">V2 · open eyes, new pose</span><br>Candidate — awaiting desk gate · P with a different Harlow: eyes open and bright blue, rearing up on his hind legs in an eager reach toward the glove paw. P's softer clouds and the Hibernator carry.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s15-r.jpg" alt="S15-R" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S15-R</span> <span class="kind">V2 · cartoon finish, Harlow refined</span><br>Candidate — awaiting desk gate · Q's open-eyed rearing Harlow re-rendered in the book's polished cartoon finish (Jon: Q read watercolor-painted), refined to his canonical build and placed back toward P's anchor. P's softer clouds and the Hibernator carry.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s15-s.jpg" alt="S15-S" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S15-S</span> <span class="kind">V2 · O's hand, gaze fixed</span><br>Candidate — awaiting desk gate · Jon: R still read too realistic vs the artwork in use — this take is re-rendered in S15-O's own illustrated hand (flat cartoon shading, grouped painted fur, simpler bolder forms). Harlow keeps the rearing reach with eyes open, and now looks directly at the Hibernator's face — eye contact, not above his head. Placement carries R; the Hibernator carries.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s16-l.jpg" alt="S16-L" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S16-L</span> <span class="kind">V2 keeper</span><br>Jon + Lois: favorite — will keep as is. A lettered-vest alt is coming: 'Emotional Support Dog' on Edward's vest.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s16-n.jpg" alt="S16-N" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S16-N</span> <span class="kind">V2 · alt — Emotional Support Dog on Edward's vest</span><br>Candidate — awaiting desk gate · L's cuddle unchanged except the vest: Edward's side panel now reads Emotional Support Dog, lettered clean and correct.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s17-j.jpg" alt="S17-J" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S17-J</span> <span class="kind">V2 base</span><br>Jon + Lois: the base — the new version scoots Harlow a little more left and a very touch smaller; the snack shack loses its empty sign-top, keeping just the red-and-white roof.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s17-k.jpg" alt="S17-K" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S17-K</span> <span class="kind">V2 · Harlow left + smaller — shack sign-top removed</span><br>Candidate — awaiting desk gate · Harlow sits a little further left; the snack shack tops out at its striped roof — the blank sign board is gone.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s18-l.jpg" alt="S18-L" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-L</span> <span class="kind">V2 base</span><br>Jon + Lois: we like overall — the new version uses S18-K's eyeballs: eyes looking opposite ways, googly-eyed.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s18-m.jpg" alt="S18-M" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-M</span> <span class="kind">V2 · googly eyes from K</span><br>Candidate — awaiting desk gate · L's beach and sunset kept; Harlow's pupils take K's opposite-direction googly read (gentler than K's own — noted for the desks). Babs unchanged.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s18-n.jpg" alt="S18-N" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-N</span> <span class="kind">V2 · corrected remake of L — Babs gets the googly eyes</span><br>Candidate — awaiting desk gate · The corrected remake of L: the googly, opposite-direction eyes are BABS's (from K, and the story — crabs can't see straight ahead). Harlow keeps his own eyes, on Babs. M had the eyes on the wrong character.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s18-o.jpg" alt="S18-O" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-O</span> <span class="kind">V2 · alt — Harlow's eyes down on Babs</span><br>Candidate — awaiting desk gate · An alt of N: everything carries, but Harlow's eyes angle down onto Babs beside him. Babs keeps her googly eyes; the beach and sunset are N's.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s18-p.jpg" alt="S18-P" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-P</span> <span class="kind">V2 · O revised — wider pair, no prints in front</span><br>Candidate — awaiting desk gate · A revision of O: Harlow scoots left, Babs right, clear of the seam — and the sand in front of both is clean, no footprints where neither has walked yet. The down-gaze and Babs's googly eyes carry O.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-q.jpg" alt="S18-Q" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-Q</span> <span class="kind">V2 · P revised — prints behind, none in front</span><br>Candidate — awaiting desk gate · A revision of P at Jon's correction: a few paw prints trail in behind Harlow where he walked in, and a couple of tiny crab tracks sit behind Babs at the waterline — and still none in front of either of them, where neither has walked yet. The wider pair, Harlow's down-gaze and Babs's googly eyes carry P.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s19-i.jpg" alt="S19-I" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S19-I</span> <span class="kind">V2 base</span><br>Jon + Lois: good as is — the one adjustment to try: Harlow looking more directly at Finnegan the shark.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s19-j.jpg" alt="S19-J" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S19-J</span> <span class="kind">V2 · Harlow turned to Finnegan</span><br>Candidate — awaiting desk gate · One change from I: Harlow's head turns near-profile to Finnegan, eyes on the shark. Finnegan holds exactly four teeth (counted at native zoom).</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s19-k.jpg" alt="S19-K" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S19-K</span> <span class="kind">V2 · I's cat, eyes onto Finnegan</span><br>Jon's yes · I remade with one change: Harlow keeps I's head pose — only his eyes move, onto Finnegan. (J turned his head; Jon prefers I's cat.) Finnegan's four teeth hold.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s20-j.jpg" alt="S20-J" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S20-J</span> <span class="kind">V2 keeper</span><br>Jon + Lois: we like — keep as is, the pair walking away from the reader.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s21-m.jpg" alt="S21-M" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S21-M</span> <span class="kind">V2 base</span><br>Jon + Lois: we like — only adjustment: Helga, with Harlow, moves just a tad bit more towards the right.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s21-n.jpg" alt="S21-N" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S21-N</span> <span class="kind">V2 · flying pair a tad right</span><br>Candidate — awaiting desk gate · Helga with Harlow in her pouch nudged right (+5 pts measured); Cash, the beach and the sunset stay M's.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s21-o.jpg" alt="S21-O" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S21-O</span> <span class="kind">V2 · flying pair down, text room above</span><br>Candidate — awaiting desk gate · N with Helga and Harlow nudged down a little, opening more sky above them for text. Cash, the beach and the sunset carry N.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s21-p.jpg" alt="S21-P" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S21-P</span> <span class="kind">V2 · pair down again, more text room</span><br>Candidate — awaiting desk gate · O with Helga and Harlow moved down one more small step, opening still more sky above them for text. Cash, the beach and the sunset carry O.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s22-q.jpg" alt="S22-Q" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-Q</span> <span class="kind">V2 base</span><br>Jon + Lois: we like Q, cats on the right in the sky — the new version keeps Q's scene but takes the sunset colors of S22-O.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s22-r.jpg" alt="S22-R" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-R</span> <span class="kind">V2 · O's sunset colors on Q</span><br>Candidate — awaiting desk gate · Q's frame exactly — Harlow alone walking home, cloud faces on the right — in O's warm sunset grade instead of Q's deep dusk. Sun fully set, no disc.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s22-s.jpg" alt="S22-S" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-S</span> <span class="kind">V2 · angel faces watch Harlow</span><br>Candidate — awaiting desk gate · R with one change: Mittens and Teddy in the clouds turn their gaze down to Harlow on the road, watching over him. The sunset, the road and the cloud faces themselves carry R.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s22-t.jpg" alt="S22-T" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-T</span> <span class="kind">V2 · angel faces, kinder</span><br>Candidate — awaiting desk gate · S with friendlier faces: Mittens and Teddy still watch Harlow from the clouds, but kind and soft-eyed now, not stern. Everything else carries S.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s22-u.jpg" alt="S22-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-U</span> <span class="kind">V2 · thinner clouds, Mittens happier</span><br>Candidate — awaiting desk gate · T dialed in per Jon: the cloud cover is thinned for more open sunset sky, and Mittens turns genuinely happy — bright lively eyes and a real smile — while Teddy stays kind. Both still watch Harlow; everything else carries T.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s22-v.jpg" alt="S22-V" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-V</span> <span class="kind">V2 · more angelic glow</span><br>Candidate — awaiting desk gate · U with one change: Teddy and Mittens glow a little more like angels — a soft radiance in the vapor around them, faces softer and more serene, Mittens' happiness warmed into benevolence, Teddy serenely watchful. Both gazes stay down-left on Harlow; the thinned sky and everything else carry U.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s22-w.jpg" alt="S22-W" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-W</span> <span class="kind">V2 · O's stylized hand</span><br>Candidate — awaiting desk gate · V with one change of feel: the whole scene re-painted in S22-O's simpler, more stylized storybook hand — broad shapes and smooth washes instead of V's fine detail — while V's composition, angelic glow, serene faces, down-left gazes and thinned sky all carry. Jon's call: V read a little too detailed; O's feel preferred.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s22-x.jpg" alt="S22-X" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-X</span> <span class="kind">V2 · the mixture — middle detail</span><br>Candidate — awaiting desk gate · W kept whole — composition, the angelic cats with their new glow, serene faces, down-left gazes and thinned sky — with the detail dial set to the middle between W and V/O: mottled modeled cloud texture, a properly built stone wall, fuller grass and flowers, a road with surface life, W's clean stylized shapes retained. Jon's call: W went a little too plain; this is the best of all of it together.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s22-y.jpg" alt="S22-Y" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-Y</span> <span class="kind">V2 · V redone in Q's hand</span><br>Candidate — awaiting desk gate · The whole-frame style audit found S22-V over-detailed and photographic against keeper Q; Y re-renders V's angelic take governed directly off Q — modeled dapple, broad swept road, Q's indigo dusk — with the glow, the dissolved softer faces, Mittens benevolent and Teddy serene, gazes down on Harlow. Trinity whole-frame inspected. (Gold stays on S22-X — V's redo line, an alternative take, not its replacement.)</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s22-z.jpg" alt="S22-Z" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-Z</span> <span class="kind">V2 · Jon's blend — Q's road, V's sky</span><br>Candidate — awaiting desk gate · Jon's blend alt: the bottom half just like S22-Q — Harlow walking away down the road toward the lit farmhouse — with S22-V's angels and radiant sky look blended in as one continuous image. Land and finish in Q's hand; V's over-detailed finish banned by name. One painting, no seam; the sky's dapple runs fuller than Q's — that coverage is V's look, per Jon's brief. Trinity whole-frame inspected. (Gold stays on S22-X.)</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s22-o.jpg" alt="S22-O" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-O</span> <span class="kind">V2 donor</span><br>Jon + Lois: donor — its sunset colors are the palette the new S22 takes.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s23-q.jpg" alt="S23-Q" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S23-Q</span> <span class="kind">V2 base</span><br>Jon + Lois: the favorite — the new version keeps Q, shrinks Wally to S23-T's scale, and matches the sky to the new S22's tones.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s23-t.jpg" alt="S23-T" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S23-T</span> <span class="kind">V2 donor</span><br>Jon + Lois: donor — Wally's smaller scale behind the open fence is the size the new S23 takes.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s23-u.jpg" alt="S23-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S23-U</span> <span class="kind">V2 · brooch edit — held frame, brooch moved to her right lapel</span><br>Candidate — awaiting desk gate · The held S23 frame with one edit: the bow brooch moved to Lois's right lapel (viewer's left). Everything else is the held frame: staging fixed for the text columns, Wally small behind the open fence, sky matched to S22-R.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s23-v.jpg" alt="S23-V" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S23-V</span> <span class="kind">V2 · F's feel, U's sunset sky</span><br>Candidate — awaiting desk gate · U's sky and city over F's garden and staging — Lois laughing as she hugs Harlow home, Wally at the fence. Brooch verified on her right lapel (viewer's left).</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s23-w.jpg" alt="S23-W" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S23-W</span> <span class="kind">V2 · V toned down — fewer flowers, clearer sky</span><br>Candidate — awaiting desk gate · V with the flowers cut to about half and the clouds thinned to a clear sunset gradient; brooch native on her right lapel (viewer's left). Posted on Jon's order for comparison — disclosed: Lois head-top y16.1%, above V's 17.4% line and inside the right-column text zone; Harlow y24.1%. The desks' Show-text proof decides.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s23-x.jpg" alt="S23-X" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S23-X</span> <span class="kind">V2 · W background pass — middle opened up</span><br>Candidate — awaiting desk gate · Jon's one change on W: the dense middle ground thinned hard — open lawn in the center, houses and skyline reading through with air between elements. Porch group, Wally, the thinned sunset sky and the brooch (her right lapel, viewer's left) carry W. Disclosed: geometry repeats W — Lois head-top y16.8%, at the y17% line; the Show-text proof decides. Posted alongside W for Jon's comparison; no pick made.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s24-q.jpg" alt="S24-Q" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S24-Q</span> <span class="kind">V2 base</span><br>Jon + Lois: the overall favorite — Harlow's angle and scene. The new version keeps Q's scene but uses S24-P's little bed.</figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s24-s.jpg" alt="S24-S" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S24-S</span> <span class="kind">V2 · P's little bed in Q's scene</span><br>Candidate — awaiting desk gate · Q's room, angle and Harlow's pose kept whole; the big green chaise becomes P's little cream-and-blue carved bed. Little Mouse on the hearth opposite, no cheese.</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s24-t.jpg" alt="S24-T" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S24-T</span> <span class="kind">V2 · P polished — one handle, less furniture</span><br>Candidate — awaiting desk gate · S24-P polished: the mug has one handle, the right side carries less furniture, and the scene sits a little lower for text room. The little bed, the fire and Little Mouse carry P. (Gold stays on S24-S — this is P's alternative, not its replacement.)</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s24-u.jpg" alt="S24-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S24-U</span> <span class="kind">V2 · T revised — fireplace to the top</span><br>Candidate — awaiting desk gate · S24-T revised: the stone fireplace now runs all the way to the top of the page — no bare wall above the mantel. The one-handled mug, the little bed, the fire and Little Mouse carry T. (Gold stays on S24-S — this is P's alternative line, not its replacement.)</figcaption>
+</figure>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s24-p.jpg" alt="S24-P" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S24-P</span> <span class="kind">V2 donor</span><br>Jon + Lois: donor — its little bed is the one the new S24 takes.</figcaption>
+</figure>
+<section id="REMOVED">
+<h2>Removed <span class="hint">(1 card)</span></h2>
+<p class="how">Cards Jon removed from the running. Letters and pictures are kept here for the record — nothing is deleted, and a card can come back with a later Keep.</p>
+<details><summary>Show removed cards</summary>
+<figure class="card">
+<div class="imgwrap"><img src="spread-options/s09-u.jpg" alt="S09-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-U</span> <span class="kind">removed</span><br>Candidate — awaiting desk gate · Another alt of S: Harlow turns toward the departing truck and stands further right, clear of the seam; Nala stretches out long on the step like the reference. KitKat keeps the stoop above.<br>Removed on Jon&#x27;s order 2026-10-21 — Nala&#x27;s coat was the wrong color (too pale); fixed in S09-V. Kept for the record; this letter is retired.</figcaption>
+</figure>
+</details>
+</section>
+</main>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+  <button id="close" aria-label="Close viewer">&times;</button>
+  <div id="lbfig">
+    <div id="lbwrap"><img id="lbimg" src="" alt=""><div class="seam-guide" id="lbseam" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+    <button class="fnav" id="fprev" aria-label="Previous image">&#8249;</button>
+    <button class="fnav" id="fnext" aria-label="Next image">&#8250;</button>
+    <button class="fclose" id="fclose" aria-label="Exit fullscreen">&times;</button>
+    <div id="lbcapbar">
+      <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
+      <span class="t"><span id="lbcap"></span><span class="n" id="lbnum"></span></span>
+      <button class="nav" id="next" aria-label="Next image">&#8250;</button>
+    </div>
+    <div id="lbseamrow"><button type="button" id="lbseamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button><button type="button" id="lbluluToggle" class="seam-btn" aria-pressed="false">Show Lulu guide</button></div>
+  </div>
+  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
+</div>
+<script>
+document.getElementById('seamToggle').addEventListener('click',function(){var on=document.body.classList.toggle('guides-on');this.setAttribute('aria-pressed',on?'true':'false');this.textContent=on?'Hide seam guide':'Show seam guide';});
+</script>
+
+<script>
+// Lulu spread guide (Jon 2026-10-21). Overlays are injected at runtime —
+// one per card image and one for the viewer — so card markup stays
+// untouched and later-posted cards are covered on the next load. The page
+// toggle and the viewer toggle are fully independent of each other and of
+// the seam guides (either / both / neither can be on). Opening the viewer
+// starts its Lulu state from the page's, mirroring the seam guide.
+(function(){
+  function build(){
+    var d=document.createElement('div');
+    d.className='lulu-guide'; d.setAttribute('aria-hidden','true');
+    d.innerHTML='<i class="gutter"></i><i class="edge"></i><i class="safe l"></i><i class="safe r"></i><i class="fold"></i><span class="lulu-label sl">SAFE</span><span class="lulu-label sr">SAFE</span><span class="lulu-label gu">GUTTER</span>';
+    return d;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.card .imgwrap'),function(w){ w.appendChild(build()); });
+  var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbfig=document.getElementById('lbfig'), lbwrap=document.getElementById('lbwrap'),
+      lbluluBtn=document.getElementById('lbluluToggle'), lblulu=null;
+  if(lbwrap){ lblulu=build(); lblulu.id='lblulu'; lbwrap.appendChild(lblulu); }
+  var btn=document.getElementById('luluToggle');
+  if(btn) btn.addEventListener('click',function(){var on=document.body.classList.toggle('lulu-on');this.setAttribute('aria-pressed',on?'true':'false');this.textContent=on?'Hide Lulu guide':'Show Lulu guide';});
+  var lbLuluOn=false;
+  // Map the viewer overlay onto the image's rendered content box, exactly
+  // like the seam guide's placeSeam, so it stays true in fullscreen/.zoomed.
+  function placeLulu(){
+    if(!lb||!lblulu||!lb.classList.contains('open')||!lbLuluOn) return;
+    var nw=lbimg.naturalWidth, nh=lbimg.naturalHeight; if(!nw||!nh) return;
+    var r=lbimg.getBoundingClientRect(), w=lbwrap.getBoundingClientRect();
+    if(!r.width||!w.width) return;
+    var s=Math.min(r.width/nw,r.height/nh), cw=nw*s, ch=nh*s;
+    lblulu.style.left=(r.left+(r.width-cw)/2-w.left)+'px';
+    lblulu.style.top=(r.top+(r.height-ch)/2-w.top)+'px';
+    lblulu.style.width=cw+'px';
+    lblulu.style.height=ch+'px';
+  }
+  function placeLuluSoon(){ requestAnimationFrame(placeLulu); }
+  function applyLulu(){
+    if(!lbfig||!lbluluBtn) return;
+    lbfig.classList.toggle('lulu-on',lbLuluOn);
+    lbluluBtn.textContent=lbLuluOn?'Hide Lulu guide':'Show Lulu guide';
+    lbluluBtn.setAttribute('aria-pressed',lbLuluOn?'true':'false');
+    if(lbLuluOn) placeLuluSoon();
+  }
+  if(lbluluBtn) lbluluBtn.addEventListener('click',function(e){ e.stopPropagation(); lbLuluOn=!lbLuluOn; applyLulu(); });
+  // Viewer opens via a card-image click: start from the page's Lulu state.
+  document.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    if(e.target.closest('.card img')&&lb){ lbLuluOn=document.body.classList.contains('lulu-on'); applyLulu(); }
+  });
+  if(lbimg) lbimg.addEventListener('load',placeLuluSoon);
+  window.addEventListener('resize',placeLuluSoon);
+  document.addEventListener('fullscreenchange',placeLuluSoon);
+  document.addEventListener('webkitfullscreenchange',placeLuluSoon);
+  ['fs','fclose'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click',function(){ placeLuluSoon(); setTimeout(placeLulu,380); }); });
+})();
+</script>
+<script>
+// Lightbox — showcase-style viewer (mirrors index.html's #lb pattern).
+// Event delegation: any .card img opens the viewer, so cards posted later work too.
+(function(){
+  var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum'),
+      lbfig=document.getElementById('lbfig'),
+      lbwrap=document.getElementById('lbwrap'), lbseam=document.getElementById('lbseam'),
+      lbseamBtn=document.getElementById('lbseamToggle');
+  var lbSeamOn=false;
+  var cards=[], cur=0;
+  function collect(){ cards=Array.prototype.slice.call(document.querySelectorAll('main figure.card')); }
+  function show(i){
+    var n=cards.length; if(!n) return;
+    cur=((i%n)+n)%n;
+    var fig=cards[cur], img=fig.querySelector('img'), cap=fig.querySelector('figcaption');
+    lbimg.src=img.getAttribute('src'); lbimg.alt=img.getAttribute('alt')||'';
+    lbcap.innerHTML=cap?cap.innerHTML:'';
+    lbnum.textContent='Image '+(cur+1)+' of '+n;
+    placeSeamSoon();
+  }
+  // Seam guide in the viewer: local state only, never touches the page's
+  // guides. placeSeam maps the overlay onto the image's rendered content
+  // box, so it stays true in the overlay, fullscreen and .zoomed states.
+  function placeSeam(){
+    if(!lb.classList.contains('open')||!lbSeamOn) return;
+    var nw=lbimg.naturalWidth, nh=lbimg.naturalHeight; if(!nw||!nh) return;
+    var r=lbimg.getBoundingClientRect(), w=lbwrap.getBoundingClientRect();
+    if(!r.width||!w.width) return;
+    var s=Math.min(r.width/nw,r.height/nh), cw=nw*s, ch=nh*s;
+    lbseam.style.left=(r.left+(r.width-cw)/2-w.left)+'px';
+    lbseam.style.top=(r.top+(r.height-ch)/2-w.top)+'px';
+    lbseam.style.width=cw+'px';
+    lbseam.style.height=ch+'px';
+  }
+  function placeSeamSoon(){ requestAnimationFrame(placeSeam); }
+  function applySeam(){
+    lbfig.classList.toggle('seam-on',lbSeamOn);
+    lbseamBtn.textContent=lbSeamOn?'Hide seam guide':'Show seam guide';
+    lbseamBtn.setAttribute('aria-pressed',lbSeamOn?'true':'false');
+    if(lbSeamOn) placeSeamSoon();
+  }
+  function toggleSeam(){ lbSeamOn=!lbSeamOn; applySeam(); }
+  function openLb(fig){
+    collect();
+    var i=cards.indexOf(fig); if(i<0) return;
+    lb.classList.add('open'); document.body.style.overflow='hidden';
+    lbSeamOn=document.body.classList.contains('guides-on'); applySeam();
+    show(i);
+  }
+  function closeLb(){
+    if(document.fullscreenElement) document.exitFullscreen();
+    lb.classList.remove('zoomed'); lb.classList.remove('open'); document.body.style.overflow='';
+  }
+  function step(d){ show(cur+d); }
+  var isIOS=/iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+  function toggleZoom(){
+    if(document.fullscreenElement){ document.exitFullscreen(); return; }
+    if(lb.classList.contains('zoomed')){ lb.classList.remove('zoomed'); return; }
+    if(isIOS){ lb.classList.add('zoomed'); return; }
+    if(lbfig.requestFullscreen){ lbfig.requestFullscreen().catch(function(){ lb.classList.add('zoomed'); }); }
+    else if(lbfig.webkitRequestFullscreen){ lbfig.webkitRequestFullscreen(); }
+    else { lb.classList.add('zoomed'); }
+  }
+  document.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var img=e.target.closest('.card img');
+    if(img){ var fig=img.closest('figure.card'); if(fig) openLb(fig); }
+  });
+  document.getElementById('close').addEventListener('click',closeLb);
+  document.getElementById('prev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('next').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fprev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('fnext').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fclose').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); });
+  document.getElementById('fs').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); });
+  lbseamBtn.addEventListener('click',function(e){ e.stopPropagation(); toggleSeam(); });
+  lbimg.addEventListener('load',placeSeamSoon);
+  window.addEventListener('resize',placeSeamSoon);
+  lb.addEventListener('click',function(e){ if(e.target===lb) closeLb(); });
+  lbimg.addEventListener('click',function(e){
+    if(document.fullscreenElement===lbfig||lb.classList.contains('zoomed')){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); }
+  });
+  function fsChanged(){
+    if(document.fullscreenElement!==lbfig&&document.webkitFullscreenElement!==lbfig)
+      lb.classList.remove('zoomed');
+    placeSeamSoon();
+  }
+  document.addEventListener('fullscreenchange',fsChanged);
+  document.addEventListener('webkitfullscreenchange',fsChanged);
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape'){ if(document.fullscreenElement) return; closeLb(); }
+    if(e.key==='ArrowLeft') step(-1);
+    if(e.key==='ArrowRight') step(1);
+  });
+})();
+</script>
+
+<button type="button" id="toTop" aria-label="Back to top" title="Back to top">&#8593;</button>
+
+<script>
+// Section jump nav + back-to-top (Jon 2026-10-21). The nav mirrors Spread
+// Options' jump strip. V2 cards are a flat run of figures (no per-spread
+// sections in the markup), so this script tags the first card of each spread
+// with its S## id at runtime and smooth-scrolls with the sticky chrome
+// (header + strip) offset. File markup stays untouched, so the card-posting
+// helpers are unaffected.
+(function(){
+  var header=document.querySelector('header'), nav=document.getElementById('jumpnav'),
+      btn=document.getElementById('toTop'), lb=document.getElementById('lb');
+  var seen={};
+  Array.prototype.forEach.call(document.querySelectorAll('main figure.card'),function(fig){
+    var tag=fig.querySelector('.tag'); if(!tag) return;
+    var m=/^S(\d{2})-/.exec(tag.textContent.replace(/^\s+|\s+$/g,'')); if(!m) return;
+    var code='S'+m[1];
+    if(!seen[code]){ seen[code]=1; if(!fig.id) fig.id=code; }
+  });
+  function stick(){ if(nav&&header) nav.style.top=header.offsetHeight+'px'; }
+  stick();
+  window.addEventListener('resize',stick);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(stick);
+  function chromeH(){ return (header?header.offsetHeight:0)+(nav?nav.offsetHeight:0); }
+  var settleTimers=[];
+  function clearSettle(){ settleTimers.forEach(clearTimeout); settleTimers=[]; }
+  ['wheel','touchstart'].forEach(function(ev){
+    window.addEventListener(ev,clearSettle,{passive:true});
+  });
+  function alignTo(el,behavior){
+    var y=el.getBoundingClientRect().top+window.scrollY-chromeH()-8;
+    window.scrollTo({top:y<0?0:y,behavior:behavior});
+  }
+  function jumpTo(code){
+    var el=document.getElementById(code); if(!el) return;
+    clearSettle();
+    alignTo(el,'smooth');
+    // Lazy images above the target keep loading and push it down; re-align
+    // a few times as the layout settles (cancelled if Jon scrolls himself).
+    [500,1200,2200].forEach(function(ms){
+      settleTimers.push(setTimeout(function(){
+        if(Math.abs(el.getBoundingClientRect().top-(chromeH()+8))>6) alignTo(el,'auto');
+      },ms));
+    });
+  }
+  if(nav) nav.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var a=e.target.closest('a[href^="#S"]'); if(!a) return;
+    e.preventDefault();
+    var code=a.getAttribute('href').slice(1);
+    jumpTo(code);
+    try{ history.replaceState(null,'','#'+code); }catch(_){}
+  });
+  // Mobile Sections dropdown (<=640px): same jump as the strip links.
+  var sel=document.getElementById('sectionJump');
+  if(sel) sel.addEventListener('change',function(){
+    if(!sel.value) return;
+    jumpTo(sel.value);
+    try{ history.replaceState(null,'','#'+sel.value); }catch(_){}
+  });
+  if(/^#S\d{2}$/.test(location.hash||'')){
+    var h=location.hash.slice(1);
+    setTimeout(function(){ jumpTo(h); },80);
+  }
+  function upd(){
+    var show=window.scrollY>600&&!(lb&&lb.classList.contains('open'));
+    btn.classList.toggle('show',show);
+  }
+  window.addEventListener('scroll',upd,{passive:true});
+  upd();
+  btn.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+  if(lb&&window.MutationObserver) new MutationObserver(upd).observe(lb,{attributes:true,attributeFilter:['class']});
+})();
+</script>
+</body></html>
