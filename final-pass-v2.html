@@ -27,6 +27,29 @@ body.guides-on .seam-guide{display:block}
 .seam-guide .line{position:absolute;top:0;bottom:0;left:50%;border-left:2px dashed rgba(255,255,255,.95);filter:drop-shadow(0 0 2px rgba(30,20,10,.85))}
 .seam-guide .seam-label{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-family:Georgia,serif;font-size:11px;font-style:italic;color:#fff;background:rgba(43,33,24,.65);padding:1px 8px;border-radius:9px;letter-spacing:.04em;white-space:nowrap}
 .seam-btn{margin-top:10px;font-family:Georgia,serif;font-size:14px;cursor:pointer;background:#f5e9d5;color:#2b2118;border:1px solid #7a4f21;border-radius:8px;padding:6px 14px;min-height:36px}
+
+.card img{cursor:zoom-in}
+#lb{position:fixed;inset:0;background:rgba(24,18,12,.94);display:none;align-items:center;justify-content:center;z-index:50;padding:14px;box-sizing:border-box}
+#lb.open{display:flex}
+#lbfig{margin:0;max-width:min(1100px,94vw);text-align:center;position:relative}
+#lbimg{max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#lbcapbar{color:#f5efe2;margin-top:.9rem;font-size:1.02rem;line-height:1.45;display:flex;align-items:center;justify-content:center;gap:12px}
+#lbcapbar .t{display:flex;flex-direction:column;text-align:left}
+#lbnum{display:block;font-size:.88rem;opacity:.65;margin-top:.25rem}
+#lbcap .kind{color:#e3c878}
+#close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#221910 0%,#3a2d1b 55%,#5e4a24 100%);border:1px solid rgba(94,74,36,.65);color:#faf6ee;font-size:1.3rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18);line-height:1;z-index:2}
+#fs{position:absolute;bottom:14px;right:14px;width:42px;height:42px;border-radius:50%;background:#faf6ee;border:none;color:#3d3229;font-size:1.15rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.4);line-height:1;z-index:2}
+#lb .nav{width:38px;height:38px;border-radius:50%;cursor:pointer;flex:none;background:#faf6ee;border:none;color:#3d3229;font-size:1.5rem;font-weight:bold;box-shadow:0 3px 12px rgba(0,0,0,.4);line-height:1;padding-bottom:3px}
+.fnav,.fclose{display:none}
+#lb.zoomed{padding:0}
+#lbfig:fullscreen,#lbfig:-webkit-full-screen,#lb.zoomed #lbfig{width:100vw;height:100vh;max-width:100vw;background:#000;display:flex;align-items:center;justify-content:center}
+#lbfig:fullscreen #lbimg,#lbfig:-webkit-full-screen #lbimg,#lb.zoomed #lbimg{width:100vw;height:100vh;max-width:100vw;max-height:100vh;object-fit:contain;border-radius:0;box-shadow:none}
+#lbfig:fullscreen #lbcapbar,#lbfig:-webkit-full-screen #lbcapbar,#lb.zoomed #lbcapbar{display:none}
+#lbfig:fullscreen .fnav,#lbfig:-webkit-full-screen .fnav,#lb.zoomed .fnav{display:block;position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.6rem;font-weight:bold;cursor:pointer;z-index:3;line-height:1;padding-bottom:3px}
+#lbfig:fullscreen #fprev,#lbfig:-webkit-full-screen #fprev,#lb.zoomed #fprev{left:16px}
+#lbfig:fullscreen #fnext,#lbfig:-webkit-full-screen #fnext,#lb.zoomed #fnext{right:16px}
+#lbfig:fullscreen .fclose,#lbfig:-webkit-full-screen .fclose,#lb.zoomed .fclose{display:block;position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.35rem;cursor:pointer;z-index:3;line-height:1}
+@media (max-width:600px){#lbimg{max-height:62vh}}
 </style></head><body>
 <header><h1>Revised Versions — Final Pass V2</h1>
 <p>45 cards — all 24 spreads: the keepers, bases and donors from Jon + Lois's full review call (Oct 21, 2026). The hopefully-final round — new generations post on this page, after their base card. The gold caption band marks the current best version of each spread. V1 keeps every earlier version, untouched: <a href="final-pass.html" style="color:#f5e9d5">the V1 page</a>. The full board (all versions ever) is still on Spread Options.</p><button type="button" id="seamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button></header>
@@ -212,7 +235,90 @@ body.guides-on .seam-guide{display:block}
 <figcaption><span class="tag">S24-P</span> <span class="kind">V2 donor</span><br>Jon + Lois: donor — its little bed is the one the new S24 takes.</figcaption>
 </figure>
 </main>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+  <button id="close" aria-label="Close viewer">&times;</button>
+  <div id="lbfig">
+    <img id="lbimg" src="" alt="">
+    <button class="fnav" id="fprev" aria-label="Previous image">&#8249;</button>
+    <button class="fnav" id="fnext" aria-label="Next image">&#8250;</button>
+    <button class="fclose" id="fclose" aria-label="Exit fullscreen">&times;</button>
+    <div id="lbcapbar">
+      <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
+      <span class="t"><span id="lbcap"></span><span class="n" id="lbnum"></span></span>
+      <button class="nav" id="next" aria-label="Next image">&#8250;</button>
+    </div>
+  </div>
+  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
+</div>
 <script>
 document.getElementById('seamToggle').addEventListener('click',function(){var on=document.body.classList.toggle('guides-on');this.setAttribute('aria-pressed',on?'true':'false');this.textContent=on?'Hide seam guide':'Show seam guide';});
+</script>
+<script>
+// Lightbox — showcase-style viewer (mirrors index.html's #lb pattern).
+// Event delegation: any .card img opens the viewer, so cards posted later work too.
+(function(){
+  var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum'),
+      lbfig=document.getElementById('lbfig');
+  var cards=[], cur=0;
+  function collect(){ cards=Array.prototype.slice.call(document.querySelectorAll('main figure.card')); }
+  function show(i){
+    var n=cards.length; if(!n) return;
+    cur=((i%n)+n)%n;
+    var fig=cards[cur], img=fig.querySelector('img'), cap=fig.querySelector('figcaption');
+    lbimg.src=img.getAttribute('src'); lbimg.alt=img.getAttribute('alt')||'';
+    lbcap.innerHTML=cap?cap.innerHTML:'';
+    lbnum.textContent='Image '+(cur+1)+' of '+n;
+  }
+  function openLb(fig){
+    collect();
+    var i=cards.indexOf(fig); if(i<0) return;
+    lb.classList.add('open'); document.body.style.overflow='hidden';
+    show(i);
+  }
+  function closeLb(){
+    if(document.fullscreenElement) document.exitFullscreen();
+    lb.classList.remove('zoomed'); lb.classList.remove('open'); document.body.style.overflow='';
+  }
+  function step(d){ show(cur+d); }
+  var isIOS=/iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+  function toggleZoom(){
+    if(document.fullscreenElement){ document.exitFullscreen(); return; }
+    if(lb.classList.contains('zoomed')){ lb.classList.remove('zoomed'); return; }
+    if(isIOS){ lb.classList.add('zoomed'); return; }
+    if(lbfig.requestFullscreen){ lbfig.requestFullscreen().catch(function(){ lb.classList.add('zoomed'); }); }
+    else if(lbfig.webkitRequestFullscreen){ lbfig.webkitRequestFullscreen(); }
+    else { lb.classList.add('zoomed'); }
+  }
+  document.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var img=e.target.closest('.card img');
+    if(img){ var fig=img.closest('figure.card'); if(fig) openLb(fig); }
+  });
+  document.getElementById('close').addEventListener('click',closeLb);
+  document.getElementById('prev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('next').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fprev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('fnext').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fclose').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); });
+  document.getElementById('fs').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); });
+  lb.addEventListener('click',function(e){ if(e.target===lb) closeLb(); });
+  lbimg.addEventListener('click',function(e){
+    if(document.fullscreenElement===lbfig||lb.classList.contains('zoomed')){ e.stopPropagation(); toggleZoom(); }
+  });
+  function fsChanged(){
+    if(document.fullscreenElement!==lbfig&&document.webkitFullscreenElement!==lbfig)
+      lb.classList.remove('zoomed');
+  }
+  document.addEventListener('fullscreenchange',fsChanged);
+  document.addEventListener('webkitfullscreenchange',fsChanged);
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape'){ if(document.fullscreenElement) return; closeLb(); }
+    if(e.key==='ArrowLeft') step(-1);
+    if(e.key==='ArrowRight') step(1);
+  });
+})();
 </script>
 </body></html>
