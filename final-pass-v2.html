@@ -74,10 +74,56 @@ body.guides-on .seam-guide{display:block}
 #toTop{position:fixed;right:14px;bottom:14px;width:46px;height:46px;border-radius:50%;background:#f5e9d5;color:#2b2118;border:1px solid #7a4f21;font-family:Georgia,serif;font-size:1.3rem;line-height:1;cursor:pointer;box-shadow:0 3px 12px rgba(60,40,10,.35);z-index:40;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease,visibility .25s}
 #toTop.show{opacity:1;visibility:visible;transform:none}
 #toTop:hover{background:#f4ca5e}
+/* Mobile Sections dropdown (Jon 2026-10-21) — mirrors Spread Options'
+   .bar-compact / .section-pick pattern: at <=640px the inline strip links
+   hide and a Sections <select> shows instead (same breakpoint). */
+.bar-compact{display:none}
+@media (max-width:640px){
+.jumpnav>a{display:none}
+.bar-compact{display:flex;align-items:center;flex-wrap:nowrap;gap:.6rem;width:100%}
+.section-pick{display:flex;align-items:center;gap:.45rem;flex:1 1 auto;min-width:0;font-size:.92rem;font-style:italic;white-space:nowrap;color:#2b2118}
+.section-pick select{flex:1 1 auto;min-width:120px;width:0;min-height:40px;font-family:Georgia,'Times New Roman',serif;font-size:1rem;color:#2b2118;background:#fff;border:1px solid #e3d5bd;border-radius:8px;padding:0 .45rem}
+}
+@media (max-width:360px){
+.bar-compact{gap:.35rem}
+.section-pick{gap:.3rem;flex:1 1 0}
+.section-pick select{min-width:96px;padding:0 .25rem}
+}
 </style></head><body>
 <header><h1>Revised Versions — Final Pass V2</h1>
 <p>77 cards — all 24 spreads: the keepers, bases and donors from Jon + Lois's full review call (Oct 21, 2026). The hopefully-final round — new generations post on this page, after their base card. The gold caption band marks the current best version of each spread. V1 keeps every earlier version, untouched: <a href="final-pass.html" style="color:#f5e9d5">the V1 page</a>. The full board (all versions ever) is still on Spread Options.</p><button type="button" id="seamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button></header>
 <nav class="jumpnav" id="jumpnav" aria-label="Jump to a spread">
+  <div class="bar-compact">
+    <label class="section-pick">Sections
+      <select id="sectionJump" aria-label="Sections">
+        <option value="">Sections…</option>
+        <option value="S01">S01</option>
+        <option value="S02">S02</option>
+        <option value="S03">S03</option>
+        <option value="S04">S04</option>
+        <option value="S05">S05</option>
+        <option value="S06">S06</option>
+        <option value="S07">S07</option>
+        <option value="S08">S08</option>
+        <option value="S09">S09</option>
+        <option value="S10">S10</option>
+        <option value="S11">S11</option>
+        <option value="S12">S12</option>
+        <option value="S13">S13</option>
+        <option value="S14">S14</option>
+        <option value="S15">S15</option>
+        <option value="S16">S16</option>
+        <option value="S17">S17</option>
+        <option value="S18">S18</option>
+        <option value="S19">S19</option>
+        <option value="S20">S20</option>
+        <option value="S21">S21</option>
+        <option value="S22">S22</option>
+        <option value="S23">S23</option>
+        <option value="S24">S24</option>
+      </select>
+    </label>
+  </div>
   <a href="#S01">S01</a>
   <a href="#S02">S02</a>
   <a href="#S03">S03</a>
@@ -590,6 +636,13 @@ document.getElementById('seamToggle').addEventListener('click',function(){var on
     var code=a.getAttribute('href').slice(1);
     jumpTo(code);
     try{ history.replaceState(null,'','#'+code); }catch(_){}
+  });
+  // Mobile Sections dropdown (<=640px): same jump as the strip links.
+  var sel=document.getElementById('sectionJump');
+  if(sel) sel.addEventListener('change',function(){
+    if(!sel.value) return;
+    jumpTo(sel.value);
+    try{ history.replaceState(null,'','#'+sel.value); }catch(_){}
   });
   if(/^#S\d{2}$/.test(location.hash||'')){
     var h=location.hash.slice(1);
