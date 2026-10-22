@@ -50,6 +50,14 @@ body.guides-on .seam-guide{display:block}
 #lbfig:fullscreen #fnext,#lbfig:-webkit-full-screen #fnext,#lb.zoomed #fnext{right:16px}
 #lbfig:fullscreen .fclose,#lbfig:-webkit-full-screen .fclose,#lb.zoomed .fclose{display:block;position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.35rem;cursor:pointer;z-index:3;line-height:1}
 @media (max-width:600px){#lbimg{max-height:62vh}}
+/* Lightbox seam guide (Jon 2026-10-21): #lbwrap shrink-wraps the image;
+   #lbseam display is keyed to #lbfig.seam-on only — the id rules outrank the
+   cards' body.guides-on .seam-guide rules, so viewer and page guides never
+   couple. Inner band/line/label reuse the cards' .seam-guide child styles. */
+#lbwrap{position:relative;display:inline-block;line-height:0;max-width:100%}
+#lbseam{display:none}
+#lbfig.seam-on #lbseam{display:block}
+#lbseamToggle{position:absolute;left:10px;bottom:10px;z-index:4;margin:0;box-shadow:0 3px 12px rgba(0,0,0,.45)}
 </style></head><body>
 <header><h1>Revised Versions — Final Pass V2</h1>
 <p>45 cards — all 24 spreads: the keepers, bases and donors from Jon + Lois's full review call (Oct 21, 2026). The hopefully-final round — new generations post on this page, after their base card. The gold caption band marks the current best version of each spread. V1 keeps every earlier version, untouched: <a href="final-pass.html" style="color:#f5e9d5">the V1 page</a>. The full board (all versions ever) is still on Spread Options.</p><button type="button" id="seamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button></header>
@@ -239,7 +247,7 @@ body.guides-on .seam-guide{display:block}
 <div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button id="close" aria-label="Close viewer">&times;</button>
   <div id="lbfig">
-    <img id="lbimg" src="" alt="">
+    <div id="lbwrap"><img id="lbimg" src="" alt=""><div class="seam-guide" id="lbseam" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div><button type="button" id="lbseamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button></div>
     <button class="fnav" id="fprev" aria-label="Previous image">&#8249;</button>
     <button class="fnav" id="fnext" aria-label="Next image">&#8250;</button>
     <button class="fclose" id="fclose" aria-label="Exit fullscreen">&times;</button>
@@ -260,7 +268,10 @@ document.getElementById('seamToggle').addEventListener('click',function(){var on
 (function(){
   var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
       lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum'),
-      lbfig=document.getElementById('lbfig');
+      lbfig=document.getElementById('lbfig'),
+      lbwrap=document.getElementById('lbwrap'), lbseam=document.getElementById('lbseam'),
+      lbseamBtn=document.getElementById('lbseamToggle');
+  var lbSeamOn=false;
   var cards=[], cur=0;
   function collect(){ cards=Array.prototype.slice.call(document.querySelectorAll('main figure.card')); }
   function show(i){
@@ -270,11 +281,35 @@ document.getElementById('seamToggle').addEventListener('click',function(){var on
     lbimg.src=img.getAttribute('src'); lbimg.alt=img.getAttribute('alt')||'';
     lbcap.innerHTML=cap?cap.innerHTML:'';
     lbnum.textContent='Image '+(cur+1)+' of '+n;
+    placeSeamSoon();
   }
+  // Seam guide in the viewer: local state only, never touches the page's
+  // guides. placeSeam maps the overlay onto the image's rendered content
+  // box, so it stays true in the overlay, fullscreen and .zoomed states.
+  function placeSeam(){
+    if(!lb.classList.contains('open')||!lbSeamOn) return;
+    var nw=lbimg.naturalWidth, nh=lbimg.naturalHeight; if(!nw||!nh) return;
+    var r=lbimg.getBoundingClientRect(), w=lbwrap.getBoundingClientRect();
+    if(!r.width||!w.width) return;
+    var s=Math.min(r.width/nw,r.height/nh), cw=nw*s, ch=nh*s;
+    lbseam.style.left=(r.left+(r.width-cw)/2-w.left)+'px';
+    lbseam.style.top=(r.top+(r.height-ch)/2-w.top)+'px';
+    lbseam.style.width=cw+'px';
+    lbseam.style.height=ch+'px';
+  }
+  function placeSeamSoon(){ requestAnimationFrame(placeSeam); }
+  function applySeam(){
+    lbfig.classList.toggle('seam-on',lbSeamOn);
+    lbseamBtn.textContent=lbSeamOn?'Hide seam guide':'Show seam guide';
+    lbseamBtn.setAttribute('aria-pressed',lbSeamOn?'true':'false');
+    if(lbSeamOn) placeSeamSoon();
+  }
+  function toggleSeam(){ lbSeamOn=!lbSeamOn; applySeam(); }
   function openLb(fig){
     collect();
     var i=cards.indexOf(fig); if(i<0) return;
     lb.classList.add('open'); document.body.style.overflow='hidden';
+    lbSeamOn=document.body.classList.contains('guides-on'); applySeam();
     show(i);
   }
   function closeLb(){
@@ -301,15 +336,19 @@ document.getElementById('seamToggle').addEventListener('click',function(){var on
   document.getElementById('next').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
   document.getElementById('fprev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
   document.getElementById('fnext').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
-  document.getElementById('fclose').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); });
-  document.getElementById('fs').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); });
+  document.getElementById('fclose').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); });
+  document.getElementById('fs').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); });
+  lbseamBtn.addEventListener('click',function(e){ e.stopPropagation(); toggleSeam(); });
+  lbimg.addEventListener('load',placeSeamSoon);
+  window.addEventListener('resize',placeSeamSoon);
   lb.addEventListener('click',function(e){ if(e.target===lb) closeLb(); });
   lbimg.addEventListener('click',function(e){
-    if(document.fullscreenElement===lbfig||lb.classList.contains('zoomed')){ e.stopPropagation(); toggleZoom(); }
+    if(document.fullscreenElement===lbfig||lb.classList.contains('zoomed')){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); }
   });
   function fsChanged(){
     if(document.fullscreenElement!==lbfig&&document.webkitFullscreenElement!==lbfig)
       lb.classList.remove('zoomed');
+    placeSeamSoon();
   }
   document.addEventListener('fullscreenchange',fsChanged);
   document.addEventListener('webkitfullscreenchange',fsChanged);
