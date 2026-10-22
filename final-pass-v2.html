@@ -57,7 +57,12 @@ body.guides-on .seam-guide{display:block}
 #lbwrap{position:relative;display:inline-block;line-height:0;max-width:100%}
 #lbseam{display:none}
 #lbfig.seam-on #lbseam{display:block}
-#lbseamToggle{position:absolute;left:10px;bottom:10px;z-index:4;margin:0;box-shadow:0 3px 12px rgba(0,0,0,.45)}
+#lbseamToggle{margin:0;box-shadow:0 3px 12px rgba(0,0,0,.45)}
+/* Jon 2026-10-21 (later): overlay mode — the toggle lives in its own row
+   under the caption bar, off the picture. Fullscreen/.zoomed pin the row
+   to the figure's bottom-left, below the letterboxed image, as before. */
+#lbseamrow{margin-top:10px;text-align:left}
+#lbfig:fullscreen #lbseamrow,#lbfig:-webkit-full-screen #lbseamrow,#lb.zoomed #lbseamrow{position:absolute;left:10px;bottom:10px;margin:0;z-index:4}
 </style></head><body>
 <header><h1>Revised Versions — Final Pass V2</h1>
 <p>45 cards — all 24 spreads: the keepers, bases and donors from Jon + Lois's full review call (Oct 21, 2026). The hopefully-final round — new generations post on this page, after their base card. The gold caption band marks the current best version of each spread. V1 keeps every earlier version, untouched: <a href="final-pass.html" style="color:#f5e9d5">the V1 page</a>. The full board (all versions ever) is still on Spread Options.</p><button type="button" id="seamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button></header>
@@ -247,7 +252,7 @@ body.guides-on .seam-guide{display:block}
 <div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button id="close" aria-label="Close viewer">&times;</button>
   <div id="lbfig">
-    <div id="lbwrap"><img id="lbimg" src="" alt=""><div class="seam-guide" id="lbseam" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div><button type="button" id="lbseamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button></div>
+    <div id="lbwrap"><img id="lbimg" src="" alt=""><div class="seam-guide" id="lbseam" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
     <button class="fnav" id="fprev" aria-label="Previous image">&#8249;</button>
     <button class="fnav" id="fnext" aria-label="Next image">&#8250;</button>
     <button class="fclose" id="fclose" aria-label="Exit fullscreen">&times;</button>
@@ -256,6 +261,7 @@ body.guides-on .seam-guide{display:block}
       <span class="t"><span id="lbcap"></span><span class="n" id="lbnum"></span></span>
       <button class="nav" id="next" aria-label="Next image">&#8250;</button>
     </div>
+    <div id="lbseamrow"><button type="button" id="lbseamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button></div>
   </div>
   <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
 </div>
