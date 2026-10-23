@@ -115,9 +115,41 @@ body.lulu-on .card .lulu-guide{display:block}
 .section-pick{gap:.3rem;flex:1 1 0}
 .section-pick select{min-width:96px;padding:0 .25rem}
 }
+/* Header hide toggle (Jon 2026-10-22): chevron collapses the sticky gradient
+   header to a slim bar so the cards get the screen on mobile. The choice
+   persists per device (localStorage 'v4hdr'); the inline script right after
+   the header restores it before the cards paint, and fires resize so the
+   jump-nav script re-pins itself under the slimmer header. */
+#hdrToggle{position:absolute;top:8px;right:10px;width:34px;height:34px;border-radius:50%;background:rgba(245,233,213,.16);border:1px solid rgba(245,233,213,.55);color:#f5e9d5;font-size:15px;line-height:1;cursor:pointer;padding:0;z-index:6}
+#hdrToggle:active{background:rgba(245,233,213,.34)}
+header h1{padding-right:42px}
+#hdrMini{display:none;font-size:14.5px;font-weight:bold;line-height:30px}
+header.collapsed{padding:6px 16px}
+header.collapsed h1,header.collapsed p,header.collapsed .seam-btn{display:none}
+header.collapsed #hdrMini{display:inline-block}
 </style></head><body>
-<header><h1>Final Pass V4 — Jon + Lois's picks</h1>
-<p>26 cards — one gold pick for each of the 24 spreads. On Oct 22, 2026, Jon and Lois went through the V3 page together and made the final calls: 14 versions carried over exactly as they were, and 10 spreads got new V4 versions built to their notes — each new version's caption says what changed. Each spread's gold pick wears the gold band: this is the decided set. Final Pass V3 stays exactly as it is, as the record of the decision round: <a href="final-pass-v3.html" style="color:#f5e9d5">the V3 page</a>. Final Pass V2 keeps the full working record: <a href="final-pass-v2.html" style="color:#f5e9d5">the V2 page</a>. V1 keeps every earlier version, untouched: <a href="final-pass.html" style="color:#f5e9d5">the V1 page</a>. And every version ever made is on Spread Options.</p><button type="button" id="seamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button><button type="button" id="luluToggle" class="seam-btn lulu-btn" aria-pressed="false">Show Lulu guide</button></header>
+<header><span id="hdrMini">Final Pass V4 — Jon + Lois's picks</span><h1>Final Pass V4 — Jon + Lois's picks</h1>
+<p>26 cards — one gold pick for each of the 24 spreads. On Oct 22, 2026, Jon and Lois went through the V3 page together and made the final calls: 14 versions carried over exactly as they were, and 10 spreads got new V4 versions built to their notes — each new version's caption says what changed. Each spread's gold pick wears the gold band: this is the decided set. Final Pass V3 stays exactly as it is, as the record of the decision round: <a href="final-pass-v3.html" style="color:#f5e9d5">the V3 page</a>. Final Pass V2 keeps the full working record: <a href="final-pass-v2.html" style="color:#f5e9d5">the V2 page</a>. V1 keeps every earlier version, untouched: <a href="final-pass.html" style="color:#f5e9d5">the V1 page</a>. And every version ever made is on Spread Options.</p><button type="button" id="seamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button><button type="button" id="luluToggle" class="seam-btn lulu-btn" aria-pressed="false">Show Lulu guide</button><button type="button" id="hdrToggle" aria-label="Hide header" aria-expanded="true" title="Hide header">&#9650;</button><script>
+// Header hide/show (Jon 2026-10-22) — see the CSS note above.
+(function(){
+  var header=document.querySelector('header'), btn=document.getElementById('hdrToggle');
+  if(!header||!btn) return;
+  function apply(hidden){
+    header.classList.toggle('collapsed',hidden);
+    btn.innerHTML=hidden?'&#9660;':'&#9650;';
+    btn.setAttribute('aria-expanded',hidden?'false':'true');
+    btn.setAttribute('aria-label',hidden?'Show header':'Hide header');
+    btn.title=hidden?'Show header':'Hide header';
+    try{ localStorage.setItem('v4hdr',hidden?'hidden':'shown'); }catch(_){}
+    window.dispatchEvent(new Event('resize'));
+  }
+  btn.addEventListener('click',function(){ apply(!header.classList.contains('collapsed')); });
+  var start=false;
+  try{ start=localStorage.getItem('v4hdr')==='hidden'; }catch(_){}
+  if(start) apply(true);
+})();
+</script>
+</header>
 <nav class="jumpnav" id="jumpnav" aria-label="Jump to a spread">
   <div class="bar-compact">
     <label class="section-pick">Sections
