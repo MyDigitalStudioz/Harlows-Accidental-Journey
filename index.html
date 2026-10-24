@@ -365,7 +365,7 @@
 
 <section id="spreads">
   <div class="wrap">
-    <h2>Current favorites</h2>
+    <h2>Gold Finals</h2>
     <p class="hint">One picture per spread &mdash; the current favorite from the colored dots on Spread Options. Tap the letter under a picture to see that version there.</p>
     <p class="hint">Tap any spread to view it big &mdash; then tap the large arrow buttons on the sides to move through them.</p>
     <p class="hint">Want to compare versions? <a href="spread-options.html">Every version of every spread &rarr;</a></p>
@@ -641,9 +641,9 @@ function renderGallery(el){
     if(s.letter){
       const m=document.createElement('div'); m.className='scmeta';
       const dots=(s.dots||[]);
-      m.innerHTML='<span class="scdots" aria-label="'+(dots.length?'Picked by '+dots.map(w=>FAV_NAMES[w]).join(', '):'No picks yet')+'">'+
+      m.innerHTML=(el.dataset.gallery==='spreads'?'':'<span class="scdots" aria-label="'+(dots.length?'Picked by '+dots.map(w=>FAV_NAMES[w]).join(', '):'No picks yet')+'">'+
         (dots.length?dots.map(w=>'<span class="fav-dot '+w+'" title="'+FAV_NAMES[w]+'">'+w+'</span>').join(''):'<span class="none">no picks yet</span>')+
-        '</span><a class="sclink" href="spread-options.html#'+s.letter+'" aria-label="See '+s.letter+' on Spread Options">'+s.letter+' &rarr;</a>';
+        '</span>')+'<a class="sclink" href="spread-options.html#'+s.letter+'" aria-label="See '+s.letter+' on Spread Options">'+s.letter+' &rarr;</a>';
       m.querySelector('a').addEventListener('click',e=>e.stopPropagation());
       m.querySelector('a').addEventListener('keydown',e=>e.stopPropagation());
       d.appendChild(m);
