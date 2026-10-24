@@ -440,7 +440,7 @@ document.getElementById('seamToggle').addEventListener('click',function(){var on
       lbseamBtn=document.getElementById('lbseamToggle');
   var lbSeamOn=false;
   var cards=[], cur=0;
-  function collect(){ cards=Array.prototype.slice.call(document.querySelectorAll('main figure.card')); }
+  function collect(){ cards=Array.prototype.slice.call(document.querySelectorAll('figure.card')); }
   function show(i){
     var n=cards.length; if(!n) return;
     cur=((i%n)+n)%n;
