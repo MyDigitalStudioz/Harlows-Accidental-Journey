@@ -717,6 +717,17 @@ function pickShowcase(cards, people, SHOWCASE_SHOWING){
       return {letter:a.dataset.letter, status:a.dataset.status,
               src:(img&&(img.getAttribute('data-render')||img.getAttribute('src')))||''};
     }).filter(c=>c.letter&&c.src);
+    // Gold-finals guarantee: any letter named in favorites "showing" that the main-scoped parse
+    // missed (e.g. a card appended outside <main> on Spread Options) is pulled in document-wide,
+    // so Jon's picks and the showing map can always be honored.
+    Object.values(fav.showing||{}).forEach(L=>{
+      if(cards.some(c=>c.letter===L)) return;
+      const a=doc.querySelector('article.card[data-letter="'+L+'"]');
+      if(!a) return;
+      const img=a.querySelector('img.thumb');
+      const src=(img&&(img.getAttribute('data-render')||img.getAttribute('src')))||'';
+      if(src) cards.push({letter:L, status:a.dataset.status||'Candidate', src:src});
+    });
     if(!cards.length) throw 0;
     finish(pickShowcase(cards, fav.people||{}, fav.showing||{}));
     const prevMap=(fav.previous&&fav.previous.showing)||{};
