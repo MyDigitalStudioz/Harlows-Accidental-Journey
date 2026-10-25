@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final Pass V7 — Jon + Lois's picks — Harlow's Accidental Journey</title>
+<style>
+body{margin:0;font-family:Georgia,serif;background:#faf6ee;color:#2b2118}
+header{position:sticky;top:0;background:linear-gradient(180deg,#7d560f,#4e3409);color:#f5e9d5;padding:12px 16px;z-index:5}
+header h1{margin:0;font-size:20px} header p{margin:4px 0 0;font-size:13.5px;opacity:.85}
+main{max-width:860px;margin:0 auto;padding:10px 10px 40px}
+.card{margin:0 0 22px;background:#fff;border:1px solid #e3d5bd;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(60,40,10,.08)}
+.card img{width:100%;display:block}
+.card figcaption{padding:10px 14px 12px;font-size:15.5px;line-height:1.45}
+.card.v2new{border-color:#d9a62e;box-shadow:0 2px 10px rgba(190,140,20,.35)}
+.card.v2new figcaption{background:linear-gradient(180deg,#f9dc8a,#f4ca5e)}
+.tag{font-weight:bold;background:#7a4f21;color:#fff;border-radius:6px;padding:2px 8px;font-size:14px}
+.kind{font-style:italic;color:#7a4f21;margin-left:6px}
+section#REMOVED h2{font-size:19px;margin:30px 0 6px}
+section#REMOVED .hint{font-weight:normal;font-size:14px;opacity:.7}
+section#REMOVED .how{font-size:14px;opacity:.85;margin:0 0 10px;line-height:1.45}
+section#REMOVED summary{cursor:pointer;color:#7a4f21;font-size:15.5px;margin:0 0 16px}
+section#REMOVED figure{opacity:.94}
+
+.imgwrap{position:relative}
+.seam-guide{position:absolute;inset:0;pointer-events:none;display:none}
+body.guides-on .seam-guide{display:block}
+.seam-guide .band{position:absolute;top:0;bottom:0;left:44%;width:12%;background:rgba(255,196,0,.13);border-left:1px dashed rgba(122,79,33,.65);border-right:1px dashed rgba(122,79,33,.65)}
+.seam-guide .line{position:absolute;top:0;bottom:0;left:50%;border-left:2px dashed rgba(255,255,255,.95);filter:drop-shadow(0 0 2px rgba(30,20,10,.85))}
+.seam-guide .seam-label{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-family:Georgia,serif;font-size:11px;font-style:italic;color:#fff;background:rgba(43,33,24,.65);padding:1px 8px;border-radius:9px;letter-spacing:.04em;white-space:nowrap}
+.seam-btn{margin-top:10px;font-family:Georgia,serif;font-size:14px;cursor:pointer;background:#f5e9d5;color:#2b2118;border:1px solid #7a4f21;border-radius:8px;padding:6px 14px;min-height:36px}
+.lulu-btn{margin-left:8px}
+/* Lulu spread guide (Jon 2026-10-21) — transparent overlay matching his Lulu
+   project's guideline template: bleed/trim edge rectangle, per-page text-safe
+   rectangles, center fold line and a lightly shaded gutter band. Geometry
+   measured off his snapshot (1317x663; proportions map 1:1 onto each card
+   image): edge x .8%/99.1%, y 1.8%/98.0%; safe-left x 3.6-46.4%, safe-right
+   x 53.5-96.3%, safe y 7.4-92.5%; fold x 50.0%; gutter x 46.4-53.5%.
+   Overlay divs are injected at runtime (see the Lulu script before </body>),
+   so card markup is untouched. Independent of the seam guide: body.lulu-on
+   keys the card overlays, #lbfig.lulu-on keys the viewer's — either, both
+   or neither guide can be on. */
+.lulu-guide{position:absolute;inset:0;pointer-events:none;display:none}
+body.lulu-on .card .lulu-guide{display:block}
+.lulu-guide .edge{position:absolute;left:.8%;right:.9%;top:1.8%;bottom:2%;border:1px solid rgba(0,175,195,.85)}
+.lulu-guide .safe{position:absolute;top:7.4%;bottom:7.5%;width:42.8%;border:1.5px solid rgba(0,195,210,.9)}
+.lulu-guide .safe.l{left:3.6%}
+.lulu-guide .safe.r{left:53.5%}
+.lulu-guide .gutter{position:absolute;top:0;bottom:0;left:46.4%;width:7.1%;background:rgba(230,60,40,.10)}
+.lulu-guide .fold{position:absolute;top:0;bottom:0;left:50%;border-left:1px solid rgba(0,175,195,.85)}
+.lulu-guide .lulu-label{position:absolute;font-family:Georgia,serif;font-size:10px;font-style:italic;letter-spacing:.05em;white-space:nowrap;line-height:1.7;padding:0 6px;border-radius:8px;color:#e2f9fb;background:rgba(8,84,96,.55)}
+.lulu-guide .lulu-label.sl{left:4.2%;top:8.4%}
+.lulu-guide .lulu-label.sr{left:54.1%;top:8.4%}
+.lulu-guide .lulu-label.gu{left:50%;top:2.7%;transform:translateX(-50%);color:#ffe9e2;background:rgba(150,40,25,.55)}
+#lblulu{display:none}
+#lbfig.lulu-on #lblulu{display:block}
+#lbluluToggle{margin:0 0 0 8px;box-shadow:0 3px 12px rgba(0,0,0,.45)}
+
+.card img{cursor:zoom-in}
+#lb{position:fixed;inset:0;overflow-y:auto;background:rgba(24,18,12,.94);display:none;align-items:center;justify-content:center;z-index:50;padding:14px;box-sizing:border-box}
+#lb.open{display:flex}
+#lbfig{margin:0;max-width:min(1100px,94vw);text-align:center;position:relative}
+#lbimg{max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#lbcapbar{color:#f5efe2;margin-top:.9rem;font-size:1.02rem;line-height:1.45;display:flex;align-items:center;justify-content:center;gap:12px}
+#lbcapbar .t{display:flex;flex-direction:column;text-align:left}
+#lbnum{display:block;font-size:.88rem;opacity:.65;margin-top:.25rem}
+#lbcap .kind{color:#e3c878}
+#close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#221910 0%,#3a2d1b 55%,#5e4a24 100%);border:1px solid rgba(94,74,36,.65);color:#faf6ee;font-size:1.3rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18);line-height:1;z-index:2}
+#fs{position:absolute;bottom:14px;right:14px;width:42px;height:42px;border-radius:50%;background:#faf6ee;border:none;color:#3d3229;font-size:1.15rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.4);line-height:1;z-index:2}
+#lb .nav{width:38px;height:38px;border-radius:50%;cursor:pointer;flex:none;background:#faf6ee;border:none;color:#3d3229;font-size:1.5rem;font-weight:bold;box-shadow:0 3px 12px rgba(0,0,0,.4);line-height:1;padding-bottom:3px}
+.fnav,.fclose{display:none}
+#lb.zoomed{padding:0}
+#lbfig:fullscreen,#lbfig:-webkit-full-screen,#lb.zoomed #lbfig{width:100vw;height:100vh;max-width:100vw;background:#000;display:flex;align-items:center;justify-content:center}
+#lbfig:fullscreen #lbimg,#lbfig:-webkit-full-screen #lbimg,#lb.zoomed #lbimg{width:100vw;height:100vh;max-width:100vw;max-height:100vh;object-fit:contain;border-radius:0;box-shadow:none}
+#lbfig:fullscreen #lbcapbar,#lbfig:-webkit-full-screen #lbcapbar,#lb.zoomed #lbcapbar{display:none}
+#lbfig:fullscreen .fnav,#lbfig:-webkit-full-screen .fnav,#lb.zoomed .fnav{display:block;position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.6rem;font-weight:bold;cursor:pointer;z-index:3;line-height:1;padding-bottom:3px}
+#lbfig:fullscreen #fprev,#lbfig:-webkit-full-screen #fprev,#lb.zoomed #fprev{left:16px}
+#lbfig:fullscreen #fnext,#lbfig:-webkit-full-screen #fnext,#lb.zoomed #fnext{right:16px}
+#lbfig:fullscreen .fclose,#lbfig:-webkit-full-screen .fclose,#lb.zoomed .fclose{display:block;position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.35rem;cursor:pointer;z-index:3;line-height:1}
+@media (max-width:600px){#lbimg{max-height:62vh}}
+/* Lightbox seam guide (Jon 2026-10-21): #lbwrap shrink-wraps the image;
+   #lbseam display is keyed to #lbfig.seam-on only — the id rules outrank the
+   cards' body.guides-on .seam-guide rules, so viewer and page guides never
+   couple. Inner band/line/label reuse the cards' .seam-guide child styles. */
+#lbwrap{position:relative;display:inline-block;line-height:0;max-width:100%}
+#lbseam{display:none}
+#lbfig.seam-on #lbseam{display:block}
+#lbseamToggle{margin:0;box-shadow:0 3px 12px rgba(0,0,0,.45)}
+/* Jon 2026-10-21 (later still): overlay mode — the toggle row is pinned
+   to the very bottom-left corner of the viewport (fixed, 14px), the same
+   corner it takes in fullscreen, instead of floating under the caption.
+   Fullscreen/.zoomed keep the figure pin on the next rule, untouched. */
+#lbseamrow{position:fixed;left:14px;bottom:14px;margin:0;z-index:4}
+#lbfig:fullscreen #lbseamrow,#lbfig:-webkit-full-screen #lbseamrow,#lb.zoomed #lbseamrow{position:absolute;left:10px;bottom:10px;margin:0;z-index:4}
+
+/* Section jump nav + back-to-top (Jon 2026-10-21) — mirrors Spread Options'
+   .jumpnav strip: italic section links on a translucent cream bar, sticky
+   under this page's sticky header (top set by the nav script below). */
+.jumpnav{position:sticky;top:0;z-index:4;background:rgba(250,246,238,.96);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border-bottom:1px solid #e3d5bd;display:flex;flex-wrap:wrap;gap:.35rem .8rem;justify-content:center;padding:.6rem 1rem .55rem}
+.jumpnav a{color:#2b2118;text-decoration:none;font-size:.9rem;font-style:italic;white-space:nowrap;padding:.15rem .1rem}
+.jumpnav a:hover{color:#7a4f21;text-decoration:underline}
+#toTop{position:fixed;right:14px;bottom:14px;width:46px;height:46px;border-radius:50%;background:#f5e9d5;color:#2b2118;border:1px solid #7a4f21;font-family:Georgia,serif;font-size:1.3rem;line-height:1;cursor:pointer;box-shadow:0 3px 12px rgba(60,40,10,.35);z-index:40;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease,visibility .25s}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:#f4ca5e}
+/* Mobile Sections dropdown (Jon 2026-10-21) — mirrors Spread Options'
+   .bar-compact / .section-pick pattern: at <=640px the inline strip links
+   hide and a Sections <select> shows instead (same breakpoint). */
+.bar-compact{display:none}
+@media (max-width:640px){
+.jumpnav>a{display:none}
+.bar-compact{display:flex;align-items:center;flex-wrap:nowrap;gap:.6rem;width:100%}
+.section-pick{display:flex;align-items:center;gap:.45rem;flex:1 1 auto;min-width:0;font-size:.92rem;font-style:italic;white-space:nowrap;color:#2b2118}
+.section-pick select{flex:1 1 auto;min-width:120px;width:0;min-height:40px;font-family:Georgia,'Times New Roman',serif;font-size:1rem;color:#2b2118;background:#fff;border:1px solid #e3d5bd;border-radius:8px;padding:0 .45rem}
+}
+@media (max-width:360px){
+.bar-compact{gap:.35rem}
+.section-pick{gap:.3rem;flex:1 1 0}
+.section-pick select{min-width:96px;padding:0 .25rem}
+}
+/* Header hide toggle (Jon 2026-10-22): chevron collapses the sticky gradient
+   header to a slim bar so the cards get the screen on mobile. The choice
+   persists per device (localStorage 'v7hdr'); the inline script right after
+   the header restores it before the cards paint, and fires resize so the
+   jump-nav script re-pins itself under the slimmer header. */
+#hdrToggle{position:absolute;top:8px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(245,233,213,.16);border:1px solid rgba(245,233,213,.55);color:#f5e9d5;font-size:15px;line-height:1;cursor:pointer;padding:0;z-index:6}
+#hdrToggle:active{background:rgba(245,233,213,.34)}
+header h1{padding-right:42px}
+#hdrMini{display:none;font-size:14.5px;font-weight:bold;line-height:30px}
+header.collapsed{padding:6px 16px;min-height:44px;box-sizing:border-box}
+header.collapsed #hdrToggle{top:50%;transform:translateY(-50%)}
+header{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+header.collapsed h1,header.collapsed p,header.collapsed .seam-btn{display:none}
+header.collapsed #hdrMini{display:inline-block}
+
+.faceline{display:block;margin-top:1px}
+.card details.carddetails{margin-top:7px}
+.card details.carddetails summary{cursor:pointer;color:#7a4f21;font-size:14px;padding:7px 0 3px;min-height:26px}
+.card details.carddetails .fullcap{margin:3px 0 2px;font-size:14.5px}
+</style></head><body>
+<header><span id="hdrMini">Final Pass V6 — Jon + Lois's picks</span><h1>Final Pass V7 — Jon + Lois's picks</h1>
+<p>Born 2026-10-25 as a faithful copy of Final Pass V6, made on Jon's call so the whole-book polish pass has its own page: the polish versions sit here beside the same golds. V6 stays exactly as it was — nothing on this page changes it — and the golds here are the V6 set unless Jon moves them.</p>
+<p>24 cards — one gold pick for each of the 24 spreads. On Oct 22, 2026, Jon and Lois went through the V3 page together and made the final calls: 14 versions carried over exactly as they were, and 10 spreads got new V4 versions built to their notes — each new version's caption says what changed. Each spread's gold pick wears the gold band: this is the decided set. Final Pass V3 stays exactly as it is, as the record of the decision round: <a href="final-pass-v3.html" style="color:#f5e9d5">the V3 page</a>. Final Pass V2 keeps the full working record: <a href="final-pass-v2.html" style="color:#f5e9d5">the V2 page</a>. V1 keeps every earlier version, untouched: <a href="final-pass.html" style="color:#f5e9d5">the V1 page</a>. And every version ever made is on Spread Options.</p><button type="button" id="seamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button><button type="button" id="luluToggle" class="seam-btn lulu-btn" aria-pressed="false">Show Lulu guide</button><button type="button" id="hdrToggle" aria-label="Hide header" aria-expanded="true" title="Hide header">&#9650;</button><script>
+// Header hide/show (Jon 2026-10-22) — see the CSS note above.
+(function(){
+  var header=document.querySelector('header'), btn=document.getElementById('hdrToggle');
+  if(!header||!btn) return;
+  function apply(hidden){
+    header.classList.toggle('collapsed',hidden);
+    btn.innerHTML=hidden?'&#9660;':'&#9650;';
+    btn.setAttribute('aria-expanded',hidden?'false':'true');
+    btn.setAttribute('aria-label',hidden?'Show header':'Hide header');
+    btn.title=hidden?'Show header':'Hide header';
+    try{ localStorage.setItem('v7hdr',hidden?'hidden':'shown'); }catch(_){}
+    window.dispatchEvent(new Event('resize'));
+  }
+  btn.addEventListener('click',function(){ apply(!header.classList.contains('collapsed')); });
+  var start=false;
+  try{ start=localStorage.getItem('v7hdr')==='hidden'; }catch(_){}
+  if(start) apply(true);
+})();
+</script>
+</header>
+<nav class="jumpnav" id="jumpnav" aria-label="Jump to a spread">
+  <div class="bar-compact">
+    <label class="section-pick">Sections
+      <select id="sectionJump" aria-label="Sections">
+        <option value="">Sections…</option>
+        <option value="S01">S01</option>
+        <option value="S02">S02</option>
+        <option value="S03">S03</option>
+        <option value="S04">S04</option>
+        <option value="S05">S05</option>
+        <option value="S06">S06</option>
+        <option value="S07">S07</option>
+        <option value="S08">S08</option>
+        <option value="S09">S09</option>
+        <option value="S10">S10</option>
+        <option value="S11">S11</option>
+        <option value="S12">S12</option>
+        <option value="S13">S13</option>
+        <option value="S14">S14</option>
+        <option value="S15">S15</option>
+        <option value="S16">S16</option>
+        <option value="S17">S17</option>
+        <option value="S18">S18</option>
+        <option value="S19">S19</option>
+        <option value="S20">S20</option>
+        <option value="S21">S21</option>
+        <option value="S22">S22</option>
+        <option value="S23">S23</option>
+        <option value="S24">S24</option>
+      </select>
+    </label>
+  </div>
+  <a href="#S01">S01</a>
+  <a href="#S02">S02</a>
+  <a href="#S03">S03</a>
+  <a href="#S04">S04</a>
+  <a href="#S05">S05</a>
+  <a href="#S06">S06</a>
+  <a href="#S07">S07</a>
+  <a href="#S08">S08</a>
+  <a href="#S09">S09</a>
+  <a href="#S10">S10</a>
+  <a href="#S11">S11</a>
+  <a href="#S12">S12</a>
+  <a href="#S13">S13</a>
+  <a href="#S14">S14</a>
+  <a href="#S15">S15</a>
+  <a href="#S16">S16</a>
+  <a href="#S17">S17</a>
+  <a href="#S18">S18</a>
+  <a href="#S19">S19</a>
+  <a href="#S20">S20</a>
+  <a href="#S21">S21</a>
+  <a href="#S22">S22</a>
+  <a href="#S23">S23</a>
+  <a href="#S24">S24</a>
+</nav>
+<main>
+
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s01-ay.jpg" alt="S01-AY" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S01-AY</span> <span class="kind">V7 &middot; S01-AY &middot; Jon&#x27;s Photoshop version &mdash; Jon&#x27;s S01 gold</span><br><span class="faceline">★ GOLD &mdash; Jon&#x27;s own Photoshop touchup: AX&#x27;s frame, the eating panel detailed, the sleeping quilt deepened.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S01-AY V7 &middot; Jon&#x27;s Photoshop version. WHY: Jon took his AX gold back into Photoshop the same afternoon (2026-10-24) and handed back a light touchup pass &mdash; posted as-is, no generation, no regrade. PIXEL-DIFF vs S01-AX: AY sits directly on AX (mean |diff| 1.53; 3.0% of pixels changed). Jon&#x27;s touchup: (1) the eating panel gets a light panel-wide detail/clarity pass (17.5% of that panel&#x27;s pixels touched, spread evenly, no composition change, negligible color shift); (2) the sleeping panel&#x27;s quilt foreground is strengthened &mdash; the bottom band of the quilt (12&ndash;15 mean |diff| there) reads deeper and crisper, with a slight overall lift to the panel, while sleeping Harlow himself is pixel-untouched; (3) the main panel and standing panel are AX unchanged for practical purposes (&le;0.1% &mdash; Lois&#x27;s face zone a whisper). Master s01-jon-ps-ay-2026-10-24/S01-AY-master.png, native 1774&times;887, md5 10617c477aa35b6da2c791fc20f84348. Jon&#x27;s gold &mdash; 2026-10-24. AX was removed from V6 in the same call (it had been made gold hours earlier); it stays live on Spread Options and Final Pass V2, and AS keeps the S01 gold on V5.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s01-az.jpg" alt="S01-AZ" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S01-AZ</span> <span class="kind">V7 &middot; S01-AZ &middot; Trinity render &mdash; S01 layout variant, Lois box lowered</span><br><span class="faceline">NEW OPTION &mdash; Jon&#x27;s layout: mom&#x27;s box lower, text above it.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S01-AZ WHY: Jon&#x27;s layout call (2026-10-25) &mdash; in the gold, S01&#x27;s opening text crosses the Lois panel even under the print fade. This variant keeps the same four panels but starts the big Lois panel about a third of the way down the frame, opening a clean sky band above it where the text can sit without touching the box. GATE (Trinity, whole frame against gold AY): the book&#x27;s cartoon polish held; Lois&#x27;s identity and brooch side correct; the panel scenes unchanged. One native generation, governed off the gold. Master s01-az-master.png, native 1774&times;887, md5 083ab494…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S01-AY keeps the S01 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s01-ba.jpg" alt="S01-BA" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S01-BA</span> <span class="kind">V7 &middot; S01-BA &middot; Trinity render &mdash; S01 layout variant, open middle</span><br><span class="faceline">NEW OPTION &mdash; Lowered box AND a clean corridor down the fold.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S01-BA WHY: Jon&#x27;s follow-up on S01-AZ (2026-10-25) &mdash; keep a little open room in the middle so the spread won&#x27;t look weird at the center when the book is opened flat. This version keeps the lowered Lois panel (its sky band is shallower than AZ&#x27;s &mdash; the honest trade) and pulls the panels apart so a continuous background corridor of sky, garden and picket fence runs down the 44–56% center, no panel edge or face crossing it. GATE (Trinity, whole frame against gold AY): polish held; Lois&#x27;s identity and brooch side correct. One native generation, governed off S01-AZ + the gold. Master s01-ba-master.png, native 1774&times;887, md5 7b336643…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S01-AY keeps the S01 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s02-af.jpg" alt="S02-AF" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S02-AF</span> <span class="kind">V6 · S02 grey-blue color pass on AE — Jon's S02 gold</span><br><span class="faceline">★ GOLD — AE with the Mustang eased to a light grey-blue and a lighter interior.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S02-AF V6 · NEW — S02 grey-blue color pass on AE · WHY (Jon, 2026-10-24): Jon loved S02-AE and asked for one more pass — the Mustang a little bit more light greyish blue so it doesn&#x27;t read as blue, and the interior a bit lighter too. Done as a measured colour grade on AE&#x27;s own pixels, NO regeneration: two masks (the painted bodywork; the interior upholstery), paint chroma pulled from mean saturation 0.57 to 0.35 with the hue nudged cooler and AE&#x27;s highlight/shading structure preserved exactly, interior lightness lifted (mean value 0.66 → 0.69) and eased toward silvery grey-blue. Pixel-diff proof: 234,277 px changed, 0 outside the two masks — Lois, Harlow, chrome, pony emblem, headlights and background are AE byte for byte. Gate (Trinity&#x27;s own eyes): at a glance the car reads light grey-blue with its gloss intact; emblem and chrome crisp at 3x; faces untouched. Plain on V6 — AD keeps the S02 gold; AE keeps its own card. Jon made AF the S02 gold on Final Pass V6 only, 2026-10-24; AD and AE were removed from V6 in the same call — the removed cards stay live on Spread Options and Final Pass V2, and AD keeps the S02 gold on V5.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s03-t.jpg" alt="S03-T" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S03-T</span> <span class="kind">V5 · best-of-best synthesis alt — Jon called it up, he loves the additions — Jon & Lois's S03 gold</span><br><span class="faceline">★ GOLD — At the market stall with Lois.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S03-T V5 · best-of-best synthesis alt — Jon called it up, he loves the additions — Jon &amp; Lois's S03 gold ★ GOLD — S03-T · Jon and Lois made it the new S03 gold on their 2026-10-23 review call. Jon called S03-T up to V5 (2026-10-23) — his words: the new T is great, he loves the additions here. WHY it was made: Jon's early S03 market versions held beats S doesn't use — Lois actually choosing a piece of fruit, Nero hidden inside the crate, and a market that feels like a whole market day; this pass tries those beats in the book's current style (S as style + Lois-face governor), produce held at S's own density per Jon's restraint note, story-checked against Rev.17 page 3. The option it offers: a warmer, more alive market morning. Jon and Lois removed S03-S from V5 on the same 2026-10-23 call and gave T the S03 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s04-m.jpg" alt="S04-M" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S04-M</span> <span class="kind">V4 · carried from V3 as-is</span><br><span class="faceline">★ GOLD — Sweet Pea in the mud, Harlow watching.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S04-M V4 · carried from V3 as-is ★ GOLD — Jon + Lois's pick, carried from V3 as-is.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s05-y.jpg" alt="S05-Y" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S05-Y</span> <span class="kind">Jon's own version — Jon's S05 gold</span><br><span class="faceline">★ GOLD — Harlow in the pond with Fiona and the girls — the ducklings each her own, finished by Jon's own hand.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S05-Y — Jon's own version, 2026-10-24 — takes the S05 gold on his order. WHY: the S05 line ran V (Jon's Photoshop retouch, the gold) → W (Lois's note answered: the two plain ducklings made individuals on V's own pixels) → X (Jon's catch repaired: the middle duckling's masked-looking head restored to V's original head art at W's paler tone). Jon then finished the scene himself and handed back this version as the winner, directing it posted as Y. PIXEL CHECK (Trinity): his frame is the W/X line — whole-frame MAD 2.21 vs X, 2.34 vs W, 3.03 vs V; the middle-duckling head zone sits at MAD 3.5 vs X against 7.5 vs W, i.e. the natural restored head, not the masked re-render; his hand concentrated on the duck-family side (Fiona zone MAD 5.1, duckling band 4.8), Harlow's side near-untouched (0.64), no global grade (mean signed diff ≈ 0). Exactly three ducklings, exactly one pink bow (Lili's); story-checked against Rev.17 page 5. No generation and no agent edit — Jon's file posted as-is; master S05-Y-master.png, native 1773×887, md5 33d425efa7ed812709774781c9d0eda1, banked in kit s05-y-gold-2026-10-24. S05-V, S05-W and S05-X were removed from V6 in the same call and stay live on Spread Options and Final Pass V2. Jon's gold — 2026-10-24.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s06-ab.jpg" alt="S06-AB" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S06-AB</span> <span class="kind">V5 · Jon's Photoshop sky pass on AA — Jon's S06 gold</span><br><span class="faceline">★ GOLD — A ride on Albie, with Molly and Dallas. (Your sky touch-up.)</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S06-AB V5 · Jon's Photoshop sky pass on AA — Jon's S06 gold ★ GOLD — S06-AB · the S06 gold on Final Pass V5 — Jon named AB the new S06 gold winner on 2026-10-24, taking the gold from S06-AA, which he removed from V5 the same night (AA stays live on Spread Options and Final Pass V2). Jon's own Photoshop pass on AA's frame: the wispy streak sky across the top of the frame reworked by his hand; every pose and the re-polished finish otherwise AA's exactly. AB also holds the S06 gold on Final Pass V3. Full record in the Spread Options summary.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s07-aq.jpg" alt="S07-AQ" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S07-AQ</span> <span class="kind">V5 · Pass 4 — Jon's synthesis: AP's polish and scale, Chester's laugh taken from AM (his named base reference), Dynamite distance-true, Harlow's gaze on the nose tip, a touch more sky — Jon & Lois's S07 gold</span><br><span class="faceline">★ GOLD — Chester the horse can’t stop laughing.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S07-AQ V5 · Pass 4 — Jon's synthesis: AP's polish and scale, Chester's laugh taken from AM (his named base reference), Dynamite distance-true, Harlow's gaze on the nose tip, a touch more sky — Jon &amp; Lois's S07 gold ★ GOLD — S07-AQ · Jon &amp; Lois's S07 gold — named the new S07 gold winner on their 2026-10-23 review call. S07-AQ — Pass 4 on S07 (2026-10-23): Jon called AP closer and better and its polish the book look to keep, but named AM his base reference for Chester's features — “his eyes closed and his whole features here… pretty much exactly the way I want” — and asked for three adjustments in one best version. Finish and scale governed off AP/AL as in pass 3; Chester's expression governed off AM. Cartoon polish holds whole-frame (grouped tufts, smooth forms, no painterly texture, no photographic detail — AP's sibling). Chester keeps the keeper scale (≈78% of frame height) and the full laughing-out-loud (upper teeth, dropped jaw, cheeks raised, star + long narrow streak exact, no tack) — with AM's eyes now: both crinkled nearly shut with mirth, superseding pass 3's disclosed open-eyes shade. Dynamite is distance-true smaller: span ≈15% of frame width (AP ≈25%; disclosed — past the 17–19% briefed band, in Jon's direction), awake and amused on the hill, blaze-to-pink-patch and halter exact. Harlow keeps his grounded wondering stance and small closed mouth, and his gaze is lowered onto the TIP of Chester's nose: head tilt, muzzle axis and pupils agree on the drawn sightline from his face center (67.5%, 56.0%) to the nose tip (46.6%, 34.8%). The frame is zoomed out a touch for text sky: the top of Chester sits at y≈9.4% vs AP's ≈7.0%, the tree line drops clear of the top edge (disclosed: less growth than the 11–13% ear-tip aim). Also disclosed: Chester's face center (42.3%, 26.6%) sits ~3 points right of AP and his nose tip reaches x≈46.6% — inside the gold AL's own graze (x≈47.8%), his face center clear of the x44–56 strip; Harlow sets ~9 points left of AP at the same size; fine wispy flyaways at Chester's mane edge at 3x. One wording used, wording 2 unspent. Open field, NO fence, exactly three characters. Story-checked against Rev.17 page 7. Seated PLAIN on V5 beside S07-AP — reviewed and passed by Trinity herself at her delivery gate, seated under Jon's delegation. In his 2026-10-23 V5 cleanup review Jon moved the S07 gold from S07-AL to this card, then restored the gold to AL later the same day ("for now"); AM, AN and AO were removed from V5 in the same review. On the evening Jon–Lois review call (2026-10-23) AQ was named the new S07 gold winner — AL stays on V5 as the plain alt, and S07-AP was removed from V5 in the same pass (AP stays posted on Spread Options + Final Pass V2).</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s08-ag.jpg" alt="S08-AG" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S08-AG</span> <span class="kind">V6 · S08 style-unification pass on gold AD — Jon's S08 gold</span><br><span class="faceline">★ GOLD — Same truck scene, one cartoon polish across the whole page.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S08-AG V6 · NEW — S08 style-unification pass on gold AD · WHY (Jon, 2026-10-24): AD&#x27;s elements read as different styles to Jon, so he ordered a new regeneration of the page — every pose and position kept the same (truck in profile center-frame, Paco standing frame-left looking up at Harlow, Harlow in his crate at the bed&#x27;s rear, the farmer&#x27;s two gloved hands at frame-right, produce crates fronting the bed) while the whole page is re-rendered in the best single cartoon polish. Full-frame fresh generation governed directly off AD (Codex lane, wording 1 of 2). &#x27;Farrelli Farms&#x27; door lettering letter-perfect at 3x with the M formed and the flourish under Farms; chrome star hood ornament present; Paco exactly four legs, near-black charcoal brindle, blue collar + one bone tag; Harlow&#x27;s startle holds whole — wide round blue eyes, both white mitts on the crate rim, tail plume inside the crate, face (75.8%, 39%) clear of the fold; roof tops at y5.86% vs AD&#x27;s y5.98%. Disclosed: a tiny pale tooth tip reads inside Harlow&#x27;s open &#x27;oh&#x27; at 6x — the natural inside of the startled mouth, for the desks. Plain on V6 — AD keeps the S08 gold on every page. Jon made AG the S08 gold on Final Pass V6 only, 2026-10-24; AD was removed from V6 in the same call — it stays live on Spread Options and Final Pass V2 and keeps the S08 gold on V5.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s09-ao.jpg" alt="S09-AO" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-AO</span> <span class="kind">V6 · S09 pass 3, wording 2 (called up by Jon) — Jon's S09 gold</span><br><span class="faceline">★ GOLD — Wording-2 take, up at Jon's call to compare: Harlow and tail right; cats still high.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S09-AO V6 · NEW — S09 pass 3, wording 2 (called up by Jon). This take was HELD at Trinity’s gate during from-scratch pass 3 and was not posted in the pass. What landed: Harlow exactly as Jon ordered — standing mid-stride at the curb, the AN face read (three-quarter, both blue eyes clear, muzzle carried forward down the street after the departing truck, worried-wistful), and a native tail that is full, complete and whole at 3x — no cutouts, no scallops, no missing chunks (the flaw that killed AN’s masked tail). What missed: the stoop rendered tall again, so the step cats ride high on the page — KitKat’s head-top measures y13.2% of frame height against gold AJ’s y31.8%, Nala’s y34.6% against AJ’s 44.3% — the staging Jon rejected in AM/AN and ordered matched to AJ. On 2026-10-24 Jon called this take up onto the page anyway, to see it larger and compare it against the cards here, while wording 3 remakes the pass under a new steer: Harlow governed off the S22 walking-home frame plus the AN head crop instead of the full AN frame, with the stoop’s geometry taken hard from AJ. Posted here as a called-up option, NOT as a gate pass; also posted PLAIN on Spread Options and Final Pass V2. Banked take: harlow-art-kit/s09-scratch3-2026-10-24/gen/take-w2.png, native 1774×887, md5 b1be9dac…. Jon ruled AO the S09 gold on 2026-10-24; S09-AQ was removed from V6 in the same call and stays live on Spread Options and Final Pass V2. Jon's gold — 2026-10-24.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s09-as.jpg" alt="S09-AS" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-AS</span> <span class="kind">V7 &middot; S09-AS &middot; Trinity render &mdash; both cats on the steps, right</span><br><span class="faceline">NEW OPTION &mdash; Jon&#x27;s staging: both cats together on the right.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S09-AS WHY: Jon&#x27;s staging call on S09 (2026-10-25) &mdash; try a version with both cats on the right side together, &#x27;the cat stretched out on the steps and the other cat next to him.&#x27; Here KitKat stretches long on the brownstone steps with Nala seated right beside her; Harlow skids in at front-left; the truck is small and departing; no cat anywhere else. GATE (Trinity, whole frame against gold AO): polish held; KitKat torbie-brown with green eyes; Nala&#x27;s rosettes soft and smoky. One native generation. (Jon later swapped the cats&#x27; roles and re-staged the street &mdash; see S09-AT and S09-AV.) Master s09-as-master.png, native 1774&times;887, md5 b44c5a15…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S09-AO keeps the S09 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s09-at.jpg" alt="S09-AT" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-AT</span> <span class="kind">V7 &middot; S09-AT &middot; Trinity render &mdash; street-level tumble and stretch</span><br><span class="faceline">NEW OPTION &mdash; The street reads right — Harlow ON it, steps behind.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S09-AT WHY: Jon&#x27;s street correction (2026-10-25) &mdash; in AS the stretching cat was the wrong one and the street geometry read awkward. New staging: camera low at street level, the street in the foreground, Harlow big ON the street doing a long shake-off stretch like he just fell out of the truck, dazed and stressed; the brownstone steps rise BEHIND him at frame-right with NALA stretched out long and KitKat seated beside her; the truck small and departing at frame-left. GATE (Trinity, whole frame against gold AO): polish and cast held; truck lettering correct. FLAG, stated plainly: Harlow&#x27;s face landed at about 48%, inside the fold band &mdash; S09-AV re-stages this same shot with him clear of it. One native generation. Master s09-at-master.png, native 1774&times;887, md5 48984190…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S09-AO keeps the S09 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s09-au.jpg" alt="S09-AU" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-AU</span> <span class="kind">V7 &middot; S09-AU &middot; Trinity render &mdash; window-box KitKat, stair Nala</span><br><span class="faceline">NEW OPTION &mdash; AR with the cats swapped into their new spots.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S09-AU WHY: Jon&#x27;s variant on the original S09-AR (2026-10-25) &mdash; go back to the first staging (Harlow skidding front-left, truck small and far at right, calm top third for the text) and just re-place the cats: KitKat up in the window box at frame-left, Nala stretched out long on the brownstone staircase at frame-right. GATE (Trinity, whole frame against gold AO): polish held; the window-box KitKat reads a touch light against her deep-espresso canon &mdash; noted for Jon&#x27;s eye. One native generation. Master s09-au-master.png, native 1774&times;887, md5 25189de6…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S09-AO keeps the S09 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s09-av.jpg" alt="S09-AV" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-AV</span> <span class="kind">V7 &middot; S09-AV &middot; Trinity render &mdash; street version, seam fixed</span><br><span class="faceline">NEW OPTION &mdash; Best-of-best street take — face clear of the fold.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S09-AV WHY: Trinity&#x27;s free-pass S09, on Jon&#x27;s brief (2026-10-25): best of the best, text area designed in, no seam problems. It takes AT&#x27;s corrected street staging &mdash; low camera, Harlow stretching on the street after the tumble, the steps behind him at right with Nala stretched out and KitKat seated, the truck departing &mdash; and moves Harlow left so his face sits at about 34% of the width, clear of the 44–56% fold band. The bright mid-morning sky is deliberate: S09 sits hours before S18&#x27;s sunset in the book&#x27;s day arc. GATE (Trinity, whole frame against gold AO): polish and cast held. One native generation (the model returned two near-twins; the seam-clean one is posted). Master s09-av-master.png, native 1774&times;887, md5 3cbcbe35…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S09-AO keeps the S09 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s09-ar.jpg" alt="S09-AR" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-AR</span> <span class="kind">V7 &middot; S09-AR &middot; Trinity render &mdash; the bolt, staged for the text</span><br><span class="faceline">NEW OPTION &mdash; Top third kept calm so S09&#x27;s text sits on quiet sky.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S09-AR WHY: text-accommodation alt, made on Jon&#x27;s call after the v3.2 print test (2026-10-25). In the gold, S09-R&#x27;s three lines cross trees, rooftops and brownstone &mdash; Trinity&#x27;s full-book sweep called it the lowest-contrast text block in the book. NEW shot staged for the text: Harlow skidding to a stop low on the sidewalk and looking up, small against the towers, the whole top third kept as calm pale sky and smooth tower glass so both text blocks sit on quiet ground; the red truck small and departing far right; KitKat on the brownstone steps and Nala at a window box remain as Lois&#x27;s page-9 Easter eggs. GATE (Trinity, whole frame against gold AO): polish held; KitKat deep espresso torbie, Nala&#x27;s rosettes soft and smoky. One native generation. Master s09-ar-master.png, native 1774&times;887, md5 6fa62a5f…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S09-AO keeps the S09 gold.</p></details></figcaption>
+</figure>
+
+
+
+<figure class="card v2new">
+<div class="imgwrap"><img src="final-pass-v4/s10-t.jpg" alt="S10-T" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S10-T</span> <span class="kind">V4 · fresh remake — ghost killed, staging held</span><br><span class="faceline">★ GOLD — Pizza in the alley with Philly.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S10-T V4 · fresh remake — ghost killed, staging held ★ GOLD — S10-T · Jon promoted it 2026-10-22: the fresh from-scratch remake — S attached for staging, Jon's ghost crop attached as the flaw exhibit; the pavement behind the box is clean and solid, French Fry's size and the Harlow–Philly spacing held (gap 17.4% vs S's 17.9%).</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s11-l.jpg" alt="S11-L" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S11-L</span> <span class="kind">V6 · S11 fresh-angle pass on gold K — Jon's S11 gold</span><br><span class="faceline">★ GOLD — Same park meeting, fresh angle, sky and trees reworked.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S11-L V6 · NEW — S11 fresh-angle pass on gold K. NEW at Jon's call (2026-10-24): Jon asked for K's page made a little better — a slight different angle, a sky adjustment and background polish to give it a better feel — with the same positions overall, and called out that the background trees in K are all the same. A fresh Codex generation governed by K's own frame, with Penelope's and Harlow's canonical portraits attached: every position and pose held — the cropped owner at the left edge (trousers, loafer, hand on the leash, no more of the person than K shows), Penelope left-of-centre in profile with her head turned to Harlow, Harlow sitting centre-right on the path with his face up to her so their eyelines meet, and Endeavor lying on the bench at frame-right with his exact patch pattern from K (white face and chest, black cap over the crown covering the far ear, black saddle, large rear-flank patch, separate shoulder patch divided from the saddle by white, black tail wrapped) and K's staging — head tilted partway over his shoulder, chin up, half-lidded gold-green eyes, pointedly nonchalant. Changed only Jon's three asks: (1) camera a touch lower and gently shifted, so the brick path's curve leads the eye further; (2) a sky with a real blue gradient and clouds of many shapes and sizes, no repeated stamps; (3) background trees all different — varied silhouettes, sizes and species-feel, layered near, mid and far — K's identical lollipop row is gone. The background also gains a pink blossom tree mid-distance and faint blue hills on the horizon as part of the depth polish; no locked element moved. Two wordings: the first read Endeavor in full profile and was banked unposted; this second take holds his over-the-shoulder nonchalance. Trinity gated it whole-frame and at 3x against K before posting. Seated here as a NEW option beside gold K so Jon + Lois can compare and rule. K keeps the S11 gold on V6. Jon made L the S11 gold on Final Pass V6 only, 2026-10-24; K was removed from V6 in the same call — it stays live on Spread Options and Final Pass V2 and keeps the S11 gold on V5.</p></details></figcaption>
+</figure>
+
+
+ 
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s12-ak.jpg" alt="S12-AK" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-AK</span> <span class="kind">V6 · S12-AK · Jon's Photoshop version — Jon's S12 gold</span><br><span class="faceline">★ GOLD — Jon's own Photoshop pass: Harlow seated left, Otis right, clear of the seam.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S12-AK V6 · NEW — S12-AK · Jon's Photoshop version · Jon's own Photoshop side-swap version of the S12-AE line, posted as-is 2026-10-24 — his pixels, no re-render, no polish. Pixel-diff identifies the base frame as S12-AI (mean |diff| 5.2; 14% of pixels changed), the line's restaged descendant: Harlow seated left with his plume curled in front, Otis standing right well clear of the seam, Chowder + Monkey at the far left. Jon's changes concentrate in the left third (24% differs, including 18% in the dogs zone) and in sky retouching (21% of the sky band differs at the same brightness — cloud work); Otis and the right third are essentially AI (6%). S12 gold stays V on V6. Jon's gold — 2026-10-24.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s12-am.jpg" alt="S12-AM" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-AM</span> <span class="kind">V7 &middot; S12-AM &middot; Trinity render &mdash; grungy alley, seam fixed</span><br><span class="faceline">NEW OPTION &mdash; Lois&#x27;s grunge, staged clear of the seam.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S12-AM WHY: Jon&#x27;s seam correction on S12-AL (2026-10-25) &mdash; &#x27;make sure Ollie and Harlow face not in seam; move Harlow a bit more left and the wolf a little more right&#x27; (Ollie / the wolf = Otis the coyote). The same grungy cobbled dusk alley Lois asked for, re-staged: Harlow&#x27;s face at about 33% of the width, Otis&#x27;s at about 64%, the fold band holding only cobbles and sky. GATE (Trinity, whole frame against gold AK): polish held; Otis grizzled and accessory-free; Chowder + Monkey small at the far-left wall with their collar locks correct. One native generation. Master s12-am-master.png, native 1774&times;887, md5 d7b8e59e…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S12-AK keeps the S12 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s12-an.jpg" alt="S12-AN" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-AN</span> <span class="kind">V7 &middot; S12-AN &middot; Trinity render &mdash; long alley vista at dusk</span><br><span class="faceline">NEW OPTION &mdash; A wide alley vista with a pale text band up top.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S12-AN WHY: Trinity&#x27;s free-pass S12, on Jon&#x27;s brief (2026-10-25). A new camera &mdash; the long view down the alley: wet cobbles and steam filling the seam band, a pale lavender-peach band across the top for the text, Harlow on the left curb listening, Otis mid-story under the lamp at right, Chowder + Monkey peeking from the far-left doorway. GATE (Trinity, whole frame against gold AK): polish held; faces at about 28% and 72%, clear of the fold. Note: Jon then asked for Otis reposed &mdash; his raised paw read performative &mdash; see S12-AO. One native generation. Master s12-an-master.png, native 1774&times;887, md5 8fbde3ac…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S12-AK keeps the S12 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s12-ao.jpg" alt="S12-AO" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-AO</span> <span class="kind">V7 &middot; S12-AO &middot; Trinity render &mdash; the alley, Otis reposed</span><br><span class="faceline">NEW OPTION &mdash; Otis back on all fours, the way Jon likes him.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S12-AO WHY: Jon&#x27;s pose fix on S12-AN (2026-10-25) &mdash; he loved the look but not Otis&#x27;s raised-paw posture, and asked for him closer to the earlier versions. Same alley vista, one change: Otis on all four paws, weight settled, a slight storyteller&#x27;s slouch, head tilted mid-sentence toward Harlow. GATE (Trinity, whole frame against gold AK): polish held; no accessories; faces clear of the fold; Chowder + Monkey in the doorway with collar locks correct. One native generation. Master s12-ao-master.png, native 1774&times;887, md5 b36252c4…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S12-AK keeps the S12 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s12-al.jpg" alt="S12-AL" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-AL</span> <span class="kind">V7 &middot; S12-AL &middot; Trinity render &mdash; dusk alley curb chat, Lois&#x27;s grunge direction</span><br><span class="faceline">NEW OPTION &mdash; Lois&#x27;s revisit: grungier alley, lighter sky, smaller dogs.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S12-AL WHY: Lois flagged this page in her LF NOTES on Rev.18 (2026-10-24) &mdash; S12&#x27;s scenery reads too similar to S09&#x27;s, and she pointed back at the old S12-F curb-chat card: &#x27;go back to something like this one, a little more grungy &mdash; maybe make the sky lighter and the dogs smaller.&#x27; This is that scene as a NEW shot at the book&#x27;s current finish: a grungy cobbled back alley at dusk, a pale lavender-peach LIGHT sky across the top (calmer under the text, too), Harlow on the curb talking up at Otis, Chowder + Monkey shrunk to small bystanders at the far-left wall, one lit amber lamp at frame-right. GATE (Trinity, whole frame against gold AK): the book&#x27;s polished cartoon hand held; Otis grizzled tan-gray, amber eyes, no accessories; the Chihuahuas small but correct &mdash; Chowder&#x27;s navy collar and red paw tag, Monkey&#x27;s red collar and bone tag (Monkey is a Chihuahua). One native generation, governed off the gold; no composite. Master s12-al-master.png, native 1774&times;887, md5 8f88c812…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S12-AK keeps the S12 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s12-ap.jpg" alt="S12-AP" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-AP</span> <span class="kind">V7 &middot; S12-AP &middot; Trinity render &mdash; gold layout, grunge alley, midday</span><br><span class="faceline">NEW OPTION &mdash; The gold&#x27;s staging, Lois&#x27;s alley, same midday light.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S12-AP WHY: Jon&#x27;s faithful read of Lois&#x27;s LF-NOTES ask (2026-10-25) &mdash; her note wanted a small change, not a re-light: keep the GOLD&#x27;S layout and its time of day, and just move the scene into the grunge alley. So this version holds AK&#x27;s staging exactly &mdash; Harlow seated left-center looking up, Otis standing in profile at frame-right with the lamp between them, Chowder + Monkey small at the far left &mdash; in bright MIDDAY light under a blue sky, while the clean sidewalk becomes a rough back alley: rusted dumpster, peeling brick, fire escape, chain-link gate, and cracked stained concrete underfoot (no cobblestones). GATE (Trinity, whole frame against gold AK): polish held; Harlow consistent; Otis accessory-free; collar locks correct on the little dogs; faces clear of the fold. One native generation, governed off the gold. Master s12-ap-master.png, native 1774&times;887, md5 c2eb49a4…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S12-AK keeps the S12 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s12-aq.jpg" alt="S12-AQ" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-AQ</span> <span class="kind">V7 &middot; S12-AQ &middot; Trinity render &mdash; the alley, lamp removed</span><br><span class="faceline">NEW OPTION &mdash; The alley without the stray sidewalk lamp.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S12-AQ WHY: Jon&#x27;s fix on S12-AP (2026-10-25) &mdash; the tall lamp post carried over from the gold&#x27;s sidewalk &#x27;looks out of place now&#x27; in the grunge alley. This version removes it entirely: where it stood, the alley simply continues &mdash; cracked concrete, chain-link gate, trees and skyline under the midday sky. Everything else is AP: the gold&#x27;s staging, Lois&#x27;s grunge environment, bright midday kept. GATE (Trinity, whole frame against gold AK + AP): polish held; Harlow consistent; Otis accessory-free; collar locks correct. One native generation, governed off AP. Master s12-aq-master.png, native 1774&times;887, md5 4afb97df…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S12-AK keeps the S12 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s12-ar.jpg" alt="S12-AR" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-AR</span> <span class="kind">V7 &middot; S12-AR &middot; Trinity render &mdash; cartoon-polish alley</span><br><span class="faceline">NEW OPTION &mdash; The alley, in the book&#x27;s own hand.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S12-AR WHY: Jon&#x27;s finish check on S12-AQ (2026-10-25) &mdash; he loved the scene but flagged that the alley rendered too painted/detailed next to the book&#x27;s cartoon polish (the same finish-mismatch family as the earlier car/truck scene). This pass keeps AQ&#x27;s exact scene &mdash; gold staging, Lois&#x27;s grunge environment, midday, no lamp post &mdash; and redraws ONLY the finish in the gold&#x27;s hand: smooth teal dumpster with flat rust color patches, clean warm walls, smooth concrete slabs with simple crack lines, puddles as bright mirror shapes. The grunge is in what&#x27;s in the alley, not in gritty texture. GATE (Trinity, whole frame against gold AK + AQ): photographic grain gone, surfaces sit inside the book&#x27;s polish family; characters and locks unchanged. One native generation, governed off AQ + the gold. Master s12-ar-master.png, native 1774&times;887, md5 99a5c942…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S12-AK keeps the S12 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s13-q.jpg" alt="S13-Q" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S13-Q</span> <span class="kind">V5 · re-visioned staging alt — seated by Trinity under Jon's delegation — Jon's S13 gold</span><br><span class="faceline">★ GOLD — Gideon the pigeon, with Tiger watching from the stoop.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S13-Q V5 · re-visioned staging alt — seated by Trinity under Jon's delegation — Jon's S13 gold ★ GOLD — S13-Q · Jon's S13 gold since his 2026-10-23 V5 cleanup review. Seated PLAIN on Final Pass V5 by Trinity under Jon's 2026-10-23 delegation — his standing instruction tonight: review the baking renders, catch any mistakes, and upload the ones Trinity is happy with to the V5 page for his fresh-eye review tomorrow; Trinity reviewed Q's preview herself and is happy with it. (S13-P held the S13 gold then; Jon moved it to this card in his 2026-10-23 V5 cleanup review.) WHY it was made: gold P's cast and world were right, but its geometry undercut the beat, so this alt re-visions P's own staging around FOUR MEASURED FIXES: (1) the street sweeps DIAGONALLY, converging right-of-center at the ballpark, instead of P's dead-center one-point corridor whose vanishing point sat on the seam with empty pavement at the frame's center; (2) Harlow's gaze finally lands ON Gideon — head turned left in three-quarter view, chin level (P's skyward tip gone), blue pupils placed on the pigeon — face center measured (72.0%, 48.2%), Gideon's head (23.3%, 20.2%), the sightline matching at 3x, so the page-13 guide conversation lands; (3) the ballpark is bigger and clearer — a tiered grandstand arc with crowd texture, two light towers and a large blank green scoreboard — the destination unmistakable; (4) the buildings are VARIED building-to-building (the blue storefront, a tall red-brick with pale stone lintels, a shorter brownstone with a green awning, a tan bay-window block, heights staggered) instead of one red-brick family stamped down both sides. Held from P: the bright glossy RED hydrant (full car treatment), Gideon recipe-true on its dome with one wing extended pointing down the street at the park, and Tiger at P's smaller scale on the brownstone steps — one bold solid ginger mustache band, pale sage heavy-lidded eyes watching the pair. One honest disclosure: the ballpark overshot its ~15–20% staging aim to ≈26.5% of frame width — it reads as the destination and bridges straight into S14's ballpark pages; disclosed plainly, not rounded into range. Story-checked against Rev.17 page 13. GOLD since Jon's 2026-10-23 V5 cleanup review — the challenger took the S13 gold; S13-P stays on V5 as the plain alt.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s14-m.jpg" alt="S14-M" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S14-M</span> <span class="kind">V5 · Alt off gold L — face truer, gaze onto Chippy, treeline de-duplicated, sky wisp + deeper blue — Jon's S14 gold</span><br><span class="faceline">★ GOLD — At the ballpark with Chippy and the guinea pigs.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S14-M V5 · Alt off gold L — face truer, gaze onto Chippy, treeline de-duplicated, sky wisp + deeper blue — Jon's S14 gold ★ GOLD — S14-M · the S14 gold on Final Pass V5 — Jon named M the new S14 gold winner on 2026-10-24, taking the gold from S14-L, which he removed from V5 the same night (L stays live on Spread Options and Final Pass V2). S14-M — the alt off almost-perfect L · WHY it was made: Jon's call (2026-10-24): S14-L is almost perfect — try an alt keeping almost everything as is, but Harlow's face more correct and his eyes right at the squirrel's eyes (in L he looks a little too high), try not to have the same duplicated-tree issue, and a little bit of wisp in the sky cloud with a slight deeper bluish tint mixed into the sky. Measured at Trinity's gate: Harlow's face portrait-true at 3x (seal cap and ears, continuous white blaze, pink nose, blue eyes); his pupils sit displaced up-left in their irises, on the sightline from his eye midpoint (38.7%, 44.6%) to Chippy's (23.5%, 33.7%), and Chippy's gaze returns down at him; the treeline strip crop shows varied species, heights and silhouettes — no repeated stamped trees (L's band repeated one lollipop shape); the sky carries thin cirrus wisps and samples (85–104, 168–174, 252) against L's paler (130, 196, 252). Canon at 3x: Chippy orange-red with tufted ears and cream chest, four paws gripping the yellow pole; Nicholas's centered white stripe and brown cheeks; Norman's spiky white crown tuft and two-tone nose; census clean (one squirrel, one cat, two guinea pigs). One disclosure: Harlow's mouth is closed here where L's was open in a smile. STORY-SUPPORT: Rev.17 page 14 — Chippy climbing the foul pole and the popcorn-bucket moment with Nicholas and Norman; the frame is that beat. METHOD + RECORD: fresh full generation governed off S14-L (Codex gpt-image lane), wording 1 of 2; master s14-alt-2026-10-24/gen/w1-master.png (md5 6cc1dd7c…); full record in s14-alt-2026-10-24/RECORD.md. Posted PLAIN here and on Final Pass V2, seated PLAIN on Final Pass V5 beside L. S14-L keeps the gold.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s15-x.jpg" alt="S15-X" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S15-X</span> <span class="kind">V5 · Alt of W — dynamic sky, varied tree line; scene and cast held — Jon & Lois's S15 gold</span><br><span class="faceline">★ GOLD — A high-five with the Hibernator.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S15-X V5 · Alt of W — dynamic sky, varied tree line; scene and cast held — Jon &amp; Lois's S15 gold ★ GOLD — S15-X · the S15 gold on Final Pass V5 — the dynamic-sky, varied-treeline alt of W; made gold on the 2026-10-23 Jon–Lois review call. An alt of the new gold W answering Jon’s sky and tree-line notes: the puzzle-piece clouds are replaced by a dynamic sky with streaming, layered, moving cloud structure, and the cloned-stamp tree line behind the stadium is broken into varied species, heights and spacing. The ballpark scene, cast and staging hold as in W (a faithful regeneration governed on W, disclosed in the Spread Options summary). On the 2026-10-23 Jon–Lois review call this alt took the S15 gold from W, and W was removed from V5 (W stays posted on Spread Options + Final Pass V2). Seated PLAIN on Final Pass V5 under Jon's standing lane — Trinity passed it at her delivery gate (2026-10-23).</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s16-o.jpg" alt="S16-O" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S16-O</span> <span class="kind">V4 · carried from V3 as-is</span><br><span class="faceline">★ GOLD — Edward’s hug, with JJ watching.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S16-O V4 · carried from V3 as-is ★ GOLD — Jon + Lois's pick, carried from V3 as-is.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s17-u.jpg" alt="S17-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S17-U</span> <span class="kind">V5 · Jon’s own Photoshop cleanup of T — bowl paw area cleaned by hand, posted as-is — Jon's S17 gold</span><br><span class="faceline">★ GOLD — Harlow and Jasmine the bee at the ballpark. (Your cleanup.)</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S17-U V5 · Jon’s own Photoshop cleanup of T — bowl paw area cleaned by hand, posted as-is — Jon's S17 gold ★ GOLD — S17-U · the S17 gold on Final Pass V5 — Jon named U — his own Photoshop cleanup of T — the new S17 gold on 2026-10-24, taking the gold from S17-Q, and called S17-Q, S17-R, S17-S and S17-T safe to remove from V5 the same night (Q, R, S and T stay live on Spread Options and Final Pass V2). S17-U — Jon’s Photoshop cleanup of T: the bowl/paw area finished by hand · WHY it was made: after two masked-cleanup rounds (S, then T), Jon took T into Photoshop himself (2026-10-24, 00:45 PDT), cleaned the bowl paw area to his own eye, and handed the file back to be posted as U at his direction. NO generation and no agent edit: U is Jon’s file, posted as-is — the bowl sits in level grass, the front leg reads uncovered down to the mitt, the extra-paw remnant and the last grass hump at the bowl are gone, and the rest of the frame is T’s art exactly (Harlow with his gaze on Jasmine; Jasmine — exactly one black stripe, two wing pairs, six legs — her sparkle trail, the blue-and-white shack, the sky). Trinity’s own visual pass on Jon’s file agrees with his read: the bowl zone is clean at 3x and the whole frame reads as T. METHOD + RECORD: Jon’s Photoshop edit on S17-T (posted image md5 45ebee59…); his PNG master banked at s17-fix-2026-10-23/pass13/S17-U-master-jon-photoshop.png (1774×887, md5 dee0de84…); full record in S17-FIX-PASS.md (pass 13). Posted PLAIN on Spread Options and Final Pass V2, seated PLAIN here beside Q, R, S and T. S17-Q keeps the gold; T stays posted untouched.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-v.jpg" alt="S18-V" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-V</span> <span class="kind">V4 · U — sand-texture pass, prints stay behind</span><br><span class="faceline">★ GOLD — Babs the crab on the beach at sunset.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-V V4 · U — sand-texture pass, prints stay behind ★ GOLD — S18-V · Jon promoted it 2026-10-22: U's coverage version with the open sand re-textured toward S18-L's grainier, more dimensional sand — the footprints stay behind the animals, and Harlow, Babs, the shells, sky and sea are U's exact pixels.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-x.jpg" alt="S18-X" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-X</span> <span class="kind">V7 &middot; S18-X &middot; Trinity render &mdash; boardwalk, Jon&#x27;s three fixes</span><br><span class="faceline">NEW OPTION &mdash; Eyes on Babs, paws down, bee gone.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-X WHY: Jon&#x27;s three fixes on S18-W (2026-10-25) &mdash; Harlow must look AT the crab (not away), his raised paw comes down, and Jasmine the bee leaves the scene. The boardwalk staging Lois asked for is kept: Babs waving at left with her outward-splayed eyes (her standing lock), Harlow seated at right with all four paws on the planks and his gaze on her. GATE (Trinity, whole frame against gold V): polish held; the sunset still sits at the horizon, where S18 belongs in the light arc. One native generation. Master s18-x-master.png, native 1774&times;887, md5 84a29d03…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-y.jpg" alt="S18-Y" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-Y</span> <span class="kind">V7 &middot; S18-Y &middot; Trinity render &mdash; Babs far left, softer expression</span><br><span class="faceline">NEW OPTION &mdash; Babs clear of the seam; a softer Harlow.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-Y WHY: Jon&#x27;s refinement on S18-X (2026-10-25) &mdash; move Babs a little more over to the left so she has no seam issues, and try a slightly different expression on Harlow, &#x27;not too much.&#x27; Babs now sits fully inside the left third with open water between her and the fold; Harlow&#x27;s expression went soft hopeful wonder (it reads a touch wistful &mdash; stated plainly for Jon&#x27;s eye). GATE (Trinity, whole frame against gold V): polish held; paws down; no bee. One native generation. Master s18-y-master.png, native 1774&times;887, md5 bbb34975…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-z.jpg" alt="S18-Z" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-Z</span> <span class="kind">V7 &middot; S18-Z &middot; Trinity render &mdash; book-consistent Harlow</span><br><span class="faceline">NEW OPTION &mdash; Harlow back to his book build and blaze.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-Z WHY: Jon&#x27;s consistency call (2026-10-25) &mdash; in S18-Y, Harlow read rounder and a little different from the rest of the book. This pass governs directly off the gold and his hero portrait: the sturdy athletic-plush build, neat controlled fur and moderate blaze of the book&#x27;s Harlow, with one new subtle expression &mdash; gentle curiosity warming into a small hopeful smile, head tilted a touch toward Babs. Babs stays far left; paws down; boardwalk kept. GATE (Trinity, whole frame against gold V + the hero portrait): Harlow consistent; polish held. One native generation. Master s18-z-master.png, native 1774&times;887, md5 6e2e40a4…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-aa.jpg" alt="S18-AA" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-AA</span> <span class="kind">V7 &middot; S18-AA &middot; Trinity render &mdash; the open boardwalk, inquisitive Harlow</span><br><span class="faceline">NEW OPTION &mdash; The open sandy boardwalk, and a curious Harlow.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-AA WHY: Jon&#x27;s boardwalk call (2026-10-25) &mdash; he preferred the earlier board treatment: more open wood, with a little bit of sand on it. This pass restores the wide pale planks with a light dusting of sand blown across them and minimal rope posts, keeps Harlow at S18-Z&#x27;s book-consistent build, and gives him a more inquisitive, fun expression &mdash; bright curious eyes, ears pricked, a playful almost-grin. Babs far left, waving. GATE (Trinity, whole frame against gold V + the hero portrait): polish held; Harlow consistent. One native generation. Master s18-aa-master.png, native 1774&times;887, md5 06d8f091…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-w.jpg" alt="S18-W" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-W</span> <span class="kind">V7 &middot; S18-W &middot; Trinity render &mdash; Babs on the boardwalk at sunset</span><br><span class="faceline">NEW OPTION &mdash; Lois&#x27;s boardwalk idea at the book&#x27;s current finish.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-W WHY: Lois&#x27;s LF NOTES (2026-10-24) &mdash; every beach scene sits right on the sand; she proposed going back to the picture of Babs on the boardwalk (her old S18-D card), which also fits her &#x27;shore → boardwalk&#x27; wording edit for this page. NEW shot at the current finish: weathered boardwalk planks in the foreground, the ocean and the just-starting sunset behind, Babs at left waving one big claw with her stalked eyes splayed outward (her standing lock), Harlow seated at right in the look-both-ways moment &mdash; paw up, head turned along the boardwalk &mdash; and Jasmine the bee exiting tiny at the top-left. GATE (Trinity, whole frame against gold V): polish held; Babs&#x27;s spots, big claws and eye-splay correct; the sunset still sits at the horizon where S18&#x27;s light arc needs it. One native generation. Master s18-w-master.png, native 1774&times;887, md5 de51958f…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-ab.jpg" alt="S18-AB" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-AB</span> <span class="kind">V7 &middot; S18-AB &middot; Trinity render &mdash; Lois&#x27;s S18-D scene, rebuilt</span><br><span class="faceline">NEW OPTION &mdash; Her boardwalk scene, with Jon&#x27;s fixes kept.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-AB WHY: the scene Lois actually pointed to in her LF NOTES &mdash; verified 2026-10-25 against the screenshot pasted in her doc, which is the S18-D card itself (&#x27;Babs waves claw left; LARGE Harlow sits right&#x27;). Rebuilt at the book&#x27;s current finish: the boards fill the foreground and give out to sand at the edges, shells and dune grass, Babs at the left end waving with her outward-splayed eyes, the sun on the horizon under a pale-gold sky &mdash; with Jon&#x27;s standing corrections kept (all four paws DOWN, Harlow&#x27;s gaze ON Babs, his book-consistent build, inquisitive and pleased). GATE (Trinity, whole frame against gold V + the hero portrait + D): polish held; Harlow consistent. One native generation. Master s18-ab-master.png, native 1774&times;887, md5 17cfeee8…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-ac.jpg" alt="S18-AC" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-AC</span> <span class="kind">V7 &middot; S18-AC &middot; Jon-supplied render &mdash; Harlow walking in</span><br><span class="faceline">NEW OPTION &mdash; Jon&#x27;s walking-Harlow boardwalk, up for comparison.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-AC WHY: posted at Jon&#x27;s ask (2026-10-25) so he can compare it directly against the other boardwalk versions &mdash; this is the render he sent in chat: Babs front-left ON the boards waving both claws, Harlow mid-stride WALKING toward the viewer at frame-right, a richer pink-orange sunset sky, rope posts and shells at the boards&#x27; edges. It is NOT the card from Lois&#x27;s notes (that is S18-D &mdash; seated Harlow &mdash; rebuilt as S18-AB); Jon thought this might be the scene she wanted, and wanted it on the page either way. Source file as supplied: 1140&times;570 JPEG &mdash; smaller than the native renders, so if it is ever picked it needs the upscale pass before print. Banked as s18-ac-master.jpg, md5 e9dfc877…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-ad.jpg" alt="S18-AD" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-AD</span> <span class="kind">V7 &middot; S18-AD &middot; Trinity render &mdash; the gaze fix</span><br><span class="faceline">NEW OPTION &mdash; Now he&#x27;s actually looking at her.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-AD WHY: Jon&#x27;s gaze fix on S18-AB (2026-10-25) &mdash; Harlow&#x27;s chin was up and his eye-line sailed over the crab; he also asked for a cuter, more inquisitive, fun look. This version keeps AB&#x27;s scene (Lois&#x27;s S18-D boardwalk rebuilt) and changes only Harlow&#x27;s head: lowered and angled DOWN toward Babs &mdash; she is a small crab at board level and he is tall &mdash; eyes landing on her, with bright inquisitive eyes, ears pricked and a playful almost-grin. GATE (Trinity, whole frame + head zoom against gold V + the hero portrait): the eye-line now meets Babs at her height; build consistent; polish held; paws down. One native generation, governed off AB. Master s18-ad-master.png, native 1774&times;887, md5 fba79f08…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-ae.jpg" alt="S18-AE" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-AE</span> <span class="kind">V7 &middot; S18-AE &middot; Trinity render &mdash; Babs&#x27; eyes fixed</span><br><span class="faceline">NEW OPTION &mdash; Her eyeballs point two different ways again.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-AE WHY: Jon&#x27;s canon fix on S18-AD (2026-10-25) &mdash; Babs&#x27; pupils both aimed straight at Harlow; her eyeballs are supposed to splay OUTWARD, each looking a different direction (the comical crab read in her recipe). This version changes ONLY the pupils: left eyeball looks off to her left, right eyeball off to her right &mdash; never both at Harlow, never crossed. Everything else is AD: Lois&#x27;s boardwalk scene, Harlow&#x27;s lowered gaze on her with the inquisitive almost-grin, paws down, sunset. GATE (Trinity, whole frame + Babs zoom against gold V + her portrait): splay confirmed at zoom &mdash; left pupil at the left edge, right pupil at the right edge; two small upper teeth; polish held. One native generation, governed off AD. Master s18-ae-master.png, native 1774&times;887, md5 8473fdc5…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-af.jpg" alt="S18-AF" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-AF</span> <span class="kind">V7 &middot; S18-AF &middot; Trinity render &mdash; the mutual turn</span><br><span class="faceline">NEW OPTION &mdash; He turns to her; she turns to him.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-AF WHY: Jon&#x27;s pose pass on S18-AE (2026-10-25) &mdash; Harlow&#x27;s head was tilted too far; Jon asked for his BODY turned a little more toward Babs instead, and for Babs&#x27; whole body angled slightly toward Harlow. This version does both: Harlow&#x27;s chest and shoulders turn toward her so his head sits nearly upright, tipped down only slightly, eyes still landing on her at her height, inquisitive almost-grin kept, all paws down; Babs turns a touch toward him while her pupils keep the outward splay from AE. GATE (Trinity, whole frame + Babs zoom against gold V + the portraits): head tilt natural now; splay confirmed again at zoom; build and polish held. One native generation, governed off AE. Master s18-af-master.png, native 1774&times;887, md5 3137e5f0…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s18-ag.jpg" alt="S18-AG" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-AG</span> <span class="kind">V7 &middot; S18-AG &middot; Trinity render &mdash; the eye-size pass</span><br><span class="faceline">NEW OPTION &mdash; Same scene, book-sized eyes.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S18-AG WHY: Jon&#x27;s proportion check on S18-AF (2026-10-25) &mdash; he wondered if Harlow&#x27;s eyes ran large against the rest of the book. Trinity measured: the book norm is round-to-almond eyes at roughly 9-11% of head width (hero portrait, S12 gold); AF ran ~12-13% and tall wide-open ovals. This pass changes only the eyes &mdash; scaled to book proportion, rounder, calmer lids, native blue and pupil size kept, gaze still on Babs. Everything else is AF: the mutual body turn, Babs angled toward him with her splayed pupils, the boardwalk sunset. GATE (Trinity, same-crop measurement against AF + the hero portrait): eyes now sit inside the book range; the surprised read is gone; polish held. One native generation, governed off AF. Master s18-ag-master.png, native 1774&times;887, md5 1d99c703…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S18-V keeps the S18 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s19-r.jpg" alt="S19-R" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S19-R</span> <span class="kind">V6 · S19-R · Jon's corrected Photoshop version — Jon's S19 gold</span><br><span class="faceline">★ GOLD — Finnegan the shark at sunset. (Jon's corrected Photoshop pass.)</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S19-R V6 · Jon's corrected Photoshop version — Jon's S19 gold ★ GOLD — Finnegan the shark at sunset. WHY: Jon caught his own Q within the hour and corrected it — R is his final hand adjustment on the Q frame, settling Harlow's coat where he wants it. Pixel-diff on banking: R sits almost on top of Q (overall mean difference 1.00; 1.6% of pixels changed, none hard) and every change is in Harlow — the Finnegan half of the frame is byte-identical to Q (mean difference 0.00, 0.0% of pixels). In the coat zone the mean difference is 4.31 (9.1% of coat pixels), the coat reading a touch deeper and warmer than Q (coat means red 178 vs Q's 180, blue 90 vs Q's 95); against the O frame R sits at mean difference 2.86 — R is a correction of Q, not a new pass on O. Pose, expression, eyeline, Finnegan (exactly 4 teeth), surf, sunset and sand untouched. Posted as-is. Master S19-R-master.png, md5 4b3186eff6c132d5e0f045d8d0b729d3. At Jon's call Q comes off V6 (it stays live on Spread Options and Final Pass V2); M, O and P were already off V6. Jon's gold — 2026-10-24.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s19-t.jpg" alt="S19-T" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S19-T</span> <span class="kind">V7 &middot; S19-T &middot; Trinity render &mdash; Finnegan close, sun set</span><br><span class="faceline">NEW OPTION &mdash; Low at the water, sun down, text band open.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S19-T WHY: Trinity&#x27;s free-pass S19, on Jon&#x27;s brief (2026-10-25). A new low angle at water level: Finnegan close and gentle at frame-right with exactly four small teeth and his pink tongue (his locks), Harlow small at the waterline at frame-left looking up. The time step is made explicit &mdash; the sun is fully BELOW the horizon, one beat after S18&#x27;s starting sunset, with the afterglow band open across the top for the text and no palms anywhere. GATE (Trinity, whole frame against gold R): polish held; four-tooth lock held; Harlow&#x27;s face clear of the fold. One native generation. Master s19-t-master.png, native 1774&times;887, md5 36fc176a…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S19-R keeps the S19 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s19-s.jpg" alt="S19-S" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S19-S</span> <span class="kind">V7 &middot; S19-S &middot; Trinity render &mdash; Finnegan at dusk, sun down, no palms</span><br><span class="faceline">NEW OPTION &mdash; Fixes the sun-order and frond flags from the print test.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S19-S WHY: text/continuity alt, on Jon&#x27;s call after the v3.2 print test (2026-10-25). Two flags on the gold: its full sun sits HIGHER than S18&#x27;s sunset sun (the light arc runs backwards), and its palm fronds cross S19-L&#x27;s text (&#x27;caught&#x27; lands on a frond). NEW shot one beat later in the light: sun below the horizon, rose afterglow over a calm sea, no palms anywhere &mdash; the top band is open dusk sky for the text on both halves; Harlow startled mid-step on the wet sand; Finnegan surging gently out of the small surf, friendly, with exactly four small teeth and his pink tongue. GATE (Trinity, whole frame against gold R): polish held; Finnegan&#x27;s four-tooth lock held. One native generation. Master s19-s-master.png, native 1774&times;887, md5 5ee8f26c…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S19-R keeps the S19 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s20-j.jpg" alt="S20-J" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S20-J</span> <span class="kind">V4 · carried from V3 as-is</span><br><span class="faceline">★ GOLD — A quiet walk with the penguin at dusk.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S20-J V4 · carried from V3 as-is ★ GOLD — Jon + Lois's pick, carried from V3 as-is.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s21-x.jpg" alt="S21-X" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S21-X</span> <span class="kind">V5 · Jon’s own Photoshop pass on T — Harlow’s face + Helga’s feathers adjusted by hand, posted as-is — Jon's S21 gold</span><br><span class="faceline">★ GOLD — Helga the pelican carries Harlow home. (Your touch-up.)</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S21-X V5 · Jon’s own Photoshop pass on T — Harlow’s face + Helga’s feathers adjusted by hand, posted as-is — Jon's S21 gold ★ GOLD — S21-X · the S21 gold on Final Pass V5 — Jon named X — his own Photoshop pass on T — the new S21 gold winner on 2026-10-24, taking the gold from S21-W, and called S21-T safe to remove from V5 the same night (W stays on V5 as a plain card; T stays live on Spread Options and Final Pass V2). S21-X — Jon’s own Photoshop pass on T: Harlow’s face and Helga’s feathers adjusted by his hand · WHY it was made: Jon took T’s sunset frame into Photoshop himself (2026-10-24, 01:37 PDT), adjusted Harlow’s face and Helga’s feathers to his own eye, and handed the file back to be posted as X at his direction. NO generation and no agent edit: X is Jon’s file, posted as-is — Harlow’s face reads clean and portrait-true in the pouch (seal cap, continuous blaze, blue eyes, joyful open mouth with pink tongue and no teeth, one white mitt on the pouch rim and the raised wave paw with clean pink pads), Helga’s wings read in the frame’s grouped cartoon hand, and everything else is T’s art exactly (the wisp sunset sky, the sea, Babs the cockatiel on the driftwood, the beach and props). Trinity’s own visual pass on Jon’s file agrees with his read: the face and feathers sit naturally in the frame at 3x and the whole frame holds together as T. METHOD + RECORD: Jon’s Photoshop edit on S21-T — pixel check: his file measures closest to T’s posted art of every S21 frame (mean |diff| 3.1 against spread-options/s21-t.jpg), the change concentrated at Harlow’s face and Helga’s wings; his PNG master banked at s21x-jon-photoshop-2026-10-24/S21-X-master-jon-photoshop.png (1774×887, md5 4616de52…); full record in S21-ALT-RECORD.md. Posted PLAIN on Spread Options and Final Pass V2, seated PLAIN here beside T and W. S21-W keeps the S21 gold on V5; T stays posted untouched.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s21-z.jpg" alt="S21-Z" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S21-Z</span> <span class="kind">V7 &middot; S21-Z &middot; Trinity render &mdash; Harlow redone, seated</span><br><span class="faceline">NEW OPTION &mdash; Harlow seated and sturdy, like his portrait.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S21-Z WHY: Jon&#x27;s call on S21-Y (2026-10-25) &mdash; &#x27;I don&#x27;t like the way he looks. He looks off to me.&#x27; New Harlow: seated on the sand in a sturdy plush sit, tail curled around his side, his head carried BROAD with wide cheeks exactly as his hero portrait &mdash; never narrow or dainty. The beat is unchanged: Helga gliding down with her wings in a high V and her pouch closed, Babs the cockatiel on the driftwood at far left. GATE (Trinity, whole frame against gold X + the hero portrait): Harlow consistent; polish held; his face sits just left of the fold band. Note: Jon then flagged the scale &mdash; at this size he&#x27;d never fit in Helga&#x27;s pouch &mdash; see S21-AA. One native generation. Master s21-z-master.png, native 1774&times;887, md5 f68f54fa…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S21-X keeps the S21 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s21-aa.jpg" alt="S21-AA" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S21-AA</span> <span class="kind">V7 &middot; S21-AA &middot; Trinity render &mdash; the scale fix</span><br><span class="faceline">NEW OPTION &mdash; Small enough to ride in the pouch now.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S21-AA WHY: Jon&#x27;s scale fix on S21-Z (2026-10-25) &mdash; he liked Z, but Harlow looked too big: &#x27;he would never fit inside Helga&#x27;s pouch on her bill.&#x27; This pass flips the scale: Harlow small in the mid-ground (his seated figure about a quarter of the frame height), Helga large and descending close, her bill pouch clearly roomy enough to carry a cat of exactly his shown size. His seated pose and broad head from Z are kept. GATE (Trinity, whole frame against gold X): polish held; Babs correct on the driftwood; seam band holds only sky and sea. One native generation. Master s21-aa-master.png, native 1774&times;887, md5 1975db81…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S21-X keeps the S21 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s21-ab.jpg" alt="S21-AB" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S21-AB</span> <span class="kind">V7 &middot; S21-AB &middot; Trinity render &mdash; Helga arriving</span><br><span class="faceline">NEW OPTION &mdash; Helga glides in; Harlow waits small below.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S21-AB WHY: Trinity&#x27;s free-pass S21, on Jon&#x27;s brief (2026-10-25). A new moment &mdash; Helga arriving: gliding in low over the water from frame-right with her wings wide in a landing flare and her pouch closed, while Harlow sits small at frame-left (S21-AA&#x27;s corrected carrying scale) watching her come in; Babs the cockatiel keeps watch from the driftwood. Late golden light, right for S21&#x27;s place in the day&#x27;s arc. GATE (Trinity, whole frame against gold X): polish held; faces clear of the fold. One native generation. Master s21-ab-master.png, native 1774&times;887, md5 1e1f6781…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S21-X keeps the S21 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s21-y.jpg" alt="S21-Y" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S21-Y</span> <span class="kind">V7 &middot; S21-Y &middot; Trinity render &mdash; Helga glides in, wings high</span><br><span class="faceline">NEW OPTION &mdash; The beat before the scoop — wingtips out of the text band.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S21-Y WHY: text-accommodation alt, on Jon&#x27;s call after the v3.2 print test (2026-10-25). In the gold, Helga&#x27;s dark left wingtip crosses S21-L&#x27;s third line. NEW shot of the beat just before the rescue: Helga gliding down with her wings swept up in a high V &mdash; wingtips reaching only the frame&#x27;s upper corners, the whole top band left as open sunset sky for the text &mdash; pouch closed and empty; Harlow small on the sand below, looking up with hope; Babs the cockatiel on the driftwood at far left, as in the gold. GATE (Trinity, whole frame against gold X): polish held; Helga&#x27;s white body, charcoal flight feathers and long orange bill correct. One native generation. Master s21-y-master.png, native 1774&times;887, md5 e1d437e6…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S21-X keeps the S21 gold.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s22-aq.jpg" alt="S22-AQ" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-AQ</span> <span class="kind">Candidate &mdash; Jon&rsquo;s S22 gold</span><br><span class="faceline">★ GOLD — Mittens and Teddy watch over Harlow in the sunset sky.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S22-AQ Candidate — Jon’s S22 gold ★ GOLD — S22-AQ · the S22 gold on Final Pass V5 — Jon named AQ the new S22 gold winner on 2026-10-24, taking the gold from S22-AO, which he removed from V5 the same night (AO stays live on Spread Options and Final Pass V2). S22-AQ — Pass 17: a little ghostlier, a little lower · Why it’s here, in short: Jon’s try-it alt (2026-10-23, 23:49 PDT) off S22-AP — pass 16’s wording 1, the walking take he picked as his favorite of that pair. One fresh generation governed on AP’s frame, changing only two dials: (1) Mittens and Teddy a little MORE GHOSTLY — more of the sunset sky shining through their bodies and wings, their edges dissolving a touch further into the cloud bank, while every facial marking stays crisp and the bright open-eyed read is kept; (2) the pair seated a LITTLE LOWER in the sky, so they are not so high. Held from AP exactly: Harlow’s mid-stride walk (hind feet apart, the near foot pushing off with pads up, the far foot lifted), his cream-tan tonal map (measured across flank, rump and tail — not one flat cream), the finer detail finish (less cel, not painterly), the bright violet-rose sky at AP’s brightness, strict canon at 3x for both cats (Mittens black-based, narrow tapering nose-bridge stripe, no tabby marks, pink nose, short close fur; Teddy forehead M, cheek stripes, pinkish-brown nose, mid-chest bib, the smirk), gazes angled softly down at Harlow, exactly 2 faces, 4 wings, one paw pair per cat, no doubles, no sun disc — the horizon carries a diffuse glow only. Gate measurements, stated plainly: nose landmarks Mittens (60.4%, 31.7%), Teddy (80.1%, 31.1%) against AP’s (63.3%, 26.2%) / (82.0%, 24.6%) — the pair came down 5.5 and 6.5 points, clearing the ‘a little lower’ gate by a wide margin and then some; disclosed shades — the descent also drifted the pair left of the (64, 29) / (83, 28) aim, and Mittens’s left ear reaches about x50%, deeper into the gutter strip than AP’s: this take traded rightward for downward, and it is posted as the ghostlier-and-lower try, not as a seat fix. Story-checked against Rev.17 page 22. S22-AO keeps the gold. Master s22-fix-2026-10-23/pass17/S22-fix17-w2-master.png (md5 89194508…); full record S22-FIX-PASS.md (pass 17 section). Posted PLAIN on Spread Options and Final Pass V2; seated PLAIN here in the S22 group under the standing lane.</p></details></figcaption>
+</figure>
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s23-aj.jpg" alt="S23-AJ" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S23-AJ</span> <span class="kind">S23 fresh generation — painted whole, no compositing: AF’s look and the right-side placement, brooch off — Jon's S23 gold</span><br><span class="faceline">★ GOLD — Home at last, in Lois’s arms.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S23-AJ S23 fresh generation — painted whole, no compositing: AF’s look and the right-side placement, brooch off — Jon's S23 gold ★ GOLD — S23-AJ · Jon named AJ the S23 gold winner "for now" on 2026-10-23 — the fresh no-composite generation that replaced AI, taking the gold from AF. Jon’s call (2026-10-23): AI’s masked composite still showed its edges on his crop — a ghost hand behind Lois’s gripping hand and smeared, doubled fur around Harlow’s ear and shoulder — so this version replaces the whole approach: one fresh native generation, painted whole in a single pass, no masks, no moves, no compositing anywhere. It holds AF’s look and feel — the backyard homecoming at sunset, AF’s own sky (deep blue-violet melting to rose and peach at the skyline, thin streak clouds, no warm re-grade), Wally small and seated in the next-door yard — with the pair composed at the right-side placement Jon asked for: Lois’s face center ≈79.5% across, Harlow’s ≈69%, both clear of the fold strip. Lois’s face is governed by her canonical chin-crop alone (soft round face, fuller cheeks, smoother brown waves, eyes opened slightly); plum-burgundy turtleneck and black jacket, brooch OFF per Lois’s S23 call. Hands gated at 3x after Jon’s crop: exactly two hands, natural anatomy, one clean edge against the fur — no ghost hand. Harlow’s ears gated at 3x: both natural, seal-brown and fur-covered with only a small pink tint inside — AH’s oversized fleshy ear does not recur. One disclosed shade: the sky meters a step more saturated than AF’s (+~0.06 saturation, value level) — same palette and cloud family. Wording 2 of 2: wording 1 passed every quality gate but held the pair at AF’s older framing, so this take shifts only the composition. Story-checked against Rev.17 page 23. Posted PLAIN beside AF; on Jon's 2026-10-23 call AJ took the S23 gold and AF was removed from V5 (AF stays live on Spread Options + Final Pass V2).</p></details></figcaption>
+</figure>
+
+<figure class="card v2new">
+<div class="imgwrap"><img src="spread-options/s24-am.jpg" alt="S24-AM" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S24-AM</span> <span class="kind">Candidate — Jon's S24 gold</span><br><span class="faceline">★ GOLD — The fireside finale from behind: Harlow curled on the chaise, gazing into the fieldstone fire, Little Mouse at the hearth.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S24-AM Candidate — Jon's own revised version, 2026-10-24 — replaces the earlier AM art on his order and takes the gold. The frame is the back-view fireside finale: Harlow curled on the green chaise with his back to us, gazing into the fieldstone fire, tail swept across the cushion, Little Mouse small at the hearth's right edge by the copper bucket, the floral lamp and its side table at the left. Pixel record (Trinity, 2026-10-24): Jon's art derives from the S24-AD fieldstone frame — the whole frame tracks AD within re-encode distance — and it carries the cleaned lamp table from Lois's notes, the plant pot seated on one solid burgundy hardcover as fixed in S24-AN; Jon's original file is banked unscaled as the master. The earlier S24-AM art (the darker-rug wingback alt) is replaced under this letter on Jon's order; it was never the frame above. S24-AD and S24-AN were removed from V6 in the same call and stay live on Spread Options and Final Pass V2. Jon's gold — 2026-10-24.</p></details></figcaption>
+</figure>
+
+</main>
+<figure class="card v6-extra" style="max-width:720px;margin:0 auto 22px;">
+<img src="assets/favorite-logo.jpg" alt="Harlow's Accidental Journey — watercolor logo" loading="lazy">
+<figcaption><span class="tag">LOGO</span> <span class="kind">Jon's favorite logo — extra</span><br><span class="faceline">The book’s logo — your favorite.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">LOGO Jon's favorite logo — extra</p></details></figcaption>
+</figure>
+
+<figure class="card v6-extra" style="max-width:720px;margin:0 auto 22px;">
+<img src="assets/covers-free-pass/front-e-road.jpg" alt="Front cover concept E — The Road, facing forward, Jon&#x27;s fence touch-up: Harlow walking toward the reader, friends along the way" loading="lazy">
+<figcaption><span class="tag">FRONT E</span> <span class="kind">Free-pass front cover E — &#8220;The Road,&#8221; facing forward — Jon&#x27;s own touch-up.</span><br><span class="faceline">Front cover idea — The Road: Harlow and his friends. (Your fence touch-up.)</span><details class="carddetails"><summary>Details</summary><p class="fullcap">FRONT E Free-pass front cover E — “The Road,” facing forward — Jon's own touch-up. Why: Jon's own Photoshop pass on Front D (2026-10-24) — he cleaned up the fence near Chester by hand: the rail run west of Chester's neck, where D's fix had left a mottled patch, now reads as clean continuous fence. Everything else is D exactly — same Harlow, same cast, same golden road home.</p></details></figcaption>
+</figure>
+<figure class="card v6-extra" style="max-width:720px;margin:0 auto 22px;">
+<img src="assets/covers-free-pass/back-c-sunset-window-clean.jpg" alt="Back cover concept C — Home at Dusk under a sunset sky: the lit house, empty glowing windows, Harlow trotting up the path" loading="lazy">
+<figcaption><span class="tag">BACK C</span> <span class="kind">Free-pass back cover C — &#8220;Home at Dusk,&#8221; sunset edition.</span><br><span class="faceline">Back cover idea — Home at Dusk: Harlow comes home.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">BACK C Free-pass back cover C — “Home at Dusk,” sunset edition. Why: Jon's alt of Back B (2026-10-24) — three changes, everything else is B's own art. The two cats are gone from the lit downstairs window: it glows warm and empty. The deep night sky and crescent moon give way to a sunset sky in S22-AQ's family — pink, rose and purple clouds over a golden horizon. And the objects silhouetted inside the top dormer window are cleaned out, leaving plain glowing panes. Harlow, the house, the path and the skyline are untouched.</p></details></figcaption>
+</figure>
+
+
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+  <button id="close" aria-label="Close viewer">&times;</button>
+  <div id="lbfig">
+    <div id="lbwrap"><img id="lbimg" src="" alt=""><div class="seam-guide" id="lbseam" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+    <button class="fnav" id="fprev" aria-label="Previous image">&#8249;</button>
+    <button class="fnav" id="fnext" aria-label="Next image">&#8250;</button>
+    <button class="fclose" id="fclose" aria-label="Exit fullscreen">&times;</button>
+    <div id="lbcapbar">
+      <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
+      <span class="t"><span id="lbcap"></span><span class="n" id="lbnum"></span></span>
+      <button class="nav" id="next" aria-label="Next image">&#8250;</button>
+    </div>
+    <div id="lbseamrow"><button type="button" id="lbseamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button><button type="button" id="lbluluToggle" class="seam-btn" aria-pressed="false">Show Lulu guide</button></div>
+  </div>
+  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
+</div>
+<script>
+document.getElementById('seamToggle').addEventListener('click',function(){var on=document.body.classList.toggle('guides-on');this.setAttribute('aria-pressed',on?'true':'false');this.textContent=on?'Hide seam guide':'Show seam guide';});
+</script>
+
+<script>
+// Lulu spread guide (Jon 2026-10-21). Overlays are injected at runtime —
+// one per card image and one for the viewer — so card markup stays
+// untouched and later-posted cards are covered on the next load. The page
+// toggle and the viewer toggle are fully independent of each other and of
+// the seam guides (either / both / neither can be on). Opening the viewer
+// starts its Lulu state from the page's, mirroring the seam guide.
+(function(){
+  function build(){
+    var d=document.createElement('div');
+    d.className='lulu-guide'; d.setAttribute('aria-hidden','true');
+    d.innerHTML='<i class="gutter"></i><i class="edge"></i><i class="safe l"></i><i class="safe r"></i><i class="fold"></i><span class="lulu-label sl">SAFE</span><span class="lulu-label sr">SAFE</span><span class="lulu-label gu">GUTTER</span>';
+    return d;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.card .imgwrap'),function(w){ w.appendChild(build()); });
+  var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbfig=document.getElementById('lbfig'), lbwrap=document.getElementById('lbwrap'),
+      lbluluBtn=document.getElementById('lbluluToggle'), lblulu=null;
+  if(lbwrap){ lblulu=build(); lblulu.id='lblulu'; lbwrap.appendChild(lblulu); }
+  var btn=document.getElementById('luluToggle');
+  if(btn) btn.addEventListener('click',function(){var on=document.body.classList.toggle('lulu-on');this.setAttribute('aria-pressed',on?'true':'false');this.textContent=on?'Hide Lulu guide':'Show Lulu guide';});
+  var lbLuluOn=false;
+  // Map the viewer overlay onto the image's rendered content box, exactly
+  // like the seam guide's placeSeam, so it stays true in fullscreen/.zoomed.
+  function placeLulu(){
+    if(!lb||!lblulu||!lb.classList.contains('open')||!lbLuluOn) return;
+    var nw=lbimg.naturalWidth, nh=lbimg.naturalHeight; if(!nw||!nh) return;
+    var r=lbimg.getBoundingClientRect(), w=lbwrap.getBoundingClientRect();
+    if(!r.width||!w.width) return;
+    var s=Math.min(r.width/nw,r.height/nh), cw=nw*s, ch=nh*s;
+    lblulu.style.left=(r.left+(r.width-cw)/2-w.left)+'px';
+    lblulu.style.top=(r.top+(r.height-ch)/2-w.top)+'px';
+    lblulu.style.width=cw+'px';
+    lblulu.style.height=ch+'px';
+  }
+  function placeLuluSoon(){ requestAnimationFrame(placeLulu); }
+  function applyLulu(){
+    if(!lbfig||!lbluluBtn) return;
+    lbfig.classList.toggle('lulu-on',lbLuluOn);
+    lbluluBtn.textContent=lbLuluOn?'Hide Lulu guide':'Show Lulu guide';
+    lbluluBtn.setAttribute('aria-pressed',lbLuluOn?'true':'false');
+    if(lbLuluOn) placeLuluSoon();
+  }
+  if(lbluluBtn) lbluluBtn.addEventListener('click',function(e){ e.stopPropagation(); lbLuluOn=!lbLuluOn; applyLulu(); });
+  // Viewer opens via a card-image click: start from the page's Lulu state.
+  document.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    if(e.target.closest('.card img')&&lb){ lbLuluOn=document.body.classList.contains('lulu-on'); applyLulu(); }
+  });
+  if(lbimg) lbimg.addEventListener('load',placeLuluSoon);
+  window.addEventListener('resize',placeLuluSoon);
+  document.addEventListener('fullscreenchange',placeLuluSoon);
+  document.addEventListener('webkitfullscreenchange',placeLuluSoon);
+  ['fs','fclose'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click',function(){ placeLuluSoon(); setTimeout(placeLulu,380); }); });
+})();
+</script>
+<script>
+// Lightbox — showcase-style viewer (mirrors index.html's #lb pattern).
+// Event delegation: any .card img opens the viewer, so cards posted later work too.
+(function(){
+  var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum'),
+      lbfig=document.getElementById('lbfig'),
+      lbwrap=document.getElementById('lbwrap'), lbseam=document.getElementById('lbseam'),
+      lbseamBtn=document.getElementById('lbseamToggle');
+  var lbSeamOn=false;
+  var cards=[], cur=0;
+  function collect(){ cards=Array.prototype.slice.call(document.querySelectorAll('figure.card')); }
+  function show(i){
+    var n=cards.length; if(!n) return;
+    cur=((i%n)+n)%n;
+    var fig=cards[cur], img=fig.querySelector('img'), cap=fig.querySelector('figcaption');
+    lbimg.src=img.getAttribute('src'); lbimg.alt=img.getAttribute('alt')||'';
+    var fc=cap?cap.querySelector('.faceline'):null; lbcap.innerHTML=fc?fc.innerHTML:(cap?cap.innerHTML:'');
+    lbnum.textContent='Image '+(cur+1)+' of '+n;
+    placeSeamSoon();
+  }
+  // Seam guide in the viewer: local state only, never touches the page's
+  // guides. placeSeam maps the overlay onto the image's rendered content
+  // box, so it stays true in the overlay, fullscreen and .zoomed states.
+  function placeSeam(){
+    if(!lb.classList.contains('open')||!lbSeamOn) return;
+    var nw=lbimg.naturalWidth, nh=lbimg.naturalHeight; if(!nw||!nh) return;
+    var r=lbimg.getBoundingClientRect(), w=lbwrap.getBoundingClientRect();
+    if(!r.width||!w.width) return;
+    var s=Math.min(r.width/nw,r.height/nh), cw=nw*s, ch=nh*s;
+    lbseam.style.left=(r.left+(r.width-cw)/2-w.left)+'px';
+    lbseam.style.top=(r.top+(r.height-ch)/2-w.top)+'px';
+    lbseam.style.width=cw+'px';
+    lbseam.style.height=ch+'px';
+  }
+  function placeSeamSoon(){ requestAnimationFrame(placeSeam); }
+  function applySeam(){
+    lbfig.classList.toggle('seam-on',lbSeamOn);
+    lbseamBtn.textContent=lbSeamOn?'Hide seam guide':'Show seam guide';
+    lbseamBtn.setAttribute('aria-pressed',lbSeamOn?'true':'false');
+    if(lbSeamOn) placeSeamSoon();
+  }
+  function toggleSeam(){ lbSeamOn=!lbSeamOn; applySeam(); }
+  function openLb(fig){
+    collect();
+    var i=cards.indexOf(fig); if(i<0) return;
+    lb.classList.add('open'); document.body.style.overflow='hidden';
+    lbSeamOn=document.body.classList.contains('guides-on'); applySeam();
+    show(i);
+  }
+  function closeLb(){
+    if(document.fullscreenElement) document.exitFullscreen();
+    lb.classList.remove('zoomed'); lb.classList.remove('open'); document.body.style.overflow='';
+  }
+  function step(d){ show(cur+d); }
+  var isIOS=/iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+  function toggleZoom(){
+    if(document.fullscreenElement){ document.exitFullscreen(); return; }
+    if(lb.classList.contains('zoomed')){ lb.classList.remove('zoomed'); return; }
+    if(isIOS){ lb.classList.add('zoomed'); return; }
+    if(lbfig.requestFullscreen){ lbfig.requestFullscreen().catch(function(){ lb.classList.add('zoomed'); }); }
+    else if(lbfig.webkitRequestFullscreen){ lbfig.webkitRequestFullscreen(); }
+    else { lb.classList.add('zoomed'); }
+  }
+  document.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var img=e.target.closest('.card img');
+    if(img){ var fig=img.closest('figure.card'); if(fig) openLb(fig); }
+  });
+  document.getElementById('close').addEventListener('click',closeLb);
+  document.getElementById('prev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('next').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fprev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('fnext').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fclose').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); });
+  document.getElementById('fs').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); });
+  lbseamBtn.addEventListener('click',function(e){ e.stopPropagation(); toggleSeam(); });
+  lbimg.addEventListener('load',placeSeamSoon);
+  window.addEventListener('resize',placeSeamSoon);
+  lb.addEventListener('click',function(e){ if(e.target===lb) closeLb(); });
+  lbimg.addEventListener('click',function(e){
+    if(document.fullscreenElement===lbfig||lb.classList.contains('zoomed')){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); }
+  });
+  function fsChanged(){
+    if(document.fullscreenElement!==lbfig&&document.webkitFullscreenElement!==lbfig)
+      lb.classList.remove('zoomed');
+    placeSeamSoon();
+  }
+  document.addEventListener('fullscreenchange',fsChanged);
+  document.addEventListener('webkitfullscreenchange',fsChanged);
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape'){ if(document.fullscreenElement) return; closeLb(); }
+    if(e.key==='ArrowLeft') step(-1);
+    if(e.key==='ArrowRight') step(1);
+  });
+})();
+</script>
+
+<button type="button" id="toTop" aria-label="Back to top" title="Back to top">&#8593;</button>
+
+<script>
+// Section jump nav + back-to-top (Jon 2026-10-21). The nav mirrors Spread
+// Options' jump strip. V2 cards are a flat run of figures (no per-spread
+// sections in the markup), so this script tags the first card of each spread
+// with its S## id at runtime and smooth-scrolls with the sticky chrome
+// (header + strip) offset. File markup stays untouched, so the card-posting
+// helpers are unaffected.
+(function(){
+  var header=document.querySelector('header'), nav=document.getElementById('jumpnav'),
+      btn=document.getElementById('toTop'), lb=document.getElementById('lb');
+  var seen={};
+  Array.prototype.forEach.call(document.querySelectorAll('main figure.card'),function(fig){
+    var tag=fig.querySelector('.tag'); if(!tag) return;
+    var m=/^S(\d{2})-/.exec(tag.textContent.replace(/^\s+|\s+$/g,'')); if(!m) return;
+    var code='S'+m[1];
+    if(!seen[code]){ seen[code]=1; if(!fig.id) fig.id=code; }
+  });
+  function stick(){ if(nav&&header) nav.style.top=header.offsetHeight+'px'; }
+  stick();
+  window.addEventListener('resize',stick);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(stick);
+  function chromeH(){ return (header?header.offsetHeight:0)+(nav?nav.offsetHeight:0); }
+  var settleTimers=[];
+  function clearSettle(){ settleTimers.forEach(clearTimeout); settleTimers=[]; }
+  ['wheel','touchstart'].forEach(function(ev){
+    window.addEventListener(ev,clearSettle,{passive:true});
+  });
+  function alignTo(el,behavior){
+    var y=el.getBoundingClientRect().top+window.scrollY-chromeH()-8;
+    window.scrollTo({top:y<0?0:y,behavior:behavior});
+  }
+  function jumpTo(code){
+    var el=document.getElementById(code); if(!el) return;
+    clearSettle();
+    alignTo(el,'smooth');
+    // Lazy images above the target keep loading and push it down; re-align
+    // a few times as the layout settles (cancelled if Jon scrolls himself).
+    [500,1200,2200].forEach(function(ms){
+      settleTimers.push(setTimeout(function(){
+        if(Math.abs(el.getBoundingClientRect().top-(chromeH()+8))>6) alignTo(el,'auto');
+      },ms));
+    });
+  }
+  if(nav) nav.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var a=e.target.closest('a[href^="#S"]'); if(!a) return;
+    e.preventDefault();
+    var code=a.getAttribute('href').slice(1);
+    jumpTo(code);
+    try{ history.replaceState(null,'','#'+code); }catch(_){}
+  });
+  // Mobile Sections dropdown (<=640px): same jump as the strip links.
+  var sel=document.getElementById('sectionJump');
+  if(sel) sel.addEventListener('change',function(){
+    if(!sel.value) return;
+    jumpTo(sel.value);
+    try{ history.replaceState(null,'','#'+sel.value); }catch(_){}
+  });
+  if(/^#S\d{2}$/.test(location.hash||'')){
+    var h=location.hash.slice(1);
+    setTimeout(function(){ jumpTo(h); },80);
+  }
+  function upd(){
+    var show=window.scrollY>600&&!(lb&&lb.classList.contains('open'));
+    btn.classList.toggle('show',show);
+  }
+  window.addEventListener('scroll',upd,{passive:true});
+  upd();
+  btn.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+  if(lb&&window.MutationObserver) new MutationObserver(upd).observe(lb,{attributes:true,attributeFilter:['class']});
+})();
+</script>
+</body></html>
