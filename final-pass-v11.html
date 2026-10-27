@@ -362,5 +362,252 @@ header.collapsed #hdrMini{display:inline-block}
 <figcaption><span class="tag">S24 &middot; V11</span> <span class="kind">City Polish rerun &mdash; fresh render, open top</span><br><span class="faceline">The bookshelf by the lamp, all tidied up.</span></figcaption>
 </figure>
 </main>
+
+<button type="button" id="toTop" aria-label="Back to top" title="Back to top">&#8593;</button>
+<div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+  <button id="close" aria-label="Close viewer">&times;</button>
+  <div id="lbfig">
+    <div id="lbwrap"><img id="lbimg" src="" alt=""><div class="seam-guide" id="lbseam" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+    <button class="fnav" id="fprev" aria-label="Previous image">&#8249;</button>
+    <button class="fnav" id="fnext" aria-label="Next image">&#8250;</button>
+    <button class="fclose" id="fclose" aria-label="Exit fullscreen">&times;</button>
+    <div id="lbcapbar">
+      <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
+      <span class="t"><span id="lbcap"></span><span class="n" id="lbnum"></span></span>
+      <button class="nav" id="next" aria-label="Next image">&#8250;</button>
+    </div>
+    <div id="lbseamrow"><button type="button" id="lbseamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button><button type="button" id="lbluluToggle" class="seam-btn" aria-pressed="false">Show Lulu guide</button></div>
+  </div>
+  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
+</div>
+<script>
+document.getElementById('seamToggle').addEventListener('click',function(){var on=document.body.classList.toggle('guides-on');this.setAttribute('aria-pressed',on?'true':'false');this.textContent=on?'Hide seam guide':'Show seam guide';});
+</script>
+<script>
+// Lulu spread guide (Jon 2026-10-21). Overlays are injected at runtime —
+// one per card image and one for the viewer — so card markup stays
+// untouched and later-posted cards are covered on the next load. The page
+// toggle and the viewer toggle are fully independent of each other and of
+// the seam guides (either / both / neither can be on). Opening the viewer
+// starts its Lulu state from the page's, mirroring the seam guide.
+(function(){
+  function build(){
+    var d=document.createElement('div');
+    d.className='lulu-guide'; d.setAttribute('aria-hidden','true');
+    d.innerHTML='<i class="gutter"></i><i class="edge"></i><i class="safe l"></i><i class="safe r"></i><i class="fold"></i><span class="lulu-label sl">SAFE</span><span class="lulu-label sr">SAFE</span><span class="lulu-label gu">GUTTER</span>';
+    return d;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.card .imgwrap'),function(w){ w.appendChild(build()); });
+  var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbfig=document.getElementById('lbfig'), lbwrap=document.getElementById('lbwrap'),
+      lbluluBtn=document.getElementById('lbluluToggle'), lblulu=null;
+  if(lbwrap){ lblulu=build(); lblulu.id='lblulu'; lbwrap.appendChild(lblulu); }
+  var btn=document.getElementById('luluToggle');
+  if(btn) btn.addEventListener('click',function(){var on=document.body.classList.toggle('lulu-on');this.setAttribute('aria-pressed',on?'true':'false');this.textContent=on?'Hide Lulu guide':'Show Lulu guide';});
+  var lbLuluOn=false;
+  // Map the viewer overlay onto the image's rendered content box, exactly
+  // like the seam guide's placeSeam, so it stays true in fullscreen/.zoomed.
+  function placeLulu(){
+    if(!lb||!lblulu||!lb.classList.contains('open')||!lbLuluOn) return;
+    var nw=lbimg.naturalWidth, nh=lbimg.naturalHeight; if(!nw||!nh) return;
+    var r=lbimg.getBoundingClientRect(), w=lbwrap.getBoundingClientRect();
+    if(!r.width||!w.width) return;
+    var s=Math.min(r.width/nw,r.height/nh), cw=nw*s, ch=nh*s;
+    lblulu.style.left=(r.left+(r.width-cw)/2-w.left)+'px';
+    lblulu.style.top=(r.top+(r.height-ch)/2-w.top)+'px';
+    lblulu.style.width=cw+'px';
+    lblulu.style.height=ch+'px';
+  }
+  function placeLuluSoon(){ requestAnimationFrame(placeLulu); }
+  function applyLulu(){
+    if(!lbfig||!lbluluBtn) return;
+    lbfig.classList.toggle('lulu-on',lbLuluOn);
+    lbluluBtn.textContent=lbLuluOn?'Hide Lulu guide':'Show Lulu guide';
+    lbluluBtn.setAttribute('aria-pressed',lbLuluOn?'true':'false');
+    if(lbLuluOn) placeLuluSoon();
+  }
+  if(lbluluBtn) lbluluBtn.addEventListener('click',function(e){ e.stopPropagation(); lbLuluOn=!lbLuluOn; applyLulu(); });
+  // Viewer opens via a card-image click: start from the page's Lulu state.
+  document.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    if(e.target.closest('.card img')&&lb){ lbLuluOn=document.body.classList.contains('lulu-on'); applyLulu(); }
+  });
+  if(lbimg) lbimg.addEventListener('load',placeLuluSoon);
+  window.addEventListener('resize',placeLuluSoon);
+  document.addEventListener('fullscreenchange',placeLuluSoon);
+  document.addEventListener('webkitfullscreenchange',placeLuluSoon);
+  ['fs','fclose'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click',function(){ placeLuluSoon(); setTimeout(placeLulu,380); }); });
+})();
+</script>
+<script>
+// Lightbox — showcase-style viewer (mirrors index.html's #lb pattern).
+// Event delegation: any .card img opens the viewer, so cards posted later work too.
+(function(){
+  var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum'),
+      lbfig=document.getElementById('lbfig'),
+      lbwrap=document.getElementById('lbwrap'), lbseam=document.getElementById('lbseam'),
+      lbseamBtn=document.getElementById('lbseamToggle');
+  var lbSeamOn=false;
+  var cards=[], cur=0;
+  function collect(){ cards=Array.prototype.slice.call(document.querySelectorAll('figure.card')); }
+  function show(i){
+    var n=cards.length; if(!n) return;
+    cur=((i%n)+n)%n;
+    var fig=cards[cur], img=fig.querySelector('img'), cap=fig.querySelector('figcaption');
+    lbimg.src=img.getAttribute('src'); lbimg.alt=img.getAttribute('alt')||'';
+    var fc=cap?cap.querySelector('.faceline'):null; lbcap.innerHTML=fc?fc.innerHTML:(cap?cap.innerHTML:'');
+    lbnum.textContent='Image '+(cur+1)+' of '+n;
+    placeSeamSoon();
+  }
+  // Seam guide in the viewer: local state only, never touches the page's
+  // guides. placeSeam maps the overlay onto the image's rendered content
+  // box, so it stays true in the overlay, fullscreen and .zoomed states.
+  function placeSeam(){
+    if(!lb.classList.contains('open')||!lbSeamOn) return;
+    var nw=lbimg.naturalWidth, nh=lbimg.naturalHeight; if(!nw||!nh) return;
+    var r=lbimg.getBoundingClientRect(), w=lbwrap.getBoundingClientRect();
+    if(!r.width||!w.width) return;
+    var s=Math.min(r.width/nw,r.height/nh), cw=nw*s, ch=nh*s;
+    lbseam.style.left=(r.left+(r.width-cw)/2-w.left)+'px';
+    lbseam.style.top=(r.top+(r.height-ch)/2-w.top)+'px';
+    lbseam.style.width=cw+'px';
+    lbseam.style.height=ch+'px';
+  }
+  function placeSeamSoon(){ requestAnimationFrame(placeSeam); }
+  function applySeam(){
+    lbfig.classList.toggle('seam-on',lbSeamOn);
+    lbseamBtn.textContent=lbSeamOn?'Hide seam guide':'Show seam guide';
+    lbseamBtn.setAttribute('aria-pressed',lbSeamOn?'true':'false');
+    if(lbSeamOn) placeSeamSoon();
+  }
+  function toggleSeam(){ lbSeamOn=!lbSeamOn; applySeam(); }
+  function openLb(fig){
+    collect();
+    var i=cards.indexOf(fig); if(i<0) return;
+    lb.classList.add('open'); document.body.style.overflow='hidden';
+    lbSeamOn=document.body.classList.contains('guides-on'); applySeam();
+    show(i);
+  }
+  function closeLb(){
+    if(document.fullscreenElement) document.exitFullscreen();
+    lb.classList.remove('zoomed'); lb.classList.remove('open'); document.body.style.overflow='';
+  }
+  function step(d){ show(cur+d); }
+  var isIOS=/iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+  function toggleZoom(){
+    if(document.fullscreenElement){ document.exitFullscreen(); return; }
+    if(lb.classList.contains('zoomed')){ lb.classList.remove('zoomed'); return; }
+    if(isIOS){ lb.classList.add('zoomed'); return; }
+    if(lbfig.requestFullscreen){ lbfig.requestFullscreen().catch(function(){ lb.classList.add('zoomed'); }); }
+    else if(lbfig.webkitRequestFullscreen){ lbfig.webkitRequestFullscreen(); }
+    else { lb.classList.add('zoomed'); }
+  }
+  document.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var img=e.target.closest('.card img');
+    if(img){ var fig=img.closest('figure.card'); if(fig) openLb(fig); }
+  });
+  document.getElementById('close').addEventListener('click',closeLb);
+  document.getElementById('prev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('next').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fprev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('fnext').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fclose').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); });
+  document.getElementById('fs').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); });
+  lbseamBtn.addEventListener('click',function(e){ e.stopPropagation(); toggleSeam(); });
+  lbimg.addEventListener('load',placeSeamSoon);
+  window.addEventListener('resize',placeSeamSoon);
+  lb.addEventListener('click',function(e){ if(e.target===lb) closeLb(); });
+  lbimg.addEventListener('click',function(e){
+    if(document.fullscreenElement===lbfig||lb.classList.contains('zoomed')){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); }
+  });
+  function fsChanged(){
+    if(document.fullscreenElement!==lbfig&&document.webkitFullscreenElement!==lbfig)
+      lb.classList.remove('zoomed');
+    placeSeamSoon();
+  }
+  document.addEventListener('fullscreenchange',fsChanged);
+  document.addEventListener('webkitfullscreenchange',fsChanged);
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape'){ if(document.fullscreenElement) return; closeLb(); }
+    if(e.key==='ArrowLeft') step(-1);
+    if(e.key==='ArrowRight') step(1);
+  });
+})();
+</script>
+<script>
+// Section jump nav + back-to-top (Jon 2026-10-21). The nav mirrors Spread
+// Options' jump strip. V2 cards are a flat run of figures (no per-spread
+// sections in the markup), so this script tags the first card of each spread
+// with its S## id at runtime and smooth-scrolls with the sticky chrome
+// (header + strip) offset. File markup stays untouched, so the card-posting
+// helpers are unaffected.
+(function(){
+  var header=document.querySelector('header'), nav=document.getElementById('jumpnav'),
+      btn=document.getElementById('toTop'), lb=document.getElementById('lb');
+  var seen={};
+  Array.prototype.forEach.call(document.querySelectorAll('main figure.card'),function(fig){
+    var tag=fig.querySelector('.tag'); if(!tag) return;
+    var m=/^S(\d{2})-/.exec(tag.textContent.replace(/^\s+|\s+$/g,'')); if(!m) return;
+    var code='S'+m[1];
+    if(!seen[code]){ seen[code]=1; if(!fig.id) fig.id=code; }
+  });
+  function stick(){ if(nav&&header) nav.style.top=header.offsetHeight+'px'; }
+  stick();
+  window.addEventListener('resize',stick);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(stick);
+  function chromeH(){ return (header?header.offsetHeight:0)+(nav?nav.offsetHeight:0); }
+  var settleTimers=[];
+  function clearSettle(){ settleTimers.forEach(clearTimeout); settleTimers=[]; }
+  ['wheel','touchstart'].forEach(function(ev){
+    window.addEventListener(ev,clearSettle,{passive:true});
+  });
+  function alignTo(el,behavior){
+    var y=el.getBoundingClientRect().top+window.scrollY-chromeH()-8;
+    window.scrollTo({top:y<0?0:y,behavior:behavior});
+  }
+  function jumpTo(code){
+    var el=document.getElementById(code); if(!el) return;
+    clearSettle();
+    alignTo(el,'smooth');
+    // Lazy images above the target keep loading and push it down; re-align
+    // a few times as the layout settles (cancelled if Jon scrolls himself).
+    [500,1200,2200].forEach(function(ms){
+      settleTimers.push(setTimeout(function(){
+        if(Math.abs(el.getBoundingClientRect().top-(chromeH()+8))>6) alignTo(el,'auto');
+      },ms));
+    });
+  }
+  if(nav) nav.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var a=e.target.closest('a[href^="#S"]'); if(!a) return;
+    e.preventDefault();
+    var code=a.getAttribute('href').slice(1);
+    jumpTo(code);
+    try{ history.replaceState(null,'','#'+code); }catch(_){}
+  });
+  // Mobile Sections dropdown (<=640px): same jump as the strip links.
+  var sel=document.getElementById('sectionJump');
+  if(sel) sel.addEventListener('change',function(){
+    if(!sel.value) return;
+    jumpTo(sel.value);
+    try{ history.replaceState(null,'','#'+sel.value); }catch(_){}
+  });
+  if(/^#S\d{2}$/.test(location.hash||'')){
+    var h=location.hash.slice(1);
+    setTimeout(function(){ jumpTo(h); },80);
+  }
+  function upd(){
+    var show=window.scrollY>600&&!(lb&&lb.classList.contains('open'));
+    btn.classList.toggle('show',show);
+  }
+  window.addEventListener('scroll',upd,{passive:true});
+  upd();
+  btn.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+  if(lb&&window.MutationObserver) new MutationObserver(upd).observe(lb,{attributes:true,attributeFilter:['class']});
+})();
+</script>
 </body>
 </html>
