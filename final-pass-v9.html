@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final Pass V9 — The Gold Finals — Harlow's Accidental Journey</title>
+<style>
+body{margin:0;font-family:Georgia,serif;background:#faf6ee;color:#2b2118}
+header{position:sticky;top:0;background:linear-gradient(180deg,#7d560f,#4e3409);color:#f5e9d5;padding:12px 16px;z-index:5}
+header h1{margin:0;font-size:20px} header p{margin:4px 0 0;font-size:13.5px;opacity:.85}
+main{max-width:860px;margin:0 auto;padding:10px 10px 40px}
+.card{margin:0 0 22px;background:#fff;border:1px solid #e3d5bd;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(60,40,10,.08)}
+.card img{width:100%;display:block}
+.card figcaption{padding:10px 14px 12px;font-size:15.5px;line-height:1.45}
+.card.v2new{border-color:#7d8ea3;box-shadow:0 2px 10px rgba(90,110,135,.35)}
+.card.v2new figcaption{background:linear-gradient(180deg,#d7e2ee,#b3c5d9)}
+.card.v2new.goldcard{border-color:#d9a62e;box-shadow:0 2px 10px rgba(190,140,20,.35)}
+.card.v2new.goldcard figcaption{background:linear-gradient(180deg,#f9dc8a,#f4ca5e)}
+.tag{font-weight:bold;background:#7a4f21;color:#fff;border-radius:6px;padding:2px 8px;font-size:14px}
+.kind{font-style:italic;color:#7a4f21;margin-left:6px}
+section#REMOVED h2{font-size:19px;margin:30px 0 6px}
+section#REMOVED .hint{font-weight:normal;font-size:14px;opacity:.7}
+section#REMOVED .how{font-size:14px;opacity:.85;margin:0 0 10px;line-height:1.45}
+section#REMOVED summary{cursor:pointer;color:#7a4f21;font-size:15.5px;margin:0 0 16px}
+section#REMOVED figure{opacity:.94}
+
+.imgwrap{position:relative}
+.seam-guide{position:absolute;inset:0;pointer-events:none;display:none}
+body.guides-on .seam-guide{display:block}
+.seam-guide .band{position:absolute;top:0;bottom:0;left:44%;width:12%;background:rgba(255,196,0,.13);border-left:1px dashed rgba(122,79,33,.65);border-right:1px dashed rgba(122,79,33,.65)}
+.seam-guide .line{position:absolute;top:0;bottom:0;left:50%;border-left:2px dashed rgba(255,255,255,.95);filter:drop-shadow(0 0 2px rgba(30,20,10,.85))}
+.seam-guide .seam-label{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-family:Georgia,serif;font-size:11px;font-style:italic;color:#fff;background:rgba(43,33,24,.65);padding:1px 8px;border-radius:9px;letter-spacing:.04em;white-space:nowrap}
+.seam-btn{margin-top:10px;font-family:Georgia,serif;font-size:14px;cursor:pointer;background:#f5e9d5;color:#2b2118;border:1px solid #7a4f21;border-radius:8px;padding:6px 14px;min-height:36px}
+.lulu-btn{margin-left:8px}
+/* Lulu spread guide (Jon 2026-10-21) — transparent overlay matching his Lulu
+   project's guideline template: bleed/trim edge rectangle, per-page text-safe
+   rectangles, center fold line and a lightly shaded gutter band. Geometry
+   measured off his snapshot (1317x663; proportions map 1:1 onto each card
+   image): edge x .8%/99.1%, y 1.8%/98.0%; safe-left x 3.6-46.4%, safe-right
+   x 53.5-96.3%, safe y 7.4-92.5%; fold x 50.0%; gutter x 46.4-53.5%.
+   Overlay divs are injected at runtime (see the Lulu script before </body>),
+   so card markup is untouched. Independent of the seam guide: body.lulu-on
+   keys the card overlays, #lbfig.lulu-on keys the viewer's — either, both
+   or neither guide can be on. */
+.lulu-guide{position:absolute;inset:0;pointer-events:none;display:none}
+body.lulu-on .card .lulu-guide{display:block}
+.lulu-guide .edge{position:absolute;left:.8%;right:.9%;top:1.8%;bottom:2%;border:1px solid rgba(0,175,195,.85)}
+.lulu-guide .safe{position:absolute;top:7.4%;bottom:7.5%;width:42.8%;border:1.5px solid rgba(0,195,210,.9)}
+.lulu-guide .safe.l{left:3.6%}
+.lulu-guide .safe.r{left:53.5%}
+.lulu-guide .gutter{position:absolute;top:0;bottom:0;left:46.4%;width:7.1%;background:rgba(230,60,40,.10)}
+.lulu-guide .fold{position:absolute;top:0;bottom:0;left:50%;border-left:1px solid rgba(0,175,195,.85)}
+.lulu-guide .lulu-label{position:absolute;font-family:Georgia,serif;font-size:10px;font-style:italic;letter-spacing:.05em;white-space:nowrap;line-height:1.7;padding:0 6px;border-radius:8px;color:#e2f9fb;background:rgba(8,84,96,.55)}
+.lulu-guide .lulu-label.sl{left:4.2%;top:8.4%}
+.lulu-guide .lulu-label.sr{left:54.1%;top:8.4%}
+.lulu-guide .lulu-label.gu{left:50%;top:2.7%;transform:translateX(-50%);color:#ffe9e2;background:rgba(150,40,25,.55)}
+#lblulu{display:none}
+#lbfig.lulu-on #lblulu{display:block}
+#lbluluToggle{margin:0 0 0 8px;box-shadow:0 3px 12px rgba(0,0,0,.45)}
+
+.card img{cursor:zoom-in}
+#lb{position:fixed;inset:0;overflow-y:auto;background:rgba(24,18,12,.94);display:none;align-items:center;justify-content:center;z-index:50;padding:14px;box-sizing:border-box}
+#lb.open{display:flex}
+#lbfig{margin:0;max-width:min(1100px,94vw);text-align:center;position:relative}
+#lbimg{max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#lbcapbar{color:#f5efe2;margin-top:.9rem;font-size:1.02rem;line-height:1.45;display:flex;align-items:center;justify-content:center;gap:12px}
+#lbcapbar .t{display:flex;flex-direction:column;text-align:left}
+#lbnum{display:block;font-size:.88rem;opacity:.65;margin-top:.25rem}
+#lbcap .kind{color:#e3c878}
+#close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#221910 0%,#3a2d1b 55%,#5e4a24 100%);border:1px solid rgba(94,74,36,.65);color:#faf6ee;font-size:1.3rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18);line-height:1;z-index:2}
+#fs{position:absolute;bottom:14px;right:14px;width:42px;height:42px;border-radius:50%;background:#faf6ee;border:none;color:#3d3229;font-size:1.15rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.4);line-height:1;z-index:2}
+#lb .nav{width:38px;height:38px;border-radius:50%;cursor:pointer;flex:none;background:#faf6ee;border:none;color:#3d3229;font-size:1.5rem;font-weight:bold;box-shadow:0 3px 12px rgba(0,0,0,.4);line-height:1;padding-bottom:3px}
+.fnav,.fclose{display:none}
+#lb.zoomed{padding:0}
+#lbfig:fullscreen,#lbfig:-webkit-full-screen,#lb.zoomed #lbfig{width:100vw;height:100vh;max-width:100vw;background:#000;display:flex;align-items:center;justify-content:center}
+#lbfig:fullscreen #lbimg,#lbfig:-webkit-full-screen #lbimg,#lb.zoomed #lbimg{width:100vw;height:100vh;max-width:100vw;max-height:100vh;object-fit:contain;border-radius:0;box-shadow:none}
+#lbfig:fullscreen #lbcapbar,#lbfig:-webkit-full-screen #lbcapbar,#lb.zoomed #lbcapbar{display:none}
+#lbfig:fullscreen .fnav,#lbfig:-webkit-full-screen .fnav,#lb.zoomed .fnav{display:block;position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.6rem;font-weight:bold;cursor:pointer;z-index:3;line-height:1;padding-bottom:3px}
+#lbfig:fullscreen #fprev,#lbfig:-webkit-full-screen #fprev,#lb.zoomed #fprev{left:16px}
+#lbfig:fullscreen #fnext,#lbfig:-webkit-full-screen #fnext,#lb.zoomed #fnext{right:16px}
+#lbfig:fullscreen .fclose,#lbfig:-webkit-full-screen .fclose,#lb.zoomed .fclose{display:block;position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.35rem;cursor:pointer;z-index:3;line-height:1}
+@media (max-width:600px){#lbimg{max-height:62vh}}
+/* Lightbox seam guide (Jon 2026-10-21): #lbwrap shrink-wraps the image;
+   #lbseam display is keyed to #lbfig.seam-on only — the id rules outrank the
+   cards' body.guides-on .seam-guide rules, so viewer and page guides never
+   couple. Inner band/line/label reuse the cards' .seam-guide child styles. */
+#lbwrap{position:relative;display:inline-block;line-height:0;max-width:100%}
+#lbseam{display:none}
+#lbfig.seam-on #lbseam{display:block}
+#lbseamToggle{margin:0;box-shadow:0 3px 12px rgba(0,0,0,.45)}
+/* Jon 2026-10-21 (later still): overlay mode — the toggle row is pinned
+   to the very bottom-left corner of the viewport (fixed, 14px), the same
+   corner it takes in fullscreen, instead of floating under the caption.
+   Fullscreen/.zoomed keep the figure pin on the next rule, untouched. */
+#lbseamrow{position:fixed;left:14px;bottom:14px;margin:0;z-index:4}
+#lbfig:fullscreen #lbseamrow,#lbfig:-webkit-full-screen #lbseamrow,#lb.zoomed #lbseamrow{position:absolute;left:10px;bottom:10px;margin:0;z-index:4}
+
+/* Section jump nav + back-to-top (Jon 2026-10-21) — mirrors Spread Options'
+   .jumpnav strip: italic section links on a translucent cream bar, sticky
+   under this page's sticky header (top set by the nav script below). */
+.jumpnav{position:sticky;top:0;z-index:4;background:rgba(250,246,238,.96);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border-bottom:1px solid #e3d5bd;display:flex;flex-wrap:wrap;gap:.35rem .8rem;justify-content:center;padding:.6rem 1rem .55rem}
+.jumpnav a{color:#2b2118;text-decoration:none;font-size:.9rem;font-style:italic;white-space:nowrap;padding:.15rem .1rem}
+.jumpnav a:hover{color:#7a4f21;text-decoration:underline}
+#toTop{position:fixed;right:14px;bottom:14px;width:46px;height:46px;border-radius:50%;background:#f5e9d5;color:#2b2118;border:1px solid #7a4f21;font-family:Georgia,serif;font-size:1.3rem;line-height:1;cursor:pointer;box-shadow:0 3px 12px rgba(60,40,10,.35);z-index:40;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease,visibility .25s}
+#toTop.show{opacity:1;visibility:visible;transform:none}
+#toTop:hover{background:#f4ca5e}
+/* Mobile Sections dropdown (Jon 2026-10-21) — mirrors Spread Options'
+   .bar-compact / .section-pick pattern: at <=640px the inline strip links
+   hide and a Sections <select> shows instead (same breakpoint). */
+.bar-compact{display:none}
+@media (max-width:640px){
+.jumpnav>a{display:none}
+.bar-compact{display:flex;align-items:center;flex-wrap:nowrap;gap:.6rem;width:100%}
+.section-pick{display:flex;align-items:center;gap:.45rem;flex:1 1 auto;min-width:0;font-size:.92rem;font-style:italic;white-space:nowrap;color:#2b2118}
+.section-pick select{flex:1 1 auto;min-width:120px;width:0;min-height:40px;font-family:Georgia,'Times New Roman',serif;font-size:1rem;color:#2b2118;background:#fff;border:1px solid #e3d5bd;border-radius:8px;padding:0 .45rem}
+}
+@media (max-width:360px){
+.bar-compact{gap:.35rem}
+.section-pick{gap:.3rem;flex:1 1 0}
+.section-pick select{min-width:96px;padding:0 .25rem}
+}
+/* Header hide toggle (Jon 2026-10-22): chevron collapses the sticky gradient
+   header to a slim bar so the cards get the screen on mobile. The choice
+   persists per device (localStorage 'v9hdr'); the inline script right after
+   the header restores it before the cards paint, and fires resize so the
+   jump-nav script re-pins itself under the slimmer header. */
+#hdrToggle{position:absolute;top:8px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(245,233,213,.16);border:1px solid rgba(245,233,213,.55);color:#f5e9d5;font-size:15px;line-height:1;cursor:pointer;padding:0;z-index:6}
+#hdrToggle:active{background:rgba(245,233,213,.34)}
+header h1{padding-right:42px}
+#hdrMini{display:none;font-size:14.5px;font-weight:bold;line-height:30px}
+header.collapsed{padding:6px 16px;min-height:44px;box-sizing:border-box}
+header.collapsed #hdrToggle{top:50%;transform:translateY(-50%)}
+header{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+header.collapsed h1,header.collapsed p,header.collapsed .seam-btn{display:none}
+header.collapsed #hdrMini{display:inline-block}
+
+.faceline{display:block;margin-top:1px}
+.card details.carddetails{margin-top:7px}
+.card details.carddetails summary{cursor:pointer;color:#7a4f21;font-size:14px;padding:7px 0 3px;min-height:26px}
+.card details.carddetails .fullcap{margin:3px 0 2px;font-size:14.5px}
+</style></head><body>
+<header><span id="hdrMini">Final Pass V9 — The Gold Finals</span><h1>Final Pass V9 — The Gold Finals</h1>
+<p>The gold finals only — born 2026-10-26 as the best-of-best cut of Final Pass V8: the 24 seated golds, one per spread, with the book&#x27;s logo and the front (E) and back (C) covers below. No options, no alternates — this is the set. Cut after Lois&#x27;s notes round — her picks and the four fixes, all ruled by Jon on 2026-10-26. The working pages stay V8 and Spread Options; Jon moves golds only by his call.</p>
+<p>Records: <a href="final-pass-v8.html" style="color:#f5e9d5">the V8 page</a> · <a href="final-pass-v7.html" style="color:#f5e9d5">the V7 page</a> · <a href="final-pass-v3.html" style="color:#f5e9d5">the V3 page</a> · <a href="final-pass-v2.html" style="color:#f5e9d5">the V2 page</a> · <a href="final-pass.html" style="color:#f5e9d5">the V1 page</a> · every version ever made is on Spread Options.</p><button type="button" id="seamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button><button type="button" id="luluToggle" class="seam-btn lulu-btn" aria-pressed="false">Show Lulu guide</button><button type="button" id="hdrToggle" aria-label="Hide header" aria-expanded="true" title="Hide header">&#9650;</button><script>
+// Header hide/show (Jon 2026-10-22) — see the CSS note above.
+(function(){
+  var header=document.querySelector('header'), btn=document.getElementById('hdrToggle');
+  if(!header||!btn) return;
+  function apply(hidden){
+    header.classList.toggle('collapsed',hidden);
+    btn.innerHTML=hidden?'&#9660;':'&#9650;';
+    btn.setAttribute('aria-expanded',hidden?'false':'true');
+    btn.setAttribute('aria-label',hidden?'Show header':'Hide header');
+    btn.title=hidden?'Show header':'Hide header';
+    try{ localStorage.setItem('v9hdr',hidden?'hidden':'shown'); }catch(_){}
+    window.dispatchEvent(new Event('resize'));
+  }
+  btn.addEventListener('click',function(){ apply(!header.classList.contains('collapsed')); });
+  var start=false;
+  try{ start=localStorage.getItem('v9hdr')==='hidden'; }catch(_){}
+  if(start) apply(true);
+})();
+</script>
+</header>
+<nav class="jumpnav" id="jumpnav" aria-label="Jump to a spread">
+  <div class="bar-compact">
+    <label class="section-pick">Sections
+      <select id="sectionJump" aria-label="Sections">
+        <option value="">Sections…</option>
+        <option value="S01">S01</option>
+        <option value="S02">S02</option>
+        <option value="S03">S03</option>
+        <option value="S04">S04</option>
+        <option value="S05">S05</option>
+        <option value="S06">S06</option>
+        <option value="S07">S07</option>
+        <option value="S08">S08</option>
+        <option value="S09">S09</option>
+        <option value="S10">S10</option>
+        <option value="S11">S11</option>
+        <option value="S12">S12</option>
+        <option value="S13">S13</option>
+        <option value="S14">S14</option>
+        <option value="S15">S15</option>
+        <option value="S16">S16</option>
+        <option value="S17">S17</option>
+        <option value="S18">S18</option>
+        <option value="S19">S19</option>
+        <option value="S20">S20</option>
+        <option value="S21">S21</option>
+        <option value="S22">S22</option>
+        <option value="S23">S23</option>
+        <option value="S24">S24</option>
+      </select>
+    </label>
+  </div>
+  <a href="#S01">S01</a>
+  <a href="#S02">S02</a>
+  <a href="#S03">S03</a>
+  <a href="#S04">S04</a>
+  <a href="#S05">S05</a>
+  <a href="#S06">S06</a>
+  <a href="#S07">S07</a>
+  <a href="#S08">S08</a>
+  <a href="#S09">S09</a>
+  <a href="#S10">S10</a>
+  <a href="#S11">S11</a>
+  <a href="#S12">S12</a>
+  <a href="#S13">S13</a>
+  <a href="#S14">S14</a>
+  <a href="#S15">S15</a>
+  <a href="#S16">S16</a>
+  <a href="#S17">S17</a>
+  <a href="#S18">S18</a>
+  <a href="#S19">S19</a>
+  <a href="#S20">S20</a>
+  <a href="#S21">S21</a>
+  <a href="#S22">S22</a>
+  <a href="#S23">S23</a>
+  <a href="#S24">S24</a>
+</nav>
+<main>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s01-bc.jpg" alt="S01-BC" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S01-BC</span> <span class="kind">V9 &middot; S01-BC &middot; Trinity render &mdash; BA&#x27;s open-corridor layout with BB&#x27;s polish grade &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; BA's lowered box + open fold corridor, finished with BB's polish grade.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S01-BC WHY: The middle path Jon approved (2026-10-25): S01-BB&#x27;s polish grade laid over S01-BA&#x27;s layout — the lowered main box and the clean corridor down the fold — instead of a fresh alt. Layout is BA&#x27;s exactly (nothing moved, no panel added or removed); the finish is BB&#x27;s: graded fresh-morning sky, a calm quiet text band across the top, soft dimensional cartoon polish matched to the gold. GATE (Trinity, whole frame vs BA + gold AY): PASS — Lois held (brooch on her right lapel), Harlow consistent across all four panels, both faces clear of the fold corridor. Master s01-bapolish-master.png, native 1774×887, md5 c9c405fa…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon's explicit call (2026-10-25).</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s02-ag.jpg" alt="S02-AG" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S02-AG</span> <span class="kind">V9 &middot; S02-AG &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, graded sky, seam between the faces.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S02-AG WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S02-AF, NOT a new scene: the same head-on blue Mustang, highway, staging and moment, kept exactly. Polish applied: sky graded to the arc&#x27;s fresh-morning clear blue, smooth and calm; the text sky at left kept open; the center seam sits between the two faces (Lois ~32%, Harlow ~62%), no face in the 44-56% band; both riders stay behind the windshield and below its top frame; Lois&#x27;s likeness and her silver bow brooch on HER right lapel held; Harlow matched to the hero portrait (continuous white blaze, cream-tan body, vivid blue eyes); the Mustang keeps its glossy car-treatment shine and pale silvery blue-gray interior. GATE (Trinity, whole frame vs gold AF + hero portrait): composition, likeness, locks and polish all held &mdash; PASS. One native generation, governed directly off the gold. Master s02-ag-master.png, native 1774&times;887, md5 e89a41e4…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s03-u.jpg" alt="S03-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S03-U</span> <span class="kind">V9 &middot; S03-U &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, right-side text sky kept open.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S03-U WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S03-T, NOT a new scene: the same market staging, cast and moment, kept exactly. Polish applied: light graded to bright farm day; the text sky on the RIGHT kept open and calm, as the gold stages it; the center seam falls on open stall front and sky, no face in the 44-56% band; Lois&#x27;s likeness held &mdash; beaming, holding her red apple, silver bow brooch on HER right lapel; Harlow matched to the hero portrait; Nero stays the black cat with green eyes in the crate at frame-right; no berries introduced. GATE (Trinity, whole frame vs gold T + hero portrait): composition, likeness, locks and polish all held &mdash; PASS. One native generation, governed directly off the gold. Master s03-u-master.png, native 1774&times;887, md5 a33e057d…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s04-n.jpg" alt="S04-N" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S04-N</span> <span class="kind">V9 &middot; S04-N &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, clean cartoon mud, seam on open ground.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S04-N WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S04-M, NOT a new scene: Sweet Pea&#x27;s mud-puddle splash at left and Harlow crept up at the puddle&#x27;s edge at right, kept exactly. Polish applied: sky graded to bright farm day, smooth and calm; the text sky across the top kept open; the center seam falls on open puddle and pasture, no face in the 44-56% band (pig ~26%, Harlow ~66%); Harlow matched to the hero portrait (continuous white blaze, white bib and mitts), interested and delighted &mdash; not scared; Sweet Pea stays joyful pink with her grin and flying MUD kept clean rounded cartoon shapes, never grit or texture. GATE (Trinity, whole frame vs gold M + hero portrait): composition, character reads, finish all held &mdash; PASS. One native generation, governed directly off the gold. Master s04-n-master.png, native 1774&times;887, md5 2b4a3910…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s05-z.jpg" alt="S05-Z" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S05-Z</span> <span class="kind">V9 &middot; S05-Z &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, three ducklings, top band calm.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S05-Z WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S05-Y, NOT a new scene: Fiona and her ducklings at left, Harlow in the pond at right shaking off, kept exactly. Polish applied: light graded to warm farm midday; the text band across the top kept open and calm; the center seam falls on open water and far shore, no face in the 44-56% band; the duckling count held at EXACTLY THREE, with Lili&#x27;s pink bow kept; Fiona&#x27;s mallard read held (green head, brown body, blue wing patch); Harlow matched to the hero portrait, wet shake-off energy kept fun, never frantic. GATE (Trinity, whole frame vs gold Y + hero portrait): counts, composition and polish all held &mdash; PASS. One native generation, governed directly off the gold. Master s05-z-master.png, native 1774&times;887, md5 0c0a57de…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s06-ab.jpg" alt="S06-AB" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S06-AB</span> <span class="kind">V5 · Jon's Photoshop sky pass on AA — Jon's S06 gold</span><br><span class="faceline">★ GOLD — A ride on Albie, with Molly and Dallas. (Your sky touch-up.)</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S06-AB V5 · Jon's Photoshop sky pass on AA — Jon's S06 gold ★ GOLD — S06-AB · the S06 gold on Final Pass V5 — Jon named AB the new S06 gold winner on 2026-10-24, taking the gold from S06-AA, which he removed from V5 the same night (AA stays live on Spread Options and Final Pass V2). Jon's own Photoshop pass on AA's frame: the wispy streak sky across the top of the frame reworked by his hand; every pose and the re-polished finish otherwise AA's exactly. AB also holds the S06 gold on Final Pass V3. Full record in the Spread Options summary.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s07-aq.jpg" alt="S07-AQ" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S07-AQ</span> <span class="kind">V5 · Pass 4 — Jon's synthesis: AP's polish and scale, Chester's laugh taken from AM (his named base reference), Dynamite distance-true, Harlow's gaze on the nose tip, a touch more sky — Jon & Lois's S07 gold</span><br><span class="faceline">★ GOLD — Chester the horse can’t stop laughing.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S07-AQ V5 · Pass 4 — Jon's synthesis: AP's polish and scale, Chester's laugh taken from AM (his named base reference), Dynamite distance-true, Harlow's gaze on the nose tip, a touch more sky — Jon &amp; Lois's S07 gold ★ GOLD — S07-AQ · Jon &amp; Lois's S07 gold — named the new S07 gold winner on their 2026-10-23 review call. S07-AQ — Pass 4 on S07 (2026-10-23): Jon called AP closer and better and its polish the book look to keep, but named AM his base reference for Chester's features — “his eyes closed and his whole features here… pretty much exactly the way I want” — and asked for three adjustments in one best version. Finish and scale governed off AP/AL as in pass 3; Chester's expression governed off AM. Cartoon polish holds whole-frame (grouped tufts, smooth forms, no painterly texture, no photographic detail — AP's sibling). Chester keeps the keeper scale (≈78% of frame height) and the full laughing-out-loud (upper teeth, dropped jaw, cheeks raised, star + long narrow streak exact, no tack) — with AM's eyes now: both crinkled nearly shut with mirth, superseding pass 3's disclosed open-eyes shade. Dynamite is distance-true smaller: span ≈15% of frame width (AP ≈25%; disclosed — past the 17–19% briefed band, in Jon's direction), awake and amused on the hill, blaze-to-pink-patch and halter exact. Harlow keeps his grounded wondering stance and small closed mouth, and his gaze is lowered onto the TIP of Chester's nose: head tilt, muzzle axis and pupils agree on the drawn sightline from his face center (67.5%, 56.0%) to the nose tip (46.6%, 34.8%). The frame is zoomed out a touch for text sky: the top of Chester sits at y≈9.4% vs AP's ≈7.0%, the tree line drops clear of the top edge (disclosed: less growth than the 11–13% ear-tip aim). Also disclosed: Chester's face center (42.3%, 26.6%) sits ~3 points right of AP and his nose tip reaches x≈46.6% — inside the gold AL's own graze (x≈47.8%), his face center clear of the x44–56 strip; Harlow sets ~9 points left of AP at the same size; fine wispy flyaways at Chester's mane edge at 3x. One wording used, wording 2 unspent. Open field, NO fence, exactly three characters. Story-checked against Rev.17 page 7. Seated PLAIN on V5 beside S07-AP — reviewed and passed by Trinity herself at her delivery gate, seated under Jon's delegation. In his 2026-10-23 V5 cleanup review Jon moved the S07 gold from S07-AL to this card, then restored the gold to AL later the same day ("for now"); AM, AN and AO were removed from V5 in the same review. On the evening Jon–Lois review call (2026-10-23) AQ was named the new S07 gold winner — AL stays on V5 as the plain alt, and S07-AP was removed from V5 in the same pass (AP stays posted on Spread Options + Final Pass V2).</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s08-ah.jpg" alt="S08-AH" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S08-AH</span> <span class="kind">V9 &middot; S08-AH &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, door lettering exact, arms-only farmhand.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S08-AH WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S08-AG, NOT a new scene: the red Farrelli Farms truck, Harlow&#x27;s crate at the open tailgate, the farmhand&#x27;s gloved arms, Paco watching, kept exactly. Polish applied: light graded to warm farm midday; the text sky across the top kept calm; the center seam falls on truck bed and pasture, no main face in the 44-56% band; the truck&#x27;s locks held &mdash; produce crates toward the front, ONE crate (Harlow&#x27;s) at the open rear, chrome star ornament, and the cream &#x27;Farrelli Farms&#x27; door lettering reading exactly right; the farmhand stays ARMS ONLY; Harlow matched to the hero portrait. One honest flag: Paco&#x27;s brindle reads slightly lighter-striped here than the gold&#x27;s near-black &mdash; his build, all-fours stance, blue collar and kind look-back all held. GATE (Trinity, whole frame vs gold AG + portraits, per-character identity reads): PASS with that one coat note for Jon&#x27;s eye. One native generation, governed directly off the gold. Master s08-ah-master.png, native 1774&times;887, md5 c8a38955…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s09-aw.jpg" alt="S09-AW" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S09-AW</span> <span class="kind">V9 &middot; S09-AW &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, both cats identity-checked at close read.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S09-AW WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S09-AO, NOT a new scene: Harlow on the sidewalk looking back, the red truck departing at frame-right, KitKat upright on the top step and Nala stretched on the steps below her, kept exactly. Polish applied: sky graded to city late-morning, bright and calm; the text sky at the top-right kept open; the center seam falls on open street and stoop greenery, no main face in the 44-56% band; Harlow matched to the hero portrait. Identity gate (Jon&#x27;s tightened rule, 2026-10-25): the first render was HELD and never posted &mdash; its KitKat read as a plain brown tabby with no folded ear. This retry holds her at close read: deep warm espresso TORBIE coat, green eyes, and the folded tip on her RIGHT ear clearly visible; Nala&#x27;s golden-brown coat carries bold dark rosettes, richer as canon directs. GATE: PASS on the retry. Master s09-aw-master.png, native 1774&times;887, md5 71cecbbe…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s10-u.jpg" alt="S10-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S10-U</span> <span class="kind">V9 &middot; S10-U &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, Philly identity-checked at close read.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S10-U WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S10-T, NOT a new scene: the warm daytime alley, Philly lecturing over the open pizza box on the manhole, Harlow eating his slice, French Fry asleep at frame-left, kept exactly. Polish applied: light graded to city midday, warm and calm; the alley sky at the top kept open; the center seam falls on the pizza box and open alley, no main face in the 44-56% band; Harlow matched to the hero portrait. Identity gate (Jon&#x27;s tightened rule, per-character close reads): Philly is himself &mdash; grizzled gray-dominant fur, sly half-lid eyes, buck tooth, and the TAN TRENCH COAT on; French Fry stays a plain tan dog asleep. GATE: PASS. One native generation, governed directly off the gold. Master s10-u-master.png, native 1774&times;887, md5 4257df17…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s11-m.jpg" alt="S11-M" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S11-M</span> <span class="kind">V9 &middot; S11-M &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, Endeavor identity-checked at close read.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S11-M WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S11-L, NOT a new scene: Penelope the Afghan hound passing on her leash at left, Harlow seated on the park path watching her, Endeavor lounging on the bench at frame-right, kept exactly. Polish applied: sky graded to bright city midday, smooth and calm; the text sky across the top kept open; the center seam falls on open path and lawn, no main face in the 44-56% band; Harlow matched to the hero portrait, sly curious read kept. Identity gate (Jon&#x27;s tightened rule, per-character close reads against the gold + portraits): Penelope&#x27;s flowing golden coat, dark ears, topknot, curled tail and collared tag all held; Endeavor is himself &mdash; white face and chest, black cap over the crown, black saddle and flank patches, head turned away over his shoulder, chin up, half-lidded gold-green eyes, pointedly nonchalant. GATE: PASS. One native generation, governed directly off the gold. Master s11-m-master.png, native 1774&times;887, md5 5a78b7a9…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s12-aq.jpg" alt="S12-AQ" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S12-AQ</span> <span class="kind">V9 &middot; S12-AQ &middot; Trinity render &mdash; the alley, lamp removed &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; The alley without the stray sidewalk lamp.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S12-AQ WHY: Jon&#x27;s fix on S12-AP (2026-10-25) &mdash; the tall lamp post carried over from the gold&#x27;s sidewalk &#x27;looks out of place now&#x27; in the grunge alley. This version removes it entirely: where it stood, the alley simply continues &mdash; cracked concrete, chain-link gate, trees and skyline under the midday sky. Everything else is AP: the gold&#x27;s staging, Lois&#x27;s grunge environment, bright midday kept. GATE (Trinity, whole frame against gold AK + AP): polish held; Harlow consistent; Otis accessory-free; collar locks correct. One native generation, governed off AP. Master s12-aq-master.png, native 1774&times;887, md5 4afb97df…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25). S12-AK keeps the S12 gold.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s13-v.jpg" alt="S13-V" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S13-V</span> <span class="kind">V9 &middot; S13-V &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, Gideon’s pointing wing held.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S13-V WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S13-Q, NOT a new scene: Gideon on the red hydrant pointing the way, Harlow below looking up at him, Tiger lounging on the stoop at frame-right, the stadium in the distance, kept exactly. Polish applied: light graded to afternoon warming &mdash; the first of the ballpark-day spreads; the text sky across the top kept open; the center seam falls on open street and the stadium approach, no main face in the 44-56% band; the stadium kept clean of any signage or lettering. Identity gate (Jon&#x27;s tightened rule, per-character close reads): Gideon is himself &mdash; gray pigeon, iridescent green-purple neck, red eye, and the pointing wing extended toward the stadium; Tiger&#x27;s ginger longhair read and white chest held. Harlow matched to the hero portrait. GATE: PASS. One native generation, governed directly off the gold. Master s13-v-master.png, native 1774&times;887, md5 8584912f…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s14-o.jpg" alt="S14-O" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S14-O</span> <span class="kind">V9 &middot; S14-O &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, both guinea pigs identity-checked.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S14-O WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S14-M, NOT a new scene: the ballpark concourse &mdash; Chippy climbing the yellow foul pole at left, Harlow seated watching him, Nicholas and Norman in the tipped popcorn bucket at right with the popcorn spilled, kept exactly. Polish applied: light graded to ballpark day, matched to the S13-S16 shared light; the text sky across the top kept open; the center seam falls on open concourse and stands, no main face in the 44-56% band. Identity gate (Jon&#x27;s tightened rule, per-character close reads): Nicholas and Norman are both unmistakably GUINEA PIGS with their distinct coats, tucked in the one tipped bucket; Chippy&#x27;s squirrel read &mdash; russet coat, ear tufts, big tail &mdash; held on the pole. Harlow matched to the hero portrait. GATE: PASS. One native generation, governed directly off the gold. Master s14-o-master.png, native 1774&times;887, md5 38a969de…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s15-y.jpg" alt="S15-Y" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S15-Y</span> <span class="kind">V9 &middot; S15-Y &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, mascot costume identity-checked seam by seam.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S15-Y WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S15-X, NOT a new scene: the Hibernator on the dugout roof waving, Harlow on the roof waving back, kept exactly (no foam finger, as the gold stages it). Polish applied: light graded to ballpark day, matched to the S13-S16 shared light; the text sky across the top kept open; the center seam falls on open field and sky, no main face in the 44-56% band. Identity gate (Jon&#x27;s tightened rule, close read): the Hibernator is unmistakably a PERSON IN A BEAR MASCOT COSTUME &mdash; stitched seams up the arms and legs, stitched muzzle, glossy mascot eyes, stitched paw pads, fabric pile &mdash; in his navy cap, pinstripe jersey, navy shorts and blue sneakers (the blues render a touch brighter than the gold&#x27;s navy; flagged for Jon&#x27;s eye). Harlow matched to the hero portrait. GATE: PASS. One native generation, governed directly off the gold. Master s15-y-master.png, native 1774&times;887, md5 ae79e70d…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s16-u.jpg" alt="S16-U" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S16-U</span> <span class="kind">V9 &middot; S16-U &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, vest lettering exact, JJ Boy identity-checked.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S16-U WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S16-O, NOT a new scene: JJ Boy kneeling at left with his chin on his hand, Edward hugging a blissful Harlow at right on the ballpark grass, kept exactly. Polish applied: light graded to ballpark day, matched to the S13-S16 shared light (this spread closes the set); the text sky across the top kept open; the center seam falls on open field and stands, no main face in the 44-56% band. Identity gate (Jon&#x27;s tightened rule, per-character close reads): JJ Boy is himself &mdash; dark brown wavy hair with the forehead curl, bluish-green hazel eyes, freckles, navy tee; Edward&#x27;s golden coat and blissful closed eyes held, and his ORANGE vest lettering reads exactly &#x27;Emotional Support Dog&#x27; &mdash; the book&#x27;s one approved lettering, kept verbatim; Harlow&#x27;s eyes stay closed and blissful in the hug, markings true. GATE: PASS. One native generation, governed directly off the gold. Master s16-u-master.png, native 1774&times;887, md5 7a8923f9…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s17-v.jpg" alt="S17-V" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S17-V</span> <span class="kind">V9 &middot; S17-V &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, Jasmine’s one stripe verified at close crop.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S17-V WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S17-U, NOT a new scene: Harlow by his water bowl on the grass looking up, Jasmine above him with her sparkle trail, the snack shack at frame-right, kept exactly. Polish applied: light graded to late afternoon &mdash; the arc&#x27;s first gold, warm and low, smooth and calm; the text zone kept open in the sky across the TOP, as the gold stages it; the center seam falls on open sky and fence line, no main face in the 44-56% band; the steel bowl kept at frame-bottom with its blue water. Identity gate (Jon&#x27;s tightened rule, per-character close reads): Jasmine verified at close crop &mdash; round golden bee with EXACTLY ONE black stripe, rosy cheeks, curly antennae; Harlow matched to the hero portrait, gaze up on her. GATE: PASS. One native generation, governed directly off the gold. Master s17-v-master.png, native 1774&times;887, md5 bc9774a5…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s18-an.jpg" alt="S18-AN" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S18-AN</span> <span class="kind">V9 &middot; S18-AN &middot; Trinity edit of AL &mdash; Lois&#x27;s fixes: Babs smaller, a little right, BOTH pupils left at Harlow &mdash; ★ GOLD on V9 (Jon ruled 2026-10-26)</span></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s19-v.jpg" alt="S19-V" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S19-V</span> <span class="kind">V9 &middot; S19-V &middot; Trinity pass off R &mdash; Jon&#x27;s compromise: sky toward U&#x27;s dusk, sun low but up, R&#x27;s glisten kept &mdash; ★ GOLD on V9 (Jon ruled 2026-10-26)</span></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s20-k.jpg" alt="S20-K" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S20-K</span> <span class="kind">V9 &middot; S20-K &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, Pebbles crest-free and checked.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S20-K WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S20-J, NOT a new scene: the beach at deep golden late, Pebbles walking and squawking up at Harlow, Harlow beside her with his tail high, their paw prints trailing in the wet sand, kept exactly. Polish applied: light graded to deep golden late, smooth and calm, matched to the beach sequence; the text sky across the top kept open; the center seam falls on open wet sand, surf and sky, no main face in the 44-56% band (both walkers are seen from behind, as in the gold). Identity gate (Jon&#x27;s tightened rule, per-character close reads): Pebbles is herself &mdash; small black-and-white penguin, golden-yellow cheek patch, orange beak and feet, and NO crest on her head; Harlow&#x27;s behind-view build, cap and tail matched to the hero portrait. GATE: PASS. One native generation, governed directly off the gold. Master s20-k-master.png, native 1774&times;887, md5 f20c8643…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s21-ad.jpg" alt="S21-AD" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S21-AD</span> <span class="kind">V9 &middot; S21-AD &middot; Trinity edit of AC &mdash; Cash a little smaller per Lois&#x27;s note &mdash; ★ GOLD on V9 (Jon ruled 2026-10-26)</span></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s22-ar.jpg" alt="S22-AR" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S22-AR</span> <span class="kind">V9 &middot; S22-AR &middot; Trinity render &mdash; polish pass on the gold &mdash; ★ GOLD on V9 (Lois&#x27;s pick, Jon ruled 2026-10-26)</span><br><span class="faceline">NEW OPTION &mdash; Polish pass on the gold — same scene, cloud faces kept to the right sky.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S22-AR WHY: Whole-book polish pass (Jon&#x27;s call, 2026-10-25) &mdash; a polish of gold S22-AQ, NOT a new scene: Harlow from behind walking the dirt road toward the lit farmhouse, Mittens and Teddy as cloud-formed faces in the right-hand sky, kept exactly. Polish applied: light graded to dusk &mdash; sun fully set (glow only), afterglow deepening toward evening; the text sky at the LEFT kept empty of face features, as the gold stages it; the center seam falls on open sky, hills and road, no face in the 44-56% band; Harlow is ALONE on the ground &mdash; the only Mittens and Teddy are the cloud faces. Identity gate (Jon&#x27;s tightened rule, close reads): the cloud faces stay soft cloud-vapor forms with gentle wing shapes at their sides in the gold&#x27;s own read &mdash; Mittens gray-and-white at center-right, Teddy ginger at far right; Harlow&#x27;s behind-view build, cap, white hind mitts and full dark tail matched to the hero portrait. GATE: PASS. One native generation, governed directly off the gold. Master s22-ar-master.png, native 1774&times;887, md5 d34b15a1…. Posted PLAIN on Spread Options and Final Pass V2; seated here as a NEW option on Jon&#x27;s explicit call (2026-10-25) for the whole-book polish pass.</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s23-aj.jpg" alt="S23-AJ" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S23-AJ</span> <span class="kind">S23 fresh generation — painted whole, no compositing: AF’s look and the right-side placement, brooch off — Jon's S23 gold</span><br><span class="faceline">★ GOLD — Home at last, in Lois’s arms.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">S23-AJ S23 fresh generation — painted whole, no compositing: AF’s look and the right-side placement, brooch off — Jon's S23 gold ★ GOLD — S23-AJ · Jon named AJ the S23 gold winner "for now" on 2026-10-23 — the fresh no-composite generation that replaced AI, taking the gold from AF. Jon’s call (2026-10-23): AI’s masked composite still showed its edges on his crop — a ghost hand behind Lois’s gripping hand and smeared, doubled fur around Harlow’s ear and shoulder — so this version replaces the whole approach: one fresh native generation, painted whole in a single pass, no masks, no moves, no compositing anywhere. It holds AF’s look and feel — the backyard homecoming at sunset, AF’s own sky (deep blue-violet melting to rose and peach at the skyline, thin streak clouds, no warm re-grade), Wally small and seated in the next-door yard — with the pair composed at the right-side placement Jon asked for: Lois’s face center ≈79.5% across, Harlow’s ≈69%, both clear of the fold strip. Lois’s face is governed by her canonical chin-crop alone (soft round face, fuller cheeks, smoother brown waves, eyes opened slightly); plum-burgundy turtleneck and black jacket, brooch OFF per Lois’s S23 call. Hands gated at 3x after Jon’s crop: exactly two hands, natural anatomy, one clean edge against the fur — no ghost hand. Harlow’s ears gated at 3x: both natural, seal-brown and fur-covered with only a small pink tint inside — AH’s oversized fleshy ear does not recur. One disclosed shade: the sky meters a step more saturated than AF’s (+~0.06 saturation, value level) — same palette and cloud family. Wording 2 of 2: wording 1 passed every quality gate but held the pair at AF’s older framing, so this take shifts only the composition. Story-checked against Rev.17 page 23. Posted PLAIN beside AF; on Jon's 2026-10-23 call AJ took the S23 gold and AF was removed from V5 (AF stays live on Spread Options + Final Pass V2).</p></details></figcaption>
+</figure>
+
+<figure class="card v2new goldcard">
+<div class="imgwrap"><img src="spread-options/s24-ap.jpg" alt="S24-AP" loading="lazy"><div class="seam-guide" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+<figcaption><span class="tag">S24-AP</span> <span class="kind">V9 &middot; S24-AP &middot; Trinity edit of AM &mdash; books + plant fixed per Lois&#x27;s note &mdash; ★ GOLD on V9 (Jon ruled 2026-10-26)</span></figcaption>
+</figure>
+
+</main>
+<figure class="card v6-extra" style="max-width:720px;margin:0 auto 22px;">
+<img src="assets/favorite-logo.jpg" alt="Harlow's Accidental Journey — watercolor logo" loading="lazy">
+<figcaption><span class="tag">LOGO</span> <span class="kind">Jon's favorite logo — extra</span><br><span class="faceline">The book’s logo — your favorite.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">LOGO Jon's favorite logo — extra</p></details></figcaption>
+</figure>
+
+<figure class="card v6-extra" style="max-width:720px;margin:0 auto 22px;">
+<img src="assets/covers-free-pass/front-e-road.jpg" alt="Front cover concept E — The Road, facing forward, Jon&#x27;s fence touch-up: Harlow walking toward the reader, friends along the way" loading="lazy">
+<figcaption><span class="tag">FRONT E</span> <span class="kind">Free-pass front cover E — &#8220;The Road,&#8221; facing forward — Jon&#x27;s own touch-up.</span><br><span class="faceline">Front cover idea — The Road: Harlow and his friends. (Your fence touch-up.)</span><details class="carddetails"><summary>Details</summary><p class="fullcap">FRONT E Free-pass front cover E — “The Road,” facing forward — Jon's own touch-up. Why: Jon's own Photoshop pass on Front D (2026-10-24) — he cleaned up the fence near Chester by hand: the rail run west of Chester's neck, where D's fix had left a mottled patch, now reads as clean continuous fence. Everything else is D exactly — same Harlow, same cast, same golden road home.</p></details></figcaption>
+</figure>
+<figure class="card v6-extra" style="max-width:720px;margin:0 auto 22px;">
+<img src="assets/covers-free-pass/back-c-sunset-window-clean.jpg" alt="Back cover concept C — Home at Dusk under a sunset sky: the lit house, empty glowing windows, Harlow trotting up the path" loading="lazy">
+<figcaption><span class="tag">BACK C</span> <span class="kind">Free-pass back cover C — &#8220;Home at Dusk,&#8221; sunset edition.</span><br><span class="faceline">Back cover idea — Home at Dusk: Harlow comes home.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">BACK C Free-pass back cover C — “Home at Dusk,” sunset edition. Why: Jon's alt of Back B (2026-10-24) — three changes, everything else is B's own art. The two cats are gone from the lit downstairs window: it glows warm and empty. The deep night sky and crescent moon give way to a sunset sky in S22-AQ's family — pink, rose and purple clouds over a golden horizon. And the objects silhouetted inside the top dormer window are cleaned out, leaving plain glowing panes. Harlow, the house, the path and the skyline are untouched.</p></details></figcaption>
+</figure>
+
+
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+  <button id="close" aria-label="Close viewer">&times;</button>
+  <div id="lbfig">
+    <div id="lbwrap"><img id="lbimg" src="" alt=""><div class="seam-guide" id="lbseam" aria-hidden="true"><i class="band"></i><i class="line"></i><span class="seam-label">page seam</span></div></div>
+    <button class="fnav" id="fprev" aria-label="Previous image">&#8249;</button>
+    <button class="fnav" id="fnext" aria-label="Next image">&#8250;</button>
+    <button class="fclose" id="fclose" aria-label="Exit fullscreen">&times;</button>
+    <div id="lbcapbar">
+      <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
+      <span class="t"><span id="lbcap"></span><span class="n" id="lbnum"></span></span>
+      <button class="nav" id="next" aria-label="Next image">&#8250;</button>
+    </div>
+    <div id="lbseamrow"><button type="button" id="lbseamToggle" class="seam-btn" aria-pressed="false">Show seam guide</button><button type="button" id="lbluluToggle" class="seam-btn" aria-pressed="false">Show Lulu guide</button></div>
+  </div>
+  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
+</div>
+<script>
+document.getElementById('seamToggle').addEventListener('click',function(){var on=document.body.classList.toggle('guides-on');this.setAttribute('aria-pressed',on?'true':'false');this.textContent=on?'Hide seam guide':'Show seam guide';});
+</script>
+
+<script>
+// Lulu spread guide (Jon 2026-10-21). Overlays are injected at runtime —
+// one per card image and one for the viewer — so card markup stays
+// untouched and later-posted cards are covered on the next load. The page
+// toggle and the viewer toggle are fully independent of each other and of
+// the seam guides (either / both / neither can be on). Opening the viewer
+// starts its Lulu state from the page's, mirroring the seam guide.
+(function(){
+  function build(){
+    var d=document.createElement('div');
+    d.className='lulu-guide'; d.setAttribute('aria-hidden','true');
+    d.innerHTML='<i class="gutter"></i><i class="edge"></i><i class="safe l"></i><i class="safe r"></i><i class="fold"></i><span class="lulu-label sl">SAFE</span><span class="lulu-label sr">SAFE</span><span class="lulu-label gu">GUTTER</span>';
+    return d;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.card .imgwrap'),function(w){ w.appendChild(build()); });
+  var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbfig=document.getElementById('lbfig'), lbwrap=document.getElementById('lbwrap'),
+      lbluluBtn=document.getElementById('lbluluToggle'), lblulu=null;
+  if(lbwrap){ lblulu=build(); lblulu.id='lblulu'; lbwrap.appendChild(lblulu); }
+  var btn=document.getElementById('luluToggle');
+  if(btn) btn.addEventListener('click',function(){var on=document.body.classList.toggle('lulu-on');this.setAttribute('aria-pressed',on?'true':'false');this.textContent=on?'Hide Lulu guide':'Show Lulu guide';});
+  var lbLuluOn=false;
+  // Map the viewer overlay onto the image's rendered content box, exactly
+  // like the seam guide's placeSeam, so it stays true in fullscreen/.zoomed.
+  function placeLulu(){
+    if(!lb||!lblulu||!lb.classList.contains('open')||!lbLuluOn) return;
+    var nw=lbimg.naturalWidth, nh=lbimg.naturalHeight; if(!nw||!nh) return;
+    var r=lbimg.getBoundingClientRect(), w=lbwrap.getBoundingClientRect();
+    if(!r.width||!w.width) return;
+    var s=Math.min(r.width/nw,r.height/nh), cw=nw*s, ch=nh*s;
+    lblulu.style.left=(r.left+(r.width-cw)/2-w.left)+'px';
+    lblulu.style.top=(r.top+(r.height-ch)/2-w.top)+'px';
+    lblulu.style.width=cw+'px';
+    lblulu.style.height=ch+'px';
+  }
+  function placeLuluSoon(){ requestAnimationFrame(placeLulu); }
+  function applyLulu(){
+    if(!lbfig||!lbluluBtn) return;
+    lbfig.classList.toggle('lulu-on',lbLuluOn);
+    lbluluBtn.textContent=lbLuluOn?'Hide Lulu guide':'Show Lulu guide';
+    lbluluBtn.setAttribute('aria-pressed',lbLuluOn?'true':'false');
+    if(lbLuluOn) placeLuluSoon();
+  }
+  if(lbluluBtn) lbluluBtn.addEventListener('click',function(e){ e.stopPropagation(); lbLuluOn=!lbLuluOn; applyLulu(); });
+  // Viewer opens via a card-image click: start from the page's Lulu state.
+  document.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    if(e.target.closest('.card img')&&lb){ lbLuluOn=document.body.classList.contains('lulu-on'); applyLulu(); }
+  });
+  if(lbimg) lbimg.addEventListener('load',placeLuluSoon);
+  window.addEventListener('resize',placeLuluSoon);
+  document.addEventListener('fullscreenchange',placeLuluSoon);
+  document.addEventListener('webkitfullscreenchange',placeLuluSoon);
+  ['fs','fclose'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click',function(){ placeLuluSoon(); setTimeout(placeLulu,380); }); });
+})();
+</script>
+<script>
+// Lightbox — showcase-style viewer (mirrors index.html's #lb pattern).
+// Event delegation: any .card img opens the viewer, so cards posted later work too.
+(function(){
+  var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum'),
+      lbfig=document.getElementById('lbfig'),
+      lbwrap=document.getElementById('lbwrap'), lbseam=document.getElementById('lbseam'),
+      lbseamBtn=document.getElementById('lbseamToggle');
+  var lbSeamOn=false;
+  var cards=[], cur=0;
+  function collect(){ cards=Array.prototype.slice.call(document.querySelectorAll('figure.card')); }
+  function show(i){
+    var n=cards.length; if(!n) return;
+    cur=((i%n)+n)%n;
+    var fig=cards[cur], img=fig.querySelector('img'), cap=fig.querySelector('figcaption');
+    lbimg.src=img.getAttribute('src'); lbimg.alt=img.getAttribute('alt')||'';
+    var fc=cap?cap.querySelector('.faceline'):null; lbcap.innerHTML=fc?fc.innerHTML:(cap?cap.innerHTML:'');
+    lbnum.textContent='Image '+(cur+1)+' of '+n;
+    placeSeamSoon();
+  }
+  // Seam guide in the viewer: local state only, never touches the page's
+  // guides. placeSeam maps the overlay onto the image's rendered content
+  // box, so it stays true in the overlay, fullscreen and .zoomed states.
+  function placeSeam(){
+    if(!lb.classList.contains('open')||!lbSeamOn) return;
+    var nw=lbimg.naturalWidth, nh=lbimg.naturalHeight; if(!nw||!nh) return;
+    var r=lbimg.getBoundingClientRect(), w=lbwrap.getBoundingClientRect();
+    if(!r.width||!w.width) return;
+    var s=Math.min(r.width/nw,r.height/nh), cw=nw*s, ch=nh*s;
+    lbseam.style.left=(r.left+(r.width-cw)/2-w.left)+'px';
+    lbseam.style.top=(r.top+(r.height-ch)/2-w.top)+'px';
+    lbseam.style.width=cw+'px';
+    lbseam.style.height=ch+'px';
+  }
+  function placeSeamSoon(){ requestAnimationFrame(placeSeam); }
+  function applySeam(){
+    lbfig.classList.toggle('seam-on',lbSeamOn);
+    lbseamBtn.textContent=lbSeamOn?'Hide seam guide':'Show seam guide';
+    lbseamBtn.setAttribute('aria-pressed',lbSeamOn?'true':'false');
+    if(lbSeamOn) placeSeamSoon();
+  }
+  function toggleSeam(){ lbSeamOn=!lbSeamOn; applySeam(); }
+  function openLb(fig){
+    collect();
+    var i=cards.indexOf(fig); if(i<0) return;
+    lb.classList.add('open'); document.body.style.overflow='hidden';
+    lbSeamOn=document.body.classList.contains('guides-on'); applySeam();
+    show(i);
+  }
+  function closeLb(){
+    if(document.fullscreenElement) document.exitFullscreen();
+    lb.classList.remove('zoomed'); lb.classList.remove('open'); document.body.style.overflow='';
+  }
+  function step(d){ show(cur+d); }
+  var isIOS=/iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+  function toggleZoom(){
+    if(document.fullscreenElement){ document.exitFullscreen(); return; }
+    if(lb.classList.contains('zoomed')){ lb.classList.remove('zoomed'); return; }
+    if(isIOS){ lb.classList.add('zoomed'); return; }
+    if(lbfig.requestFullscreen){ lbfig.requestFullscreen().catch(function(){ lb.classList.add('zoomed'); }); }
+    else if(lbfig.webkitRequestFullscreen){ lbfig.webkitRequestFullscreen(); }
+    else { lb.classList.add('zoomed'); }
+  }
+  document.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var img=e.target.closest('.card img');
+    if(img){ var fig=img.closest('figure.card'); if(fig) openLb(fig); }
+  });
+  document.getElementById('close').addEventListener('click',closeLb);
+  document.getElementById('prev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('next').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fprev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('fnext').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fclose').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); });
+  document.getElementById('fs').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); });
+  lbseamBtn.addEventListener('click',function(e){ e.stopPropagation(); toggleSeam(); });
+  lbimg.addEventListener('load',placeSeamSoon);
+  window.addEventListener('resize',placeSeamSoon);
+  lb.addEventListener('click',function(e){ if(e.target===lb) closeLb(); });
+  lbimg.addEventListener('click',function(e){
+    if(document.fullscreenElement===lbfig||lb.classList.contains('zoomed')){ e.stopPropagation(); toggleZoom(); placeSeamSoon(); setTimeout(placeSeam,380); }
+  });
+  function fsChanged(){
+    if(document.fullscreenElement!==lbfig&&document.webkitFullscreenElement!==lbfig)
+      lb.classList.remove('zoomed');
+    placeSeamSoon();
+  }
+  document.addEventListener('fullscreenchange',fsChanged);
+  document.addEventListener('webkitfullscreenchange',fsChanged);
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape'){ if(document.fullscreenElement) return; closeLb(); }
+    if(e.key==='ArrowLeft') step(-1);
+    if(e.key==='ArrowRight') step(1);
+  });
+})();
+</script>
+
+<button type="button" id="toTop" aria-label="Back to top" title="Back to top">&#8593;</button>
+
+<script>
+// Section jump nav + back-to-top (Jon 2026-10-21). The nav mirrors Spread
+// Options' jump strip. V2 cards are a flat run of figures (no per-spread
+// sections in the markup), so this script tags the first card of each spread
+// with its S## id at runtime and smooth-scrolls with the sticky chrome
+// (header + strip) offset. File markup stays untouched, so the card-posting
+// helpers are unaffected.
+(function(){
+  var header=document.querySelector('header'), nav=document.getElementById('jumpnav'),
+      btn=document.getElementById('toTop'), lb=document.getElementById('lb');
+  var seen={};
+  Array.prototype.forEach.call(document.querySelectorAll('main figure.card'),function(fig){
+    var tag=fig.querySelector('.tag'); if(!tag) return;
+    var m=/^S(\d{2})-/.exec(tag.textContent.replace(/^\s+|\s+$/g,'')); if(!m) return;
+    var code='S'+m[1];
+    if(!seen[code]){ seen[code]=1; if(!fig.id) fig.id=code; }
+  });
+  function stick(){ if(nav&&header) nav.style.top=header.offsetHeight+'px'; }
+  stick();
+  window.addEventListener('resize',stick);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(stick);
+  function chromeH(){ return (header?header.offsetHeight:0)+(nav?nav.offsetHeight:0); }
+  var settleTimers=[];
+  function clearSettle(){ settleTimers.forEach(clearTimeout); settleTimers=[]; }
+  ['wheel','touchstart'].forEach(function(ev){
+    window.addEventListener(ev,clearSettle,{passive:true});
+  });
+  function alignTo(el,behavior){
+    var y=el.getBoundingClientRect().top+window.scrollY-chromeH()-8;
+    window.scrollTo({top:y<0?0:y,behavior:behavior});
+  }
+  function jumpTo(code){
+    var el=document.getElementById(code); if(!el) return;
+    clearSettle();
+    alignTo(el,'smooth');
+    // Lazy images above the target keep loading and push it down; re-align
+    // a few times as the layout settles (cancelled if Jon scrolls himself).
+    [500,1200,2200].forEach(function(ms){
+      settleTimers.push(setTimeout(function(){
+        if(Math.abs(el.getBoundingClientRect().top-(chromeH()+8))>6) alignTo(el,'auto');
+      },ms));
+    });
+  }
+  if(nav) nav.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var a=e.target.closest('a[href^="#S"]'); if(!a) return;
+    e.preventDefault();
+    var code=a.getAttribute('href').slice(1);
+    jumpTo(code);
+    try{ history.replaceState(null,'','#'+code); }catch(_){}
+  });
+  // Mobile Sections dropdown (<=640px): same jump as the strip links.
+  var sel=document.getElementById('sectionJump');
+  if(sel) sel.addEventListener('change',function(){
+    if(!sel.value) return;
+    jumpTo(sel.value);
+    try{ history.replaceState(null,'','#'+sel.value); }catch(_){}
+  });
+  if(/^#S\d{2}$/.test(location.hash||'')){
+    var h=location.hash.slice(1);
+    setTimeout(function(){ jumpTo(h); },80);
+  }
+  function upd(){
+    var show=window.scrollY>600&&!(lb&&lb.classList.contains('open'));
+    btn.classList.toggle('show',show);
+  }
+  window.addEventListener('scroll',upd,{passive:true});
+  upd();
+  btn.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+  if(lb&&window.MutationObserver) new MutationObserver(upd).observe(lb,{attributes:true,attributeFilter:['class']});
+})();
+</script>
+</body></html>
