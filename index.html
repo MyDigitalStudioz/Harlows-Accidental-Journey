@@ -34,6 +34,8 @@
   .topnav a{ color:var(--ink); text-decoration:none; font-size:.95rem; font-style:italic;
            white-space:nowrap; }
   .topnav a:hover{ color:var(--accent); }
+  .topnav .pg-sep{ flex:none; width:1px; align-self:stretch; background:var(--soft); }
+  .topnav a.pg[aria-current="page"]{ color:var(--accent); font-weight:bold; font-style:normal; text-decoration:underline; text-underline-offset:.3em; text-decoration-thickness:2px; }
   .sitefoot{ position:relative; display:flex; align-items:center; justify-content:center;
            padding:2rem 1.5rem 2.5rem; font-style:italic; opacity:.9; }
   #giftBtn{ position:absolute; right:1.2rem; bottom:1.1rem; width:54px; height:54px;
@@ -92,8 +94,10 @@
            background:#f2ead9; }
   [data-gallery="spreads"] .card img{ aspect-ratio:2/1; object-fit:cover; }
   [data-gallery="coverwrap"] .card img{ aspect-ratio:1902/827; object-fit:cover; }
-  [data-gallery="coverb"] .card img, [data-gallery="coverd"] .card img,
+  [data-gallery="coverb"] .card img,
   [data-gallery="covere"] .card img{ aspect-ratio:1206/1385; object-fit:cover; }
+  [data-gallery="coverd"] .card img{ aspect-ratio:1/1; object-fit:cover; }
+  [data-gallery="coveroptd"] .card img{ aspect-ratio:1206/1385; object-fit:cover; }
   [data-gallery="welcome"] .card img{ aspect-ratio:1206/1558; object-fit:cover; }
   .card img.pl, .deck-card img.pl{ opacity:0;
            background:linear-gradient(100deg,#ece1c9 35%,#faf6ee 50%,#ece1c9 65%);
@@ -107,6 +111,21 @@
   .card .cap .capmain + span{ flex:none; overflow:visible; text-overflow:clip; }
   .card .cap span{ font-size:.85rem; opacity:.6; font-style:italic; white-space:nowrap;
        min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  /* Current favorites (showcase) — dots + letter link under each spread */
+  .fav-dot{ width:1.2rem; height:1.2rem; border-radius:50%; color:#fff; font-size:.7rem; font-weight:700;
+           font-family:system-ui,-apple-system,sans-serif; display:inline-flex; align-items:center; justify-content:center;
+           line-height:1; flex:none; box-shadow:0 1px 3px rgba(61,50,41,.28); }
+  .fav-dot.T{ background:#0f766e; } .fav-dot.F{ background:#7c3aed; } .fav-dot.R{ background:#1a1a1a; }
+  .fav-dot.J{ background:#c9a227; color:#1a1408; } .fav-dot.L{ background:#e11d48; }
+  [data-gallery="spreads"] .card .scmeta{ display:flex; align-items:center; justify-content:space-between; gap:.6rem;
+           padding:0 1rem .85rem; margin-top:-.35rem; }
+  [data-gallery="spreads"] .card .scdots{ display:flex; gap:.28rem; flex-wrap:wrap; min-height:1.2rem; }
+  [data-gallery="spreads"] .card .scdots .none{ font-size:.8rem; opacity:.55; font-style:italic; }
+  [data-gallery="spreads"] .card a.sclink{ color:var(--accent); font-weight:bold; text-decoration:none; font-size:.95rem;
+           white-space:nowrap; padding:.35rem .1rem; }
+  [data-gallery="spreads"] .card a.sclink:hover{ text-decoration:underline; }
+  #spreadGrid[aria-busy="true"]{ min-height:320px; }
+  [data-gallery="spreads"] .card .scskip{ padding:0 1rem .8rem; margin-top:-.45rem; font-size:.8rem; font-style:italic; color:#8a3418; opacity:.85; }
   .pair{ display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
   #readtext{ position:absolute; bottom:16px; right:18px; color:#3d3229;
              background:linear-gradient(180deg,#fffefb 0%,#f3e7cd 100%);
@@ -316,19 +335,26 @@
   }
 
   .deck-card img[src="characters/wally.png"], .card img[src="characters/wally.png"]{ object-position:50% 6%; }
+  .deck-card img[src="characters/kitkat.png"], .card img[src="characters/kitkat.png"]{ object-position:50% 6%; }
+  .deck-card img[src="characters/nala.png"], .card img[src="characters/nala.png"]{ object-position:50% 6%; }
 </style>
 </head>
 <body>
+<a href="final-pass.html" style="display:block;background:#7a4f21;color:#fff8ec;text-decoration:none;text-align:center;font-size:18px;font-weight:bold;padding:14px 16px;line-height:1.35;">⭐ NEW — The Revised Versions: tonight's final-pass pictures →</a>
+
 
 <nav class="topnav" aria-label="Page sections">
   <div class="links">
     <a href="#spreads">Spreads</a>
     <a href="#covers">Covers</a>
     <a href="#welcome">Welcome</a>
-    <a href="#title-treatments">Mock-ups</a>
+    <a href="#title-treatments">Title designs</a>
     <a href="#cast">Cast</a>
-    <a href="#documents">Documents</a>
-    <a href="spread-options.html">Spread Options</a>
+    <a href="#rev18-downloads">Documents</a>
+    <span class="pg-sep" aria-hidden="true"></span>
+    <a href="index.html" class="pg" aria-current="page">Showcase</a>
+    <a href="spread-options.html" class="pg">Spread Options</a>
+    <a href="mockups.html" class="pg">Mockups</a>
   </div>
 </nav>
 
@@ -341,10 +367,20 @@
 
 <section id="spreads">
   <div class="wrap">
-    <h2>Current Spreads</h2>
+    <h2>Gold Finals</h2>
+    <p class="hint">One picture per spread &mdash; the final gold version of every spread, as locked on the Gold page. The name under each picture is that version&rsquo;s name there.</p>
     <p class="hint">Tap any spread to view it big &mdash; then tap the large arrow buttons on the sides to move through them.</p>
     <p class="hint">Want to compare versions? <a href="spread-options.html">Every version of every spread &rarr;</a></p>
-    <div class="grid" data-gallery="spreads"></div>
+    <div class="grid" data-gallery="spreads" id="spreadGrid" aria-busy="true"></div>
+    <div class="logodrawer-wrap">
+      <button class="revealbtn" id="prevToggle" aria-expanded="false" aria-controls="prevDrawer">Reveal previous favorites &#9662;</button>
+      <div class="logodrawer" id="prevDrawer">
+        <div class="drawerinner">
+          <p class="hint">The favorites as they stood before the final pass (Oct 20, 2026) &mdash; kept here so each new version is easy to compare against the one it replaced. Tap any picture to view it big.</p>
+          <div class="grid" data-gallery="previous" id="prevGrid"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -355,6 +391,9 @@
 
     <h3>The Covers &mdash; Current</h3>
     <div class="pair" data-gallery="coverd"></div>
+
+    <h3>The Covers &mdash; Option D</h3>
+    <div class="pair" data-gallery="coveroptd"></div>
 
   </div>
 </section>
@@ -369,13 +408,13 @@
 
 <section class="alt" id="title-treatments">
   <div class="wrap">
-    <h2>Approved Logo</h2>
-    <p class="hint">The approved title treatment on the current front cover. Tap the card to view it big.</p>
+    <h2>Chosen Logo</h2>
+    <p class="hint">The chosen title treatment on the current front cover. Tap the card to view it big.</p>
     <div style="max-width:480px;margin:0 auto;">
       <div class="card" id="approvedMockupCard" style="cursor:pointer;">
-        <img src="covers/approved-logo-mockup.jpg" alt="Approved Logo — Logo 1 on the current front cover">
+        <img src="covers/approved-logo-mockup.jpg" alt="Chosen Logo — Logo 1 on the current front cover">
         <div class="cap" style="flex-direction:column;align-items:flex-start;gap:.3rem;">
-          <b style="font-size:1.05rem;">Approved Logo</b>
+          <b style="font-size:1.05rem;">Chosen Logo</b>
           <span style="white-space:normal;">Logo 1 — on the current front cover</span>
         </div>
       </div>
@@ -386,7 +425,7 @@
 <section id="cast">
   <div class="wrap">
     <h2>Meet the Cast</h2>
-    <p class="hint">Every approved character &mdash; tap any portrait to view it big.</p>
+    <p class="hint">Every character in the book &mdash; tap any portrait to view it big.</p>
     <div class="castbar">
       <input id="castSearch" type="search" placeholder="Find a character&hellip;" aria-label="Search characters">
       <span id="castCount" aria-live="polite"></span>
@@ -415,39 +454,20 @@
   </div>
 </section>
 
-<section class="alt" id="documents" style="padding-top:2.5rem;">
+
+
+<section id="rev18-downloads" style="padding-top:2.5rem;">
   <div class="wrap">
-    <h2>Documents</h2>
-    <p class="hint">View right in your browser, or download to keep.</p>
-    <div class="pair">
-      <div class="card" style="cursor:default;">
-        <div class="cap" style="flex-direction:column;align-items:flex-start;gap:.6rem;">
-          <b style="font-size:1.15rem;">Harlow's Accidental Journey — Storyline Rev 17</b>
-          <span style="white-space:normal;font-size:.82rem;opacity:.55;">October 13, 2026 — the current version</span>
-          <span style="white-space:normal;">The one current storyline, with the final cast portraits throughout — the whole crew in their finished cast style. Older versions retired so there's no confusion about which one is newest.</span>
-          <span style="display:flex;gap:.7rem;flex-wrap:wrap;">
-            <a href="docs/harlows-storyline-rev17-2026-10-13.pdf" target="_blank" rel="noopener"
-               style="display:inline-block;background:#b3541e;color:#fff;text-decoration:none;font-style:normal;
-                      padding:.7rem 1.6rem;border-radius:30px;font-size:1.05rem;">View PDF</a>
-            <a href="docs/harlows-storyline-rev17-2026-10-13.pdf" download="Harlows-Accidental-Journey-Storyline-Rev17.pdf"
-               style="display:inline-block;background:#fff;color:#b3541e;text-decoration:none;font-style:normal;
-                      border:2px solid #b3541e;padding:.6rem 1.4rem;border-radius:30px;font-size:1.05rem;">Download</a>
-          </span>
-        </div>
-      </div>
-      <div class="card" style="cursor:default;">
-        <div class="cap" style="flex-direction:column;align-items:flex-start;gap:.6rem;">
-          <b style="font-size:1.15rem;">Spread Options &mdash; every version of every spread</b>
-          <span style="white-space:normal;font-size:.82rem;opacity:.55;">82 versions &mdash; S01 through S24</span>
-          <span style="white-space:normal;">Every round and alternate for all 24 spreads, each with its own permanent letter (S08-A, S08-B &hellip;) so anyone can name exactly which version they mean. Blocked, banked and alternate versions all labelled, with the print-ready file one tap away on versions that have one.</span>
-          <span style="display:flex;gap:.7rem;flex-wrap:wrap;">
-            <a href="spread-options.html"
-               style="display:inline-block;background:#b3541e;color:#fff;text-decoration:none;font-style:normal;
-                      padding:.7rem 1.6rem;border-radius:30px;font-size:1.05rem;">Open Spread Options</a>
-          </span>
-        </div>
-      </div>
-    </div>
+    <h2>The newest storyline &mdash; Rev.18, Gold Finals</h2>
+    <p class="hint">The whole story with the final gold artwork on every page. Download a copy to keep.</p>
+    <p style="display:flex;gap:.7rem;flex-wrap:wrap;">
+      <a href="downloads/HARLOWS-ACCIDENTAL-JOURNEY-STORYLINE-REV18-GOLD-FINALS-2026-10-24.pdf" download
+         style="display:inline-block;background:#b3541e;color:#fff;text-decoration:none;font-style:normal;
+                padding:.7rem 1.6rem;border-radius:30px;font-size:1.05rem;">Download the Storyline — Rev.18 (PDF)</a>
+      <a href="downloads/HARLOWS-ACCIDENTAL-JOURNEY-STORYLINE-REV18-GOLD-FINALS-2026-10-24.docx" download
+         style="display:inline-block;background:#fff;color:#b3541e;text-decoration:none;font-style:normal;
+                border:2px solid #b3541e;padding:.6rem 1.4rem;border-radius:30px;font-size:1.05rem;">Download the Storyline — Rev.18 (Word)</a>
+    </p>
   </div>
 </section>
 
@@ -503,17 +523,42 @@
 
 <script>
 const galleries={
+  previous:[],
   spreads:[
-    {src:"spreads/p01-harlow.jpg",     title:"Harlow at Home",           sub:"Page 1", pages:"Book pages 1–2"},
-    {src:"spreads/p02-mustang.jpg",    title:"The Silver Blue Mustang",  sub:"Page 2", pages:"Book pages 3–4"},
-    {src:"spreads/p03-marketplace.jpg",title:"The Farmers Market",       sub:"Page 3", pages:"Book pages 5–6"},
-    {src:"spreads/p04-sweet-pea.jpg",  title:"Sweet Pea's Muddy Puddle", sub:"Page 4", pages:"Book pages 7–8"},
-    {src:"spreads/p05-pond.jpg",       title:"Mama Fiona's Pond",        sub:"Page 5", pages:"Book pages 9–10"},
-    {src:"spreads/p06-donkeys.jpg",    title:"Molly, Albie & Dallas",    sub:"Page 6", pages:"Book pages 11–12"}
+    // THE GOLD 24 — locked by Jon 2026-10-28, taken from gold.html (the Gold page of record).
+    // This list IS the Gold Finals grid now; favorites.json no longer drives this section.
+    {src:"spread-options/v12-s01-alt2.jpg",        title:"Harlow at Home",           sub:"S01 · V12 ALT 2",           pages:"Book pages 1–2",   spread:1},
+    {src:"spread-options/v12-s02-alt1.jpg",        title:"The Silver Blue Mustang",  sub:"S02 · V12 ALT 1",           pages:"Book pages 3–4",   spread:2},
+    {src:"spread-options/v12-s03-gleam2.jpg",      title:"The Farmers Market",       sub:"S03 · V12 GLEAM 2",         pages:"Book pages 5–6",   spread:3},
+    {src:"spread-options/v12-s04-gleam2.jpg",      title:"Sweet Pea's Muddy Puddle", sub:"S04 · V12 GLEAM 2",         pages:"Book pages 7–8",   spread:4},
+    {src:"spread-options/v12-s05-gleam2.jpg",      title:"Mama Fiona's Pond",        sub:"S05 · V12 GLEAM 2",         pages:"Book pages 9–10",  spread:5},
+    {src:"spread-options/v12-s06-gleamsubtle2.jpg",title:"Molly, Albie & Dallas",    sub:"S06 · V12 SUBTLE GLEAM 2",  pages:"Book pages 11–12", spread:6},
+    {src:"spread-options/v12-s07-gleam2.jpg",      title:"Chester's Chuckle",        sub:"S07 · V12 GLEAM 2",         pages:"Book pages 13–14", spread:7},
+    {src:"spread-options/v11-s08.jpg",             title:"The Red Farm Truck",       sub:"S08 · V11",                 pages:"Book pages 15–16", spread:8},
+    {src:"spread-options/v12-s09cb-gleam2.jpg",    title:"Lost in the City",         sub:"S09 CB · V12 GLEAM 2",      pages:"Book pages 17–18", spread:9},
+    {src:"spread-options/v12-s10-ygaze2.jpg",      title:"Philly's Pizza Lesson",    sub:"S10 · V12 Y GAZE 2",        pages:"Book pages 19–20", spread:10},
+    {src:"spread-options/v12-s11alt6-gleam2.jpg",  title:"Penelope in Midtown Park", sub:"S11 ALT 6 · V12 GLEAM 2",   pages:"Book pages 21–22", spread:11},
+    {src:"spread-options/v12-s12-gleam2.jpg",      title:"Otis the Coyote",          sub:"S12 · V12 GLEAM 2",         pages:"Book pages 23–24", spread:12},
+    {src:"spread-options/v12-s13-gleam2.jpg",      title:"Gideon on the Rooftops",   sub:"S13 · V12 GLEAM 2",         pages:"Book pages 25–26", spread:13},
+    {src:"spread-options/v11-s14.jpg",             title:"Chippy and the Popcorn",   sub:"S14 · V11",                 pages:"Book pages 27–28", spread:14},
+    {src:"spread-options/v11-s15.jpg",             title:"The Hibernator",           sub:"S15 · V11",                 pages:"Book pages 29–30", spread:15},
+    {src:"spread-options/v11-s16.jpg",             title:"Edward's Big Hug",         sub:"S16 · V11",                 pages:"Book pages 31–32", spread:16},
+    {src:"spread-options/v11-s17.jpg",             title:"Jasmine at the Water Bowl",sub:"S17 · V11",                 pages:"Book pages 33–34", spread:17},
+    {src:"spread-options/v12-s18-fresh1.jpg",      title:"Babs the Crab",            sub:"S18 · V12 FRESH 1",         pages:"Book pages 35–36", spread:18},
+    {src:"spread-options/v12-s19-skyalt3.jpg",     title:"Finnegan the Shark",       sub:"S19 · V12 SKY ALT 3",       pages:"Book pages 37–38", spread:19},
+    {src:"spread-options/v12-s20-skyalt6.jpg",     title:"Pebbles the Lost Penguin", sub:"S20 · V12 SKY ALT 6",       pages:"Book pages 39–40", spread:20},
+    {src:"spread-options/v12-s21-fresh11.jpg",     title:"Helga's Pouch Ride",       sub:"S21 · V12 FRESH 11",        pages:"Book pages 41–42", spread:21},
+    {src:"spread-options/v12-s22-skyalt7.jpg",     title:"Mittens and Teddy",        sub:"S22 · V11 SKY ALT 7",       pages:"Book pages 43–44", spread:22},
+    {src:"spread-options/v12-s23-skyalt3.jpg",     title:"Home Again",               sub:"S23 · V11 SKY ALT 3",       pages:"Book pages 45–46", spread:23},
+    {src:"spread-options/v11-s24-room2.jpg",       title:"Fireside with Little Mouse",sub:"S24 · V11 ROOM ALT 2",     pages:"Book pages 47–48", spread:24}
   ],
   coverd:[
-    {src:"covers/option-d-front-v2.jpg", title:"Front Cover", sub:"Current"},
-    {src:"covers/option-d-back-v2.jpg",  title:"Back Cover",  sub:"Current"}
+    {src:"assets/covers-free-pass/front-e-road.jpg", title:"Front Cover", sub:"Front E"},
+    {src:"assets/covers-free-pass/back-c-sunset-window-clean.jpg", title:"Back Cover", sub:"Back C"}
+  ],
+  coveroptd:[
+    {src:"covers/option-d-front-v2.jpg", title:"Front Cover", sub:"Option D"},
+    {src:"covers/option-d-back-v2.jpg", title:"Back Cover", sub:"Option D"}
   ],
   welcome:[
     {src:"welcome/v1-the-peek.jpg",        title:"The Peek",        sub:"Version 1"},
@@ -521,7 +566,7 @@ const galleries={
     {src:"welcome/v3-follow-the-paws.jpg", title:"Follow the Paws", sub:"Version 3"}
   ],
   logos:[
-    {src:"covers/approved-logo-mockup.jpg", title:"Approved Logo", sub:"Logo 1 — on the current front cover"}
+    {src:"covers/approved-logo-mockup.jpg", title:"Chosen Logo", sub:"Logo 1 — on the current front cover"}
   ],
   characters:[
     {src:"characters/albie.png", title:"Albie", sub:"Character portrait"},
@@ -544,7 +589,7 @@ const galleries={
     {src:"characters/jasmine.png", title:"Jasmine", sub:"Character portrait"},
     {src:"characters/jj-boy.png", title:"JJ Boy", sub:"Character portrait"},
     {pos:"top", src:"characters/jj-boy-fullbody.png", title:"JJ Boy (full body)", sub:"Character portrait"},
-    {src:"characters/jon-boy.png", title:"Jon Boy", sub:"Character portrait"},
+    {src:"characters/jon-boy.png", title:"Jon Boy", sub:"Character portrait"}, {src:"characters/kitkat.png", title:"KitKat", sub:"Easter-egg portrait"},
     {pos:"top", src:"characters/jon-boy-fullbody.png", title:"Jon Boy (full body)", sub:"Character portrait"},
     {src:"characters/little-mouse.png", title:"Little Mouse", sub:"Character portrait"},
     {src:"characters/lois-mom.png", title:"Lois", sub:"Character portrait"},
@@ -554,7 +599,7 @@ const galleries={
     {src:"characters/molly.png", title:"Molly", sub:"Character portrait"},
     {src:"characters/monkey.png", title:"Monkey", sub:"Character portrait"},
     {src:"characters/mustang.png", title:"Mustang", sub:"Character portrait"},
-    {src:"characters/mustang-front.png", title:"Mustang (front)", sub:"Character portrait"},
+    {src:"characters/mustang-front.png", title:"Mustang (front)", sub:"Character portrait"}, {src:"characters/nala.png", title:"Nala", sub:"Easter-egg portrait"},
     {src:"characters/nero.png", title:"Nero", sub:"Character portrait"},
     {src:"characters/nicolas.png", title:"Nicolas", sub:"Character portrait"},
     {src:"characters/norman.png", title:"Norman", sub:"Character portrait"},
@@ -586,8 +631,10 @@ const spreadText=[
  {place:"Planned placement: upper band across the spread, above the donkeys.",
   text:"After a while, I realized I'd wandered far from Lois. Molly the donkey and her baby, Albie, trotted over, sensing I was lost. \u201CFeeling turned around, little guy?\u201D Molly chuckled. \u201CTake a look at our big ears \u2014 let them remind you to listen to your surroundings in tight spots.\u201D I swiveled my ears like radar dishes and caught the sound of people talking. \u201CThat's brilliant! Thank you, Molly!\u201D I called, nodding to her and Albie as I hurried toward the voices."}
 ];
-document.querySelectorAll('[data-gallery]').forEach(el=>{
+const FAV_NAMES={T:'Trinity',F:'Folio',R:'Ravyn',J:'Jon',L:'Lois'};
+function renderGallery(el){
   const items=galleries[el.dataset.gallery];
+  el.innerHTML='';
   items.forEach((s,i)=>{
     const d=document.createElement('div'); d.className='card'; d.tabIndex=0;
     d.setAttribute('role','button'); d.setAttribute('aria-label','View larger: '+s.title);
@@ -601,11 +648,113 @@ document.querySelectorAll('[data-gallery]').forEach(el=>{
     const pim=d.querySelector('img');
     if(s.pos) pim.style.objectPosition=s.pos;
     armImg(pim);
+    if(s.letter){
+      const m=document.createElement('div'); m.className='scmeta';
+      const dots=(s.dots||[]);
+      m.innerHTML=(el.dataset.gallery==='spreads'?'':'<span class="scdots" aria-label="'+(dots.length?'Picked by '+dots.map(w=>FAV_NAMES[w]).join(', '):'No picks yet')+'">'+
+        (dots.length?dots.map(w=>'<span class="fav-dot '+w+'" title="'+FAV_NAMES[w]+'">'+w+'</span>').join(''):'<span class="none">no picks yet</span>')+
+        '</span>')+'<a class="sclink" href="spread-options.html#'+s.letter+'" aria-label="See '+s.letter+' on Spread Options">'+s.letter+' &rarr;</a>';
+      m.querySelector('a').addEventListener('click',e=>e.stopPropagation());
+      m.querySelector('a').addEventListener('keydown',e=>e.stopPropagation());
+      d.appendChild(m);
+      if(s.skipped){ const h=document.createElement('p'); h.className='scskip'; h.textContent='a pick was skipped: needs a fix'; d.appendChild(h); }
+    }
     d.onclick=()=>openLb(el.dataset.gallery,i);
     d.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(el.dataset.gallery,i);} };
     el.appendChild(d);
   });
-});
+}
+document.querySelectorAll('[data-gallery]').forEach(el=>{ if(el.dataset.gallery!=='spreads') renderGallery(el); });
+
+// ---- Gold Finals grid: since 2026-10-28 (Jon's lock) the grid renders the static Gold 24 list in galleries.spreads;
+// pickShowcase below is retained for the record but no longer drives the grid. The previous-favorites drawer still reads favorites.json.
+// ---- (Historical) Current favorites: one image per spread, computed at load from favorites.json + Spread Options statuses ----
+// Rules (in order): 1 Jon's pick (J) · 2 Lois's pick (L) · 3 most desk dots (T/F/R); tie -> keep favorites.json "showing",
+// else Trinity's pick among the tied (then Folio's, then Ravyn's) · 4 no picks -> "showing", else Folio's pick, else skip.
+// A 'Needs a fix' card is never eligible. See SPREAD-OPTIONS-SYSTEM.md.
+const SPREAD_TITLES=["Harlow at Home","The Silver Blue Mustang","The Farmers Market","Sweet Pea's Muddy Puddle",
+  "Mama Fiona's Pond","Molly, Albie & Dallas","Chester's Chuckle","The Red Farm Truck","Lost in the City",
+  "Philly's Pizza Lesson","Penelope in Midtown Park","Otis the Coyote","Gideon on the Rooftops","Chippy and the Popcorn",
+  "The Hibernator","Edward's Big Hug","Jasmine at the Water Bowl","Babs the Crab","Finnegan the Shark",
+  "Pebbles the Lost Penguin","Helga's Pouch Ride","Mittens and Teddy","Home Again","Fireside with Little Mouse"];
+function pickShowcase(cards, people, SHOWCASE_SHOWING){
+  SHOWCASE_SHOWING=SHOWCASE_SHOWING||{};
+  // Ignore any letter that is not a real Spread Options card (mockups, unused letters, typos): picks are matched against these cards only.
+  cards=cards.filter(c=>c.letter && c.status && !/-M\d+$/.test(c.letter));
+  const bySpread={};
+  cards.forEach(c=>{ (bySpread[c.letter.slice(0,3)]=bySpread[c.letter.slice(0,3)]||[]).push(c); });
+  const picksOf=w=>(people[w]&&people[w].picks)||[];
+  const out=[];
+  Object.keys(bySpread).sort().forEach(sp=>{
+    const el=bySpread[sp].filter(c=>c.status!=='Needs a fix');
+    const elL=el.map(c=>c.letter);
+    const mine=w=>picksOf(w).filter(p=>elL.indexOf(p)>=0);
+    let choice=null, why='';
+    if(mine('J').length){ choice=mine('J')[0]; why="Jon's pick"; }
+    else if(mine('L').length){ choice=mine('L')[0]; why="Lois's pick"; }
+    else{
+      const cnt={}; elL.forEach(l=>{ cnt[l]=['T','F','R'].filter(w=>picksOf(w).indexOf(l)>=0).length; });
+      const m=Math.max(0,...Object.values(cnt));
+      if(m>0){
+        const tied=elL.filter(l=>cnt[l]===m);
+        if(tied.length===1){ choice=tied[0]; why='most desk dots'; }
+        else if(tied.indexOf(SHOWCASE_SHOWING[sp])>=0){ choice=SHOWCASE_SHOWING[sp]; why='tie, kept current'; }
+        else for(const w of ['T','F','R']){ const t=picksOf(w).filter(p=>tied.indexOf(p)>=0); if(t.length){ choice=t[0]; why='tie, '+people[w].name+"'s pick"; break; } }
+      }else if(elL.indexOf(SHOWCASE_SHOWING[sp])>=0){ choice=SHOWCASE_SHOWING[sp]; why='no picks, kept current'; }
+      else if(mine('F').length){ choice=mine('F')[0]; why="no picks, Folio's pick"; }
+    }
+    const skipped=['T','F','R','J','L'].some(w=>picksOf(w).some(p=>p.slice(0,3)===sp && bySpread[sp].some(c=>c.letter===p && c.status==='Needs a fix')));
+    if(!choice) return;
+    const card=bySpread[sp].find(c=>c.letter===choice);
+    const n=parseInt(sp.slice(1),10);
+    out.push({src:card.src, title:SPREAD_TITLES[n-1]||('Spread '+n), sub:'Page '+n, pages:'Book pages '+(2*n-1)+'–'+(2*n),
+      spread:n, letter:choice, why:why, skipped:skipped, dots:['T','F','R','J','L'].filter(w=>picksOf(w).indexOf(choice)>=0)});
+  });
+  return out;
+}
+(function buildShowcase(){
+  const grid=document.getElementById('spreadGrid');
+  let done=false;
+  const finish=items=>{ if(done) return; done=true; if(items&&items.length) galleries.spreads=items;
+    renderGallery(grid); grid.removeAttribute('aria-busy'); window.showcasePicks=galleries.spreads.map(s=>[s.letter,s.why||'static']); };
+  setTimeout(()=>finish(null), 8000);
+  finish(null); // Gold Finals locked (Jon, 2026-10-28): the grid renders the static Gold 24 list above at once; the fetch below now feeds only the previous-favorites drawer.
+  Promise.all([
+    fetch('spread-options.html',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return r.text(); }),
+    fetch('favorites.json',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return r.json(); })
+  ]).then(([html,fav])=>{
+    const doc=new DOMParser().parseFromString(html,'text/html');
+    // Only real Spread Options cards count: mockup letters (S07-M1…) and anything not an article.card with a status are ignored.
+    const cards=[...doc.querySelectorAll('main article.card[data-status]')].filter(a=>a.dataset.kind!=='mockup' && !/-M\d+$/.test(a.dataset.letter||'')).map(a=>{
+      const img=a.querySelector('img.thumb');
+      return {letter:a.dataset.letter, status:a.dataset.status,
+              src:(img&&(img.getAttribute('data-render')||img.getAttribute('src')))||''};
+    }).filter(c=>c.letter&&c.src);
+    // Gold-finals guarantee: any letter named in favorites "showing" that the main-scoped parse
+    // missed (e.g. a card appended outside <main> on Spread Options) is pulled in document-wide,
+    // so Jon's picks and the showing map can always be honored.
+    Object.values(fav.showing||{}).forEach(L=>{
+      if(cards.some(c=>c.letter===L)) return;
+      const a=doc.querySelector('article.card[data-letter="'+L+'"]');
+      if(!a) return;
+      const img=a.querySelector('img.thumb');
+      const src=(img&&(img.getAttribute('data-render')||img.getAttribute('src')))||'';
+      if(src) cards.push({letter:L, status:a.dataset.status||'Candidate', src:src});
+    });
+    if(!cards.length) throw 0;
+    finish(pickShowcase(cards, fav.people||{}, fav.showing||{}));
+    const prevMap=(fav.previous&&fav.previous.showing)||{};
+    const prevItems=[];
+    Object.keys(prevMap).sort().forEach(sp=>{
+      const card=cards.find(c=>c.letter===prevMap[sp]);
+      if(!card) return;
+      const n=parseInt(sp.slice(1),10);
+      prevItems.push({src:card.src, title:SPREAD_TITLES[n-1]||('Spread '+n), sub:'Page '+n, pages:'Book pages '+(2*n-1)+'\u2013'+(2*n),
+        spread:n, letter:card.letter, dots:['T','F','R','J','L'].filter(w=>(((fav.people||{})[w]||{}).picks||[]).indexOf(card.letter)>=0)});
+    });
+    if(prevItems.length){ galleries.previous=prevItems; renderGallery(document.getElementById('prevGrid')); }
+  }).catch(()=>finish(null));
+})();
 const totop=document.getElementById('totop');
 addEventListener('scroll', ()=>{ totop.classList.toggle('show', scrollY>600); }, {passive:true});
 totop.onclick=()=>window.scrollTo({top:0, behavior:'smooth'});
@@ -632,15 +781,16 @@ const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
 let gkey='spreads', cur=0;
 function openLb(key,i){ gkey=key; const items=galleries[key]; cur=(i+items.length)%items.length;
   lbimg.src=items[cur].src; lbimg.alt=items[cur].title;
-  lbcap.textContent=items[cur].title+' — '+items[cur].sub+(items[cur].pages?' · '+items[cur].pages.toLowerCase():'');
+  lbcap.textContent=items[cur].title+' — '+items[cur].sub+(items[cur].pages?' · '+items[cur].pages.toLowerCase():'')+(items[cur].letter?' · '+items[cur].letter:'');
   const single=items.length===1;
   document.getElementById('prev').classList.toggle('hidden',single);
   document.getElementById('next').classList.toggle('hidden',single);
   lbnum.textContent=single ? 'Tap × to close'
     : 'Image '+(cur+1)+' of '+items.length;
   lb.classList.add('open'); document.body.style.overflow='hidden';
-  document.getElementById('readtext').classList.toggle('hidden', key!=='spreads');
-  document.getElementById('fread').classList.toggle('hidden', key!=='spreads');
+  const hasText=key==='spreads' && !!spreadText[(items[cur].spread||cur+1)-1];
+  document.getElementById('readtext').classList.toggle('hidden', !hasText);
+  document.getElementById('fread').classList.toggle('hidden', !hasText);
   document.getElementById('textpanel').classList.remove('open'); }
 function closeLb(){ if(document.fullscreenElement) document.exitFullscreen();
   lb.classList.remove('zoomed'); lb.classList.remove('open'); document.body.style.overflow=''; }
@@ -699,7 +849,7 @@ giftmodal.addEventListener('click',e=>{ if(e.target===giftmodal) closeGift(); })
 addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeGift(); } });
 const textpanel=document.getElementById('textpanel');
 function openText(){
-  const s=galleries[gkey][cur], d=spreadText[cur];
+  const s=galleries[gkey][cur], d=spreadText[(s.spread||cur+1)-1]; if(!d) return;
   document.getElementById('tpTitle').textContent=s.title+' \u2014 '+s.sub;
   document.getElementById('tpPlace').textContent=d.place;
   document.getElementById('tpCopy').textContent=d.text;
@@ -825,6 +975,12 @@ castToggle.onclick=()=>{
   const open=castDrawer.classList.toggle('open');
   castToggle.setAttribute('aria-expanded',open);
   castToggle.innerHTML=open?'Hide cast members &#9652;':'Reveal cast members &#9662;';
+};
+const prevToggle=document.getElementById('prevToggle'), prevDrawer=document.getElementById('prevDrawer');
+prevToggle.onclick=()=>{
+  const open=prevDrawer.classList.toggle('open');
+  prevToggle.setAttribute('aria-expanded',open);
+  prevToggle.innerHTML=open?'Hide previous favorites &#9652;':'Reveal previous favorites &#9662;';
 };
 document.addEventListener('keydown',e=>{
   if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
