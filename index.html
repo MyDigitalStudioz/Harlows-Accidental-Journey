@@ -368,7 +368,7 @@
 <section id="spreads">
   <div class="wrap">
     <h2>Gold Finals</h2>
-    <p class="hint">One picture per spread &mdash; the current favorite from the colored dots on Spread Options. Tap the letter under a picture to see that version there.</p>
+    <p class="hint">One picture per spread &mdash; the final gold version of every spread, as locked on the Gold page. The name under each picture is that version&rsquo;s name there.</p>
     <p class="hint">Tap any spread to view it big &mdash; then tap the large arrow buttons on the sides to move through them.</p>
     <p class="hint">Want to compare versions? <a href="spread-options.html">Every version of every spread &rarr;</a></p>
     <div class="grid" data-gallery="spreads" id="spreadGrid" aria-busy="true"></div>
@@ -525,12 +525,32 @@
 const galleries={
   previous:[],
   spreads:[
-    {src:"spreads/p01-harlow.jpg",     title:"Harlow at Home",           sub:"Page 1", pages:"Book pages 1–2", spread:1, letter:"S01-L", dots:[]},
-    {src:"spreads/p02-mustang.jpg",    title:"The Silver Blue Mustang",  sub:"Page 2", pages:"Book pages 3–4", spread:2, letter:"S02-F", dots:[]},
-    {src:"spreads/p03-marketplace.jpg",title:"The Farmers Market",       sub:"Page 3", pages:"Book pages 5–6", spread:3, letter:"S03-F", dots:[]},
-    {src:"spreads/p04-sweet-pea.jpg",  title:"Sweet Pea's Muddy Puddle", sub:"Page 4", pages:"Book pages 7–8", spread:4, letter:"S04-G", dots:[]},
-    {src:"spreads/p05-pond.jpg",       title:"Mama Fiona's Pond",        sub:"Page 5", pages:"Book pages 9–10", spread:5, letter:"S05-G", dots:[]},
-    {src:"spreads/p06-donkeys.jpg",    title:"Molly, Albie & Dallas",    sub:"Page 6", pages:"Book pages 11–12", spread:6, letter:"S06-H", dots:[]}
+    // THE GOLD 24 — locked by Jon 2026-10-28, taken from gold.html (the Gold page of record).
+    // This list IS the Gold Finals grid now; favorites.json no longer drives this section.
+    {src:"spread-options/v12-s01-alt2.jpg",        title:"Harlow at Home",           sub:"S01 · V12 ALT 2",           pages:"Book pages 1–2",   spread:1},
+    {src:"spread-options/v12-s02-alt1.jpg",        title:"The Silver Blue Mustang",  sub:"S02 · V12 ALT 1",           pages:"Book pages 3–4",   spread:2},
+    {src:"spread-options/v12-s03-gleam2.jpg",      title:"The Farmers Market",       sub:"S03 · V12 GLEAM 2",         pages:"Book pages 5–6",   spread:3},
+    {src:"spread-options/v12-s04-gleam2.jpg",      title:"Sweet Pea's Muddy Puddle", sub:"S04 · V12 GLEAM 2",         pages:"Book pages 7–8",   spread:4},
+    {src:"spread-options/v12-s05-gleam2.jpg",      title:"Mama Fiona's Pond",        sub:"S05 · V12 GLEAM 2",         pages:"Book pages 9–10",  spread:5},
+    {src:"spread-options/v12-s06-gleamsubtle2.jpg",title:"Molly, Albie & Dallas",    sub:"S06 · V12 SUBTLE GLEAM 2",  pages:"Book pages 11–12", spread:6},
+    {src:"spread-options/v12-s07-gleam2.jpg",      title:"Chester's Chuckle",        sub:"S07 · V12 GLEAM 2",         pages:"Book pages 13–14", spread:7},
+    {src:"spread-options/v11-s08.jpg",             title:"The Red Farm Truck",       sub:"S08 · V11",                 pages:"Book pages 15–16", spread:8},
+    {src:"spread-options/v12-s09cb-gleam2.jpg",    title:"Lost in the City",         sub:"S09 CB · V12 GLEAM 2",      pages:"Book pages 17–18", spread:9},
+    {src:"spread-options/v12-s10-ygaze2.jpg",      title:"Philly's Pizza Lesson",    sub:"S10 · V12 Y GAZE 2",        pages:"Book pages 19–20", spread:10},
+    {src:"spread-options/v12-s11alt6-gleam2.jpg",  title:"Penelope in Midtown Park", sub:"S11 ALT 6 · V12 GLEAM 2",   pages:"Book pages 21–22", spread:11},
+    {src:"spread-options/v12-s12-gleam2.jpg",      title:"Otis the Coyote",          sub:"S12 · V12 GLEAM 2",         pages:"Book pages 23–24", spread:12},
+    {src:"spread-options/v12-s13-gleam2.jpg",      title:"Gideon on the Rooftops",   sub:"S13 · V12 GLEAM 2",         pages:"Book pages 25–26", spread:13},
+    {src:"spread-options/v11-s14.jpg",             title:"Chippy and the Popcorn",   sub:"S14 · V11",                 pages:"Book pages 27–28", spread:14},
+    {src:"spread-options/v11-s15.jpg",             title:"The Hibernator",           sub:"S15 · V11",                 pages:"Book pages 29–30", spread:15},
+    {src:"spread-options/v11-s16.jpg",             title:"Edward's Big Hug",         sub:"S16 · V11",                 pages:"Book pages 31–32", spread:16},
+    {src:"spread-options/v11-s17.jpg",             title:"Jasmine at the Water Bowl",sub:"S17 · V11",                 pages:"Book pages 33–34", spread:17},
+    {src:"spread-options/v12-s18-fresh1.jpg",      title:"Babs the Crab",            sub:"S18 · V12 FRESH 1",         pages:"Book pages 35–36", spread:18},
+    {src:"spread-options/v12-s19-skyalt3.jpg",     title:"Finnegan the Shark",       sub:"S19 · V12 SKY ALT 3",       pages:"Book pages 37–38", spread:19},
+    {src:"spread-options/v12-s20-skyalt6.jpg",     title:"Pebbles the Lost Penguin", sub:"S20 · V12 SKY ALT 6",       pages:"Book pages 39–40", spread:20},
+    {src:"spread-options/v12-s21-fresh11.jpg",     title:"Helga's Pouch Ride",       sub:"S21 · V12 FRESH 11",        pages:"Book pages 41–42", spread:21},
+    {src:"spread-options/v12-s22-skyalt7.jpg",     title:"Mittens and Teddy",        sub:"S22 · V11 SKY ALT 7",       pages:"Book pages 43–44", spread:22},
+    {src:"spread-options/v12-s23-skyalt3.jpg",     title:"Home Again",               sub:"S23 · V11 SKY ALT 3",       pages:"Book pages 45–46", spread:23},
+    {src:"spread-options/v11-s24-room2.jpg",       title:"Fireside with Little Mouse",sub:"S24 · V11 ROOM ALT 2",     pages:"Book pages 47–48", spread:24}
   ],
   coverd:[
     {src:"assets/covers-free-pass/front-e-road.jpg", title:"Front Cover", sub:"Front E"},
@@ -646,7 +666,9 @@ function renderGallery(el){
 }
 document.querySelectorAll('[data-gallery]').forEach(el=>{ if(el.dataset.gallery!=='spreads') renderGallery(el); });
 
-// ---- Current favorites: one image per spread, computed at load from favorites.json + Spread Options statuses ----
+// ---- Gold Finals grid: since 2026-10-28 (Jon's lock) the grid renders the static Gold 24 list in galleries.spreads;
+// pickShowcase below is retained for the record but no longer drives the grid. The previous-favorites drawer still reads favorites.json.
+// ---- (Historical) Current favorites: one image per spread, computed at load from favorites.json + Spread Options statuses ----
 // Rules (in order): 1 Jon's pick (J) · 2 Lois's pick (L) · 3 most desk dots (T/F/R); tie -> keep favorites.json "showing",
 // else Trinity's pick among the tied (then Folio's, then Ravyn's) · 4 no picks -> "showing", else Folio's pick, else skip.
 // A 'Needs a fix' card is never eligible. See SPREAD-OPTIONS-SYSTEM.md.
@@ -696,6 +718,7 @@ function pickShowcase(cards, people, SHOWCASE_SHOWING){
   const finish=items=>{ if(done) return; done=true; if(items&&items.length) galleries.spreads=items;
     renderGallery(grid); grid.removeAttribute('aria-busy'); window.showcasePicks=galleries.spreads.map(s=>[s.letter,s.why||'static']); };
   setTimeout(()=>finish(null), 8000);
+  finish(null); // Gold Finals locked (Jon, 2026-10-28): the grid renders the static Gold 24 list above at once; the fetch below now feeds only the previous-favorites drawer.
   Promise.all([
     fetch('spread-options.html',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return r.text(); }),
     fetch('favorites.json',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return r.json(); })
