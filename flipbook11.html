@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" href="flipbook1/favicon.png">
+<link rel="apple-touch-icon" href="flipbook1/favicon.png"><title>Harlow's Accidental Journey — NOT FOR PRINT</title>
+<style>
+  html,body{margin:0;height:100%;background:#191919;color:#f4f1ea;font:15px/1.3 "Segoe UI",sans-serif}
+  #viewer{position:relative;min-height:100%;height:100%;background:#191919;display:flex;flex-direction:column}
+  #viewer:fullscreen,#viewer:-webkit-full-screen{width:100%;height:100%;background:#191919}
+  #banner{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 18px;background:#191919;z-index:2}
+  #tools{display:flex;align-items:center;gap:12px}
+  #counter{background:rgba(20,20,20,.55);color:#fff;border-radius:999px;padding:6px 12px;white-space:nowrap}
+  #mark{white-space:nowrap}
+  #fs,#pagesBtn{flex:0 0 auto;width:42px;height:42px;padding:0;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.07);color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:50%;cursor:pointer;font:inherit}
+  #fs svg{width:20px;height:20px;stroke:#f4f1ea;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;display:block}
+  #pagesBtn svg{width:19px;height:19px;fill:#f4f1ea;display:block}
+  #stage{flex:1;width:100%;min-height:0;background:#373737;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  #bookWrap{position:relative;z-index:1;cursor:grab;touch-action:none;will-change:transform}
+  #bookWrap.grabbing{cursor:grabbing}
+  #book{position:relative;perspective:2300px}
+  #book.single{overflow:hidden}
+  .base{position:absolute;top:0;height:100%;z-index:1;background:#2b2b2b;box-shadow:0 24px 55px rgba(0,0,0,.5)}
+  .base img{width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
+  .shade{position:absolute;top:0;height:100%;z-index:3;opacity:0;pointer-events:none}
+  #shadeL{background:linear-gradient(to left,rgba(0,0,0,.55),rgba(0,0,0,0) 75%)}
+  #shadeR{background:linear-gradient(to right,rgba(0,0,0,.55),rgba(0,0,0,0) 75%)}
+  #gl{position:absolute;z-index:5;display:none;pointer-events:none}
+  #leafFB{position:absolute;top:0;height:100%;z-index:5;display:none;transform-origin:left center;transform-style:preserve-3d;will-change:transform}
+  #leafFB .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#2b2b2b}
+  #leafFB .face img{width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
+  #leafFB .face.back{transform:rotateY(180deg)}
+  #leafFB .fshade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+  #spineShade{position:absolute;top:0;height:100%;z-index:8;pointer-events:none;background:linear-gradient(to right,rgba(0,0,0,0) 0%,rgba(0,0,0,.16) 38%,rgba(0,0,0,.30) 50%,rgba(0,0,0,.16) 62%,rgba(0,0,0,0) 100%)}
+  #castShade{position:absolute;top:0;height:100%;z-index:4;pointer-events:none;opacity:0;background:linear-gradient(to right,rgba(0,0,0,0) 0%,rgba(0,0,0,.85) 50%,rgba(0,0,0,0) 100%)}
+  .arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:64px;height:96px;margin:0;padding:0;border:0;outline:0;box-shadow:none;background:transparent;color:#fff;font-size:52px;cursor:pointer;line-height:1;pointer-events:auto;appearance:none;-webkit-appearance:none}
+  .arrow:hover,.arrow:focus,.arrow:focus-visible,.arrow:active{border:0;outline:0;box-shadow:none;background:transparent}
+  #prev{left:8px}#next{right:8px}
+  body.expanded #viewer{position:fixed;inset:0;height:100%;height:100dvh;z-index:50}
+  body.expanded #banner{position:absolute;top:0;left:0;right:0;background:transparent;justify-content:flex-end}
+  body.expanded #counter,body.expanded #mark{display:none}
+  body.expanded #stage{height:100%}
+  #viewer:fullscreen #banner{position:absolute;top:0;left:0;right:0;background:transparent;justify-content:flex-end;z-index:30}
+  #viewer:fullscreen #counter,#viewer:fullscreen #mark{display:none}
+  body.expanded #fs,body.expanded #pagesBtn,#viewer:fullscreen #fs,#viewer:fullscreen #pagesBtn{background:rgba(15,15,15,.5)}
+  #sheet{position:absolute;left:0;right:0;bottom:0;z-index:40;background:rgba(16,16,16,.97);border-top:1px solid #4a4a4a;transform:translateY(105%);visibility:hidden;transition:transform .3s ease,visibility 0s linear .3s}
+  #sheet.open{transform:none;visibility:visible;transition:transform .3s ease}
+  #sheetBar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px 0}
+  #sheetTitle{font-weight:600;letter-spacing:.03em}
+  #sheetClose{flex:0 0 auto;width:34px;height:34px;padding:0;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);color:#f4f1ea;border:1px solid rgba(244,241,234,.4);border-radius:50%;cursor:pointer}
+  #sheetClose svg{width:15px;height:15px;stroke:#f4f1ea;fill:none;stroke-width:2.4;stroke-linecap:round;display:block}
+  #strip{display:flex;gap:10px;overflow-x:auto;padding:10px 14px 16px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#4d4d4d #101010}
+  #strip::-webkit-scrollbar{height:10px}
+  #strip::-webkit-scrollbar-track{background:#101010}
+  #strip::-webkit-scrollbar-thumb{background:#4d4d4d;border-radius:6px;border:2px solid #101010}
+  #strip::-webkit-scrollbar-thumb:hover{background:#666}
+  .tcard{flex:0 0 auto;background:none;border:2px solid rgba(255,255,255,.14);border-radius:8px;padding:4px;cursor:pointer;font:inherit}
+  .tcard .timgs{display:flex;gap:2px}
+  .tcard img{height:82px;width:82px;object-fit:cover;display:block;border-radius:3px;background:#333}
+  .tcard .tcap{display:block;color:#cfc9bd;font-size:11px;text-align:center;padding-top:4px}
+  .tcard.now{border-color:#e8b34b}
+  .tcard.now .tcap{color:#e8b34b}
+  @media (max-width:560px){#banner{padding:10px 12px}#tools{gap:8px;flex-wrap:wrap;justify-content:flex-end}#mark{order:3;flex-basis:100%;text-align:right;font-size:12px;white-space:normal}#counter{padding:6px 10px}}
+</style></head>
+<body>
+  <div id="viewer">
+    <div id="banner"><span id="counter">Page 1 of 52</span><span id="tools"><strong id="mark">BookDesk-Mocks-Test-20261029-c · v2-pages — NOT FOR PRINT</strong><button id="pagesBtn" type="button" aria-label="Pages" title="Pages"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button><button id="fs" type="button" aria-label="Full screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg></button></span></div>
+    <div id="stage">
+      <button id="prev" class="arrow" type="button" aria-label="Previous">&#8249;</button>
+      <button id="next" class="arrow" type="button" aria-label="Next">&#8250;</button>
+      <div id="bookWrap"><div id="glide"><div id="book">
+        <div class="base" id="baseL"><img alt=""></div>
+        <div class="base" id="baseR"><img alt=""></div>
+        <div class="shade" id="shadeL"></div>
+        <div class="shade" id="shadeR"></div>
+        <canvas id="gl"></canvas>
+        <div id="castShade"></div>
+        <div id="leafFB">
+          <div class="face front"><img alt=""><div class="fshade"></div></div>
+          <div class="face back"><img alt=""><div class="fshade"></div></div>
+        </div>
+        <div id="spineShade"></div>
+      </div></div></div>
+    </div>
+    <div id="sheet" aria-hidden="true">
+      <div id="sheetBar"><span id="sheetTitle">Pages — tap one to jump there</span><button id="sheetClose" type="button" aria-label="Close pages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <div id="strip"></div>
+    </div>
+  </div>
+  <script src="flipbook1/manifest.js"></script>
+  <script>
+  (function () {
+    var PAGES = BOOK.pages, N = PAGES.length, HALF = N / 2;
+    var viewer = document.getElementById("viewer");
+    var stage = document.getElementById("stage");
+    var bookWrap = document.getElementById("bookWrap");
+    var bookEl = document.getElementById("book");
+    var glideEl = document.getElementById("glide");
+    var baseL = document.getElementById("baseL"), baseR = document.getElementById("baseR");
+    var imgL = baseL.querySelector("img"), imgR = baseR.querySelector("img");
+    var shadeL = document.getElementById("shadeL"), shadeR = document.getElementById("shadeR");
+    var canvas = document.getElementById("gl");
+    var leafFB = document.getElementById("leafFB");
+    var fbFrontImg = leafFB.querySelector(".front img"), fbBackImg = leafFB.querySelector(".back img");
+    var fbShades = leafFB.querySelectorAll(".fshade");
+    var spineShade = document.getElementById("spineShade");
+    var castShade = document.getElementById("castShade");
+    var counter = document.getElementById("counter");
+    var fsBtn = document.getElementById("fs");
+    var sheet = document.getElementById("sheet");
+    var strip = document.getElementById("strip");
+
+    var pageImgs = PAGES.map(function (src) { var im = new Image(); im.src = src; return im; });
+
+    /* ================= WebGL leaf ================= */
+    var M = 24;                                  // strip columns (shared vertices = no seams)
+    var FLEX_RAD = 24 * Math.PI / 180;           // total tip lag at mid-turn
+    var PERSP = 2300;
+    var gl = null, glOK = false;
+    var gProg, gPosBuf, gUvBuf, gIdxBuf, gTexF = null, gTexB = null;
+    var uHalf, uWin, uP, uShadeL, uBendL, aPosL, aUvL;
+    var winW = 0, winH = 0;                      // canvas window size in CSS px
+    (function initGL() {
+      try {
+        gl = canvas.getContext("webgl", { antialias: true, alpha: true, depth: false, stencil: false, premultipliedAlpha: false });
+        if (!gl) return;
+        var vs = "attribute vec3 aPos; attribute vec2 aUv; uniform vec2 uHalf; uniform vec2 uWin; uniform float uP; varying vec2 vUv;" +
+          "void main(){ float X = aPos.x - uHalf.x; float Y = aPos.y - uHalf.y; float d = uP - aPos.z;" +
+          " float px = X * uP / d; float py = Y * uP / d;" +
+          " gl_Position = vec4(px / uWin.x, -py / uWin.y, 0.0, 1.0); vUv = aUv; }";
+        var fs = "precision mediump float; varying vec2 vUv; uniform sampler2D uFront; uniform sampler2D uBack; uniform float uShade; uniform float uBend;" +
+          "void main(){ vec4 c; if (gl_FrontFacing) { c = texture2D(uFront, vUv); } else { c = texture2D(uBack, vec2(1.0 - vUv.x, vUv.y)); }" +
+          " c.rgb *= (1.0 - uShade); c.rgb += uBend * 0.05 * smoothstep(0.93, 1.0, vUv.x); gl_FragColor = vec4(c.rgb, 1.0); }";
+        function sh(type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
+        gProg = gl.createProgram();
+        gl.attachShader(gProg, sh(gl.VERTEX_SHADER, vs));
+        gl.attachShader(gProg, sh(gl.FRAGMENT_SHADER, fs));
+        gl.linkProgram(gProg);
+        if (!gl.getProgramParameter(gProg, gl.LINK_STATUS)) { gl = null; return; }
+        gl.useProgram(gProg);
+        aPosL = gl.getAttribLocation(gProg, "aPos");
+        aUvL = gl.getAttribLocation(gProg, "aUv");
+        uHalf = gl.getUniformLocation(gProg, "uHalf");
+        uWin = gl.getUniformLocation(gProg, "uWin");
+        uP = gl.getUniformLocation(gProg, "uP");
+        uShadeL = gl.getUniformLocation(gProg, "uShade");
+        uBendL = gl.getUniformLocation(gProg, "uBend");
+        gl.uniform1i(gl.getUniformLocation(gProg, "uFront"), 0);
+        gl.uniform1i(gl.getUniformLocation(gProg, "uBack"), 1);
+        // static uv + index buffers
+        var uv = new Float32Array((M + 1) * 2 * 2);
+        var idx = [];
+        for (var i = 0; i <= M; i++) {
+          uv[(i * 2) * 2] = i / M; uv[(i * 2) * 2 + 1] = 1;
+          uv[(i * 2 + 1) * 2] = i / M; uv[(i * 2 + 1) * 2 + 1] = 0;
+          if (i < M) { var a = i * 2, b = a + 1, c = a + 2, d = a + 3; idx.push(a, b, c, b, d, c); }
+        }
+        gUvBuf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, gUvBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, uv, gl.STATIC_DRAW);
+        gIdxBuf = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gIdxBuf);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx), gl.STATIC_DRAW);
+        gPosBuf = gl.createBuffer();
+        gl.disable(gl.DEPTH_TEST);
+        gl.disable(gl.CULL_FACE);
+        glOK = true;
+      } catch (e) { gl = null; glOK = false; }
+    })();
+
+    function makeTex(img) {
+      var t = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      return t;
+    }
+
+    function drawLeafGL(thetaDeg, lagSign, shade, mx, my, bend) {
+      var W = pageSize, spineX = W;
+      var th = thetaDeg * Math.PI / 180;
+      var lag = lagSign * FLEX_RAD * Math.sin(Math.PI * Math.abs(thetaDeg) / 180);
+      var pos = new Float32Array((M + 1) * 2 * 3);
+      var step = W / M;
+      for (var i = 0; i <= M; i++) {
+        var s = i * step, x, z;
+        if (Math.abs(lag) < 1e-5) { x = spineX + s * Math.cos(th); z = -s * Math.sin(th); }
+        else {
+          var a1 = th + lag * s / W;
+          x = spineX + (W / lag) * (Math.sin(a1) - Math.sin(th));
+          z = (W / lag) * (Math.cos(a1) - Math.cos(th));
+        }
+        var o = i * 6;
+        pos[o] = x; pos[o + 1] = 0; pos[o + 2] = z;
+        pos[o + 3] = x; pos[o + 4] = W; pos[o + 5] = z;
+      }
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.useProgram(gProg);
+      gl.uniform2f(uHalf, W, W / 2);
+      gl.uniform2f(uWin, winW / 2, winH / 2);
+      gl.uniform1f(uP, PERSP);
+      gl.uniform1f(uShadeL, shade);
+      gl.uniform1f(uBendL, bend || 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gPosBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, pos, gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(aPosL);
+      gl.vertexAttribPointer(aPosL, 3, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gUvBuf);
+      gl.enableVertexAttribArray(aUvL);
+      gl.vertexAttribPointer(aUvL, 2, gl.FLOAT, false, 0, 0);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, gTexF);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, gTexB);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gIdxBuf);
+      gl.drawElements(gl.TRIANGLES, M * 6, gl.UNSIGNED_SHORT, 0);
+    }
+    /* =============== end WebGL leaf =============== */
+
+    var focusMode = false;
+    var flipped = 0;
+    var focus = 0;
+    var pageSize = 300;
+    var camX = 0, camAnim = null;
+    var animating = false;
+    var pendingDir = null;   // one-deep queue: a tap mid-flip lines up the next turn
+    var REDUCED = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var FLIP_MS = REDUCED ? 320 : 950;
+
+    function isSingle() { return stage.clientHeight > stage.clientWidth; }
+    function easeInOutSine(t) { return 0.5 - 0.5 * Math.cos(Math.PI * t); }
+    function glideFor(f) { return focusMode ? 0 : (f === 0 ? -pageSize / 2 : (f === HALF ? pageSize / 2 : 0)); }
+
+    /* ---- camera: in focus (portrait) mode the spread stays whole and the
+       view slides to frame one page at a time, like the Santa viewer ---- */
+    function setCam(x) { camX = x; bookWrap.style.transform = "translateX(" + x + "px)"; }
+    function camTargetFor(fx, foc) {
+      if (!focusMode) return 0;
+      if (fx === 0) return -pageSize / 2;
+      if (fx === HALF) return pageSize / 2;
+      return foc === 0 ? pageSize / 2 : -pageSize / 2;
+    }
+    function tweenCam(to, dur, easeFn) {
+      if (camAnim) cancelAnimationFrame(camAnim);
+      var from = camX, t0 = null; dur = dur || 500;
+      function fr(ts) {
+        if (t0 === null) t0 = ts;
+        var raw = Math.min(1, (ts - t0) / dur);
+        var e = easeFn ? easeFn(raw) : Math.sin(raw * Math.PI / 2);
+        setCam(from + (to - from) * e);
+        if (raw < 1) camAnim = requestAnimationFrame(fr); else camAnim = null;
+      }
+      camAnim = requestAnimationFrame(fr);
+    }
+    function slideTo(side) {
+      focus = side;
+      tweenCam(camTargetFor(flipped, side), REDUCED ? 180 : 500);
+      counter.textContent = label();
+    }
+
+    function label() {
+      if (focusMode) {
+        if (flipped === 0) return "Page 1 of " + N;
+        if (flipped === HALF) return "Page " + N + " of " + N;
+        return "Page " + (focus === 0 ? 2 * flipped : 2 * flipped + 1) + " of " + N;
+      }
+      if (flipped === 0) return "Page 1 of " + N;
+      if (flipped === HALF) return "Page " + N + " of " + N;
+      return "Page " + (2 * flipped) + "–" + (2 * flipped + 1) + " of " + N;
+    }
+
+    function render() {
+      var li = flipped === 0 ? null : 2 * flipped - 1;
+      var ri = flipped === HALF ? null : 2 * flipped;
+      if (li === null) { baseL.style.display = "none"; } else { baseL.style.display = "block"; imgL.src = PAGES[li]; }
+      if (ri === null) { baseR.style.display = "none"; } else { baseR.style.display = "block"; imgR.src = PAGES[ri]; }
+      // While a leaf is flying, poseLeaf owns the glide (it interpolates to
+      // exactly this value on the final frame). Setting it here mid-flight
+      // would slam the book sideways at the swap, then step it back.
+      if (!animating) glideEl.style.transform = "translateX(" + glideFor(flipped) + "px)";
+      counter.textContent = label();
+    }
+
+    function fit() {
+      var nowFocus = isSingle();
+      if (nowFocus !== focusMode) {
+        focusMode = nowFocus;
+        if (focusMode) focus = 0;   // entering portrait: frame the left page first
+      }
+      var sw = stage.clientWidth, sh = stage.clientHeight;
+      var pad = sw < 560 ? 10 : 24;
+      if (focusMode) pageSize = Math.max(80, Math.min(sw - pad * 2, sh - pad * 2));
+      else pageSize = Math.max(80, Math.min((sw - pad * 2) / 2, sh - pad * 2));
+      var bookW = pageSize * 2;
+      bookEl.style.width = bookW + "px";
+      bookEl.style.height = pageSize + "px";
+      baseL.style.left = "0px"; baseL.style.width = pageSize + "px";
+      baseR.style.left = pageSize + "px"; baseR.style.width = pageSize + "px";
+      shadeL.style.left = "0px"; shadeL.style.width = pageSize + "px";
+      shadeR.style.left = pageSize + "px"; shadeR.style.width = pageSize + "px";
+      spineShade.style.display = "block";
+      spineShade.style.left = (pageSize - 36) + "px";
+      spineShade.style.width = "72px";
+      leafFB.style.left = pageSize + "px";
+      leafFB.style.width = pageSize + "px";
+      // WebGL canvas window: book + margins so the swinging leaf is never clipped
+      var mx = Math.round(bookW * 0.38);
+      var my = Math.round(pageSize * 0.45);
+      winW = bookW + 2 * mx; winH = pageSize + 2 * my;
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.style.left = -mx + "px";
+      canvas.style.top = -my + "px";
+      canvas.style.width = winW + "px";
+      canvas.style.height = winH + "px";
+      canvas.width = Math.round(winW * dpr);
+      canvas.height = Math.round(winH * dpr);
+      // shift the GL book origin by the margins: handled by translating positions
+      canvas.dataset.mx = mx; canvas.dataset.my = my;
+      if (camAnim) { cancelAnimationFrame(camAnim); camAnim = null; }
+      setCam(camTargetFor(flipped, focus));
+      render();
+    }
+
+    function setLeafImages(frontIdx, backIdx) {
+      if (glOK) {
+        if (gTexF) gl.deleteTexture(gTexF);
+        if (gTexB) gl.deleteTexture(gTexB);
+        gTexF = makeTex(pageImgs[frontIdx]);
+        gTexB = makeTex(pageImgs[backIdx]);
+      } else {
+        fbFrontImg.src = PAGES[frontIdx];
+        fbBackImg.src = PAGES[backIdx];
+      }
+    }
+
+    function showLeaf() { var el = glOK ? canvas : leafFB; el.style.opacity = ""; el.style.display = "block"; }
+    function hideLeaf() {
+      canvas.style.display = "none";
+      canvas.style.opacity = "";
+      leafFB.style.display = "none";
+      leafFB.style.opacity = "";
+      leafFB.style.transform = "";
+      shadeL.style.opacity = 0; shadeR.style.opacity = 0;
+      fbShades[0].style.opacity = 0; fbShades[1].style.opacity = 0;
+      castShade.style.opacity = 0;
+    }
+
+    function poseLeaf(theta, lagSign, glideNow) {
+      var s = Math.sin(Math.PI * Math.abs(theta) / 180);
+      if (glOK) {
+        // translate book coords into the canvas window (margin offset)
+        var mx = parseFloat(canvas.dataset.mx || 0), my = parseFloat(canvas.dataset.my || 0);
+        drawLeafGL(theta, lagSign, s * 0.13, mx, my, s);
+      } else {
+        leafFB.style.transform = "rotateY(" + theta + "deg)";
+        var fs = (s * 0.13).toFixed(3);
+        fbShades[0].style.opacity = fs; fbShades[1].style.opacity = fs;
+      }
+      if (lagSign > 0) { shadeR.style.opacity = (s * 0.34).toFixed(3); shadeL.style.opacity = (s * 0.20).toFixed(3); }
+      else { shadeL.style.opacity = (s * 0.34).toFixed(3); shadeR.style.opacity = (s * 0.20).toFixed(3); }
+      // cast shadow: a soft band on the pages beneath, tracking the leaf tip's
+      // ground projection (same bend integral as the GL sheet), peaking mid-turn
+      var thR = theta * Math.PI / 180;
+      var lagR = lagSign * FLEX_RAD * s;
+      var tipDx;
+      if (Math.abs(lagR) < 1e-4) tipDx = pageSize * Math.cos(thR);
+      else tipDx = (pageSize / lagR) * (Math.sin(thR + lagR) - Math.sin(thR));
+      var bandW = pageSize * (0.55 + 0.55 * s);
+      castShade.style.left = (pageSize + tipDx - bandW / 2) + "px";
+      castShade.style.width = bandW + "px";
+      castShade.style.opacity = (0.32 * s).toFixed(3);
+      if (glideNow !== null && glideNow !== undefined) glideEl.style.transform = "translateX(" + glideNow + "px)";
+    }
+
+    /* Set up bases + leaf for a turn. dir: "next" | "prev". Returns false if impossible. */
+    function setupTurn(dir) {
+      if (dir === "next") {
+        if (flipped >= HALF) return false;
+        var f = flipped;
+        setLeafImages(2 * f, 2 * f + 1);
+        var nr = 2 * f + 2;
+        if (nr < N) { baseR.style.display = "block"; imgR.src = PAGES[nr]; } else baseR.style.display = "none";
+      } else {
+        if (flipped <= 0) return false;
+        var g = flipped;
+        setLeafImages(2 * g - 2, 2 * g - 1);
+        var pl = 2 * g - 3;
+        if (pl >= 0) { baseL.style.display = "block"; imgL.src = PAGES[pl]; } else baseL.style.display = "none";
+      }
+      return true;
+    }
+
+    function commitTurn(dir) {
+      flipped += (dir === "next" ? 1 : -1);
+    }
+
+    function stateAfter(dir) { return flipped + (dir === "next" ? 1 : -1); }
+
+    var SWAP_DEG = 18;   // landing crossfade window, degrees before touchdown
+    function animateLeaf(fromDeg, toDeg, gFrom, gTo, lagSign, dur, onSwap, onDone) {
+      animating = true;
+      showLeaf();
+      var t0 = null, swapped = false;
+      var leafEl = glOK ? canvas : leafFB;
+      function frame(ts) {
+        if (t0 === null) t0 = ts;
+        var raw = Math.min(1, (ts - t0) / dur);
+        var e = easeInOutSine(raw);
+        var ang = fromDeg + (toDeg - fromDeg) * e;
+        var frac = Math.abs(ang - fromDeg) / 180;
+        poseLeaf(ang, lagSign, gFrom + (gTo - gFrom) * frac);
+        // Landing handoff: within SWAP_DEG of touchdown, swap the flat base
+        // image in UNDER the still-turning sheet, then fade the sheet out
+        // over the remaining degrees so the two renderings blend instead
+        // of snapping in a single frame.
+        var remain = Math.abs(toDeg - ang);
+        if (!swapped && remain <= SWAP_DEG) {
+          swapped = true;
+          if (onSwap) onSwap();
+        }
+        if (swapped) leafEl.style.opacity = Math.max(0, remain / SWAP_DEG).toFixed(3);
+        if (raw < 1) { requestAnimationFrame(frame); return; }
+        hideLeaf();
+        animating = false;
+        if (onDone) onDone();
+        if (pendingDir) {
+          var pd = pendingDir;
+          pendingDir = null;
+          if (pd === "next") flipNext(); else flipPrev();
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function flipNext() {
+      if (drag) return;
+      if (animating) { pendingDir = "next"; return; }
+      if (focusMode && flipped > 0 && flipped < HALF && focus === 0) { slideTo(1); return; }
+      if (!setupTurn("next")) return;
+      var g0 = glideFor(flipped), g1 = glideFor(flipped + 1);
+      tweenCam(camTargetFor(flipped + 1, 0), FLIP_MS, easeInOutSine);
+      animateLeaf(0, -180, g0, g1, 1, FLIP_MS, function () { commitTurn("next"); focus = 0; render(); }, null);
+    }
+
+    function flipPrev() {
+      if (drag) return;
+      if (animating) { pendingDir = "prev"; return; }
+      if (focusMode && flipped > 0 && flipped < HALF && focus === 1) { slideTo(0); return; }
+      if (!setupTurn("prev")) return;
+      var g0 = glideFor(flipped), g1 = glideFor(flipped - 1);
+      tweenCam(camTargetFor(flipped - 1, 1), FLIP_MS, easeInOutSine);
+      animateLeaf(-180, 0, g0, g1, -1, FLIP_MS, function () { commitTurn("prev"); focus = 1; render(); }, null);
+    }
+
+    function goTo(firstIdx) {
+      animating = false;
+      pendingDir = null;
+      hideLeaf();
+      if (focusMode) {
+        var p = firstIdx;
+        if (p <= 0) { flipped = 0; focus = 0; }
+        else if (p >= N - 1) { flipped = HALF; focus = 1; }
+        else { flipped = (p + 1) >> 1; focus = (p % 2 === 1) ? 0 : 1; }
+        if (camAnim) { cancelAnimationFrame(camAnim); camAnim = null; }
+        setCam(camTargetFor(flipped, focus));
+      } else {
+        flipped = firstIdx === 0 ? 0 : (firstIdx + 1) / 2;
+      }
+      render();
+    }
+
+    document.getElementById("prev").onclick = function (e) { e.preventDefault(); e.stopPropagation(); flipPrev(); };
+    document.getElementById("next").onclick = function (e) { e.preventDefault(); e.stopPropagation(); flipNext(); };
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && sheet.classList.contains("open")) { closeSheet(); return; }
+      if (e.repeat || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.key === "ArrowLeft") { e.preventDefault(); flipPrev(); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); flipNext(); }
+      else if (e.key === "Home") { e.preventDefault(); goTo(0); }
+      else if (e.key === "End") { e.preventDefault(); goTo(N - 1); }
+    });
+
+    /* ---- drag the page ---- */
+    var drag = null;
+    function dragTheta(d) {
+      var dx = d.dx;
+      if (d.dir === "next") return Math.max(-180, Math.min(0, 180 * dx / pageSize));
+      return Math.max(-180, Math.min(0, -180 + 180 * dx / pageSize));
+    }
+    bookWrap.addEventListener("pointerdown", function (e) {
+      if (animating || drag) return;
+      if (e.target.closest("button") || sheet.classList.contains("open")) return;
+      drag = { x0: e.clientX, dx: 0, dir: null, active: false, id: e.pointerId, samples: [{ t: performance.now(), dx: 0 }] };
+      try { bookWrap.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    bookWrap.addEventListener("pointermove", function (e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      drag.dx = e.clientX - drag.x0;
+      drag.samples.push({ t: performance.now(), dx: drag.dx });
+      if (drag.samples.length > 12) drag.samples.shift();
+      if (!drag.active) {
+        if (Math.abs(drag.dx) < 8) return;
+        if (focusMode) {
+          var intent = drag.dx < 0 ? "next" : "prev";
+          var canSlide = flipped > 0 && flipped < HALF &&
+            ((intent === "next" && focus === 0) || (intent === "prev" && focus === 1));
+          if (canSlide) {
+            if (camAnim) { cancelAnimationFrame(camAnim); camAnim = null; }
+            drag.kind = "slide";
+            drag.slideTarget = intent === "next" ? 1 : 0;
+            drag.camFrom = camX;
+            drag.camTo = camTargetFor(flipped, drag.slideTarget);
+            drag.active = true;
+            bookWrap.classList.add("grabbing");
+          } else {
+            if (!setupTurn(intent)) { drag = null; return; }
+            drag.kind = "flip";
+            drag.dir = intent;
+            drag.active = true;
+            drag.g0 = glideFor(flipped);
+            drag.g1 = glideFor(stateAfter(intent));
+            showLeaf();
+            bookWrap.classList.add("grabbing");
+          }
+        } else {
+          var dir;
+          var r = bookEl.getBoundingClientRect();
+          var spineX = r.left + pageSize;
+          if (e.clientX - drag.dx < spineX) dir = "prev"; else dir = "next";
+          if ((dir === "next" && flipped >= HALF) || (dir === "prev" && flipped <= 0)) dir = drag.dx < 0 ? "next" : "prev";
+          if (!setupTurn(dir)) { drag = null; return; }
+          drag.kind = "flip";
+          drag.dir = dir;
+          drag.active = true;
+          drag.g0 = glideFor(flipped);
+          drag.g1 = glideFor(stateAfter(dir));
+          showLeaf();
+          bookWrap.classList.add("grabbing");
+        }
+      }
+      if (drag.kind === "slide") {
+        var lo = Math.min(drag.camFrom, drag.camTo), hi = Math.max(drag.camFrom, drag.camTo);
+        setCam(Math.max(lo, Math.min(hi, drag.camFrom + drag.dx)));
+        return;
+      }
+      var th = dragTheta(drag);
+      drag.theta = th;
+      var frac = Math.abs(th - (drag.dir === "next" ? 0 : -180)) / 180;
+      poseLeaf(th, drag.dir === "next" ? 1 : -1, drag.g0 + (drag.g1 - drag.g0) * frac);
+    });
+    function endDrag() {
+      if (!drag) return;
+      var d = drag; drag = null;
+      bookWrap.classList.remove("grabbing");
+      if (!d.active) return;
+      var now = performance.now(), vel = 0, s0 = d.samples[0];
+      for (var i = d.samples.length - 1; i >= 0; i--) {
+        if (now - d.samples[i].t > 90) { s0 = d.samples[i]; break; }
+      }
+      if (s0 && now > s0.t) vel = (d.dx - s0.dx) / (now - s0.t);
+      if (d.kind === "slide") {
+        var prog = Math.abs(camX - d.camFrom) / pageSize;
+        var sflick = d.slideTarget === 1 ? vel < -0.45 : vel > 0.45;
+        if (prog > 0.4 || sflick) {
+          focus = d.slideTarget;
+          tweenCam(d.camTo, REDUCED ? 120 : 260);
+          counter.textContent = label();
+        } else {
+          tweenCam(d.camFrom, REDUCED ? 120 : 260);
+        }
+        return;
+      }
+      var th = d.theta || (d.dir === "next" ? 0 : -180);
+      var flick = d.dir === "next" ? vel < -0.45 : vel > 0.45;
+      var complete = d.dir === "next" ? (th <= -65 || flick) : (th >= -115 || flick);
+      var target = d.dir === "next" ? (complete ? -180 : 0) : (complete ? 0 : -180);
+      var dur = Math.max(140, FLIP_MS * Math.abs(target - th) / 180);
+      var gNow = parseFloat((glideEl.style.transform || "").replace(/[^0-9.\-]/g, "")) || 0;
+      var gEnd = complete ? d.g1 : d.g0;
+      var landFocus = d.dir === "next" ? 0 : 1;
+      if (complete) tweenCam(camTargetFor(stateAfter(d.dir), landFocus), dur, easeInOutSine);
+      animateLeaf(th, target, gNow, gEnd, d.dir === "next" ? 1 : -1, dur, function () {
+        if (complete) { commitTurn(d.dir); focus = landFocus; }
+        render();
+      }, null);
+    }
+    bookWrap.addEventListener("pointerup", endDrag);
+    bookWrap.addEventListener("pointercancel", endDrag);
+
+    /* ---- Pages sheet ---- */
+    function pageGroups() {
+      var out = [];
+      if (focusMode) { for (var i = 0; i < N; i++) out.push([i]); return out; }
+      out.push([0]);
+      for (var j = 1; j < N - 1; j += 2) out.push([j, j + 1]);
+      if ((N - 1) % 2 === 1) out.push([N - 1]);
+      return out;
+    }
+    function currentFirst() {
+      if (focusMode) {
+        if (flipped === 0) return 0;
+        if (flipped === HALF) return N - 1;
+        return focus === 0 ? 2 * flipped - 1 : 2 * flipped;
+      }
+      return flipped === 0 ? 0 : 2 * flipped - 1;
+    }
+    function buildStrip() {
+      var cur = currentFirst();
+      strip.innerHTML = "";
+      pageGroups().forEach(function (g) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "tcard" + (g.indexOf(cur) >= 0 ? " now" : "");
+        var imgs = g.map(function (ix) { return '<img loading="lazy" alt="" src="' + PAGES[ix] + '">'; }).join("");
+        var cap = g.length === 2 ? (g[0] + 1) + "–" + (g[1] + 1) : "" + (g[0] + 1);
+        b.innerHTML = '<span class="timgs">' + imgs + '</span><span class="tcap">' + cap + "</span>";
+        b.setAttribute("aria-label", "Go to page " + cap);
+        b.onclick = function () { closeSheet(); goTo(g[0]); };
+        strip.appendChild(b);
+      });
+      var now = strip.querySelector(".tcard.now");
+      if (now) strip.scrollLeft = Math.max(0, now.offsetLeft - strip.clientWidth / 2 + now.clientWidth / 2);
+    }
+    function openSheet() { buildStrip(); sheet.classList.add("open"); sheet.setAttribute("aria-hidden", "false"); }
+    function closeSheet() { sheet.classList.remove("open"); sheet.setAttribute("aria-hidden", "true"); }
+    document.getElementById("pagesBtn").onclick = function () {
+      if (sheet.classList.contains("open")) closeSheet(); else openSheet();
+    };
+    document.getElementById("sheetClose").onclick = closeSheet;
+
+    /* ---- Fullscreen / expand (same behavior as flipbook5) ---- */
+    var fsRequest = viewer.requestFullscreen || viewer.webkitRequestFullscreen;
+    var fsElement = function () { return document.fullscreenElement || document.webkitFullscreenElement; };
+    var ICON_OPEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>';
+    var ICON_CLOSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    function fsShow(close, label) {
+      fsBtn.innerHTML = close ? ICON_CLOSE : ICON_OPEN;
+      fsBtn.setAttribute("aria-label", label);
+      fsBtn.title = label;
+    }
+    function scheduleFit() { requestAnimationFrame(function () { requestAnimationFrame(fit); }); }
+    function refit() { scheduleFit(); setTimeout(fit, 60); setTimeout(fit, 240); }
+    function setExpanded(on) {
+      document.body.classList.toggle("expanded", on);
+      fsShow(on, on ? "Exit expanded view" : (fsRequest ? "Full screen" : "Expand view"));
+      refit();
+    }
+    if (!fsRequest) fsShow(false, "Expand view");
+    fsBtn.onclick = function () {
+      if (document.body.classList.contains("expanded")) { setExpanded(false); return; }
+      if (fsElement()) {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        return;
+      }
+      if (fsRequest) {
+        try {
+          var p = fsRequest.call(viewer);
+          if (p && p.catch) p.catch(function () { setExpanded(true); });
+        } catch (err) { setExpanded(true); }
+      } else setExpanded(true);
+    };
+    function onFsChange() {
+      var inFs = !!fsElement();
+      fsShow(inFs, inFs ? "Exit full screen" : (fsRequest ? "Full screen" : "Expand view"));
+      refit();
+    }
+    document.addEventListener("fullscreenchange", onFsChange);
+    document.addEventListener("webkitfullscreenchange", onFsChange);
+    window.addEventListener("resize", function () {
+      scheduleFit();
+      if (sheet.classList.contains("open")) setTimeout(buildStrip, 260);
+    });
+    fit();
+  })();
+  </script>
+</body></html>
