@@ -9,9 +9,9 @@
   #counter{background:rgba(20,20,20,.55);color:#fff;border-radius:999px;padding:6px 12px}
   #fs{background:transparent;color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:999px;padding:6px 12px;cursor:pointer;font:inherit}
   #stage{flex:1;width:100%;min-height:0;background:#373737;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-  #book{position:relative;flex:0 0 auto;align-self:center;width:min(1100px,86vw);max-width:calc(100% - 80px);height:auto;margin:0 auto;background:#373737;overflow:hidden}
-  #book .stf__wrapper{position:relative;width:100%;height:0;box-sizing:content-box}
-  #book canvas{position:absolute;left:0;top:0;width:100%;height:100%;background:#373737}
+  #book{position:relative;flex:0 0 auto;align-self:center;width:min(1100px,86vw);height:min(550px,43vw);max-width:calc(100% - 80px);margin:0 auto;background:#373737;overflow:hidden;box-sizing:border-box}
+  #book .stf__wrapper{position:absolute !important;left:0;top:0;right:0;bottom:0;width:100% !important;height:100% !important;padding:0 !important;margin:0}
+  #book canvas{position:absolute;left:0;top:0;background:#373737}
   .arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:54px;height:84px;border:0;background:transparent;color:#fff;font-size:48px;cursor:pointer;line-height:1}
   #prev{left:8px}#next{right:8px}
 </style></head>
@@ -55,13 +55,25 @@
       var width = Math.min(availW, availH * 2);
       if (!full) width = Math.min(width, 1100, stage.clientWidth * 0.86);
       width = Math.floor(width);
+      var height = Math.floor(width / 2);
       bookEl.style.width = width + "px";
+      bookEl.style.height = height + "px";
       bookEl.style.maxWidth = width + "px";
-      bookEl.style.height = "auto";
       bookEl.style.minWidth = "0";
       bookEl.style.minHeight = "0";
       bookEl.style.marginLeft = "auto";
       bookEl.style.marginRight = "auto";
+      var wrap = bookEl.querySelector(".stf__wrapper");
+      if (wrap) {
+        wrap.style.cssText = "position:absolute;left:0;top:0;padding:0;margin:0;width:" + width + "px;height:" + height + "px;";
+      }
+      var canvas = bookEl.querySelector("canvas");
+      if (canvas) {
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+        canvas.width = width;
+        canvas.height = height;
+      }
       flip.update();
     }
     fsBtn.onclick = function () {
