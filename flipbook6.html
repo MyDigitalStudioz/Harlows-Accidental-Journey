@@ -46,7 +46,11 @@
   #sheetTitle{font-weight:600;letter-spacing:.03em}
   #sheetClose{flex:0 0 auto;width:34px;height:34px;padding:0;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);color:#f4f1ea;border:1px solid rgba(244,241,234,.4);border-radius:50%;cursor:pointer}
   #sheetClose svg{width:15px;height:15px;stroke:#f4f1ea;fill:none;stroke-width:2.4;stroke-linecap:round;display:block}
-  #strip{display:flex;gap:10px;overflow-x:auto;padding:10px 14px 16px;-webkit-overflow-scrolling:touch}
+  #strip{display:flex;gap:10px;overflow-x:auto;padding:10px 14px 16px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#4d4d4d #101010}
+  #strip::-webkit-scrollbar{height:10px}
+  #strip::-webkit-scrollbar-track{background:#101010}
+  #strip::-webkit-scrollbar-thumb{background:#4d4d4d;border-radius:6px;border:2px solid #101010}
+  #strip::-webkit-scrollbar-thumb:hover{background:#666}
   .tcard{flex:0 0 auto;background:none;border:2px solid rgba(255,255,255,.14);border-radius:8px;padding:4px;cursor:pointer;font:inherit}
   .tcard .timgs{display:flex;gap:2px}
   .tcard img{height:82px;width:82px;object-fit:cover;display:block;border-radius:3px;background:#333}
