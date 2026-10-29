@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Harlow's Accidental Journey — NOT FOR PRINT</title>
+<html><head><meta charset="utf-8"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><title>Harlow's Accidental Journey — NOT FOR PRINT</title>
 <style>
   html,body{margin:0;height:100%;background:#191919;color:#f4f1ea;font:15px/1.3 "Segoe UI",sans-serif}
   #viewer{min-height:100%;height:100%;background:#191919;display:flex;flex-direction:column}
@@ -16,6 +16,9 @@
   .arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:64px;height:96px;margin:0;padding:0;border:0;outline:0;box-shadow:none;background:transparent;color:#fff;font-size:52px;cursor:pointer;line-height:1;pointer-events:auto;appearance:none;-webkit-appearance:none}
   .arrow:hover,.arrow:focus,.arrow:focus-visible,.arrow:active{border:0;outline:0;box-shadow:none;background:transparent}
   #prev{left:8px}#next{right:8px}
+  body.expanded #viewer{position:fixed;inset:0;height:100%;height:100dvh;z-index:50}
+  body.expanded #banner{position:absolute;top:0;left:0;right:0;background:rgba(25,25,25,.72)}
+  body.expanded #stage{height:100%}
 </style></head>
 <body>
   <div id="viewer">
@@ -110,9 +113,28 @@
       if (e.key === "ArrowLeft") { e.preventDefault(); turn(-1); }
       else if (e.key === "ArrowRight") { e.preventDefault(); turn(1); }
     });
+    var fsRequest = viewer.requestFullscreen || viewer.webkitRequestFullscreen;
+    var fsElement = function () { return document.fullscreenElement || document.webkitFullscreenElement; };
+    function refit() { scheduleFit(); setTimeout(fitBook, 60); setTimeout(fitBook, 240); }
+    function setExpanded(on) {
+      document.body.classList.toggle("expanded", on);
+      fsBtn.textContent = on ? "Exit expanded view" : "Expand view";
+      refit();
+    }
+    if (!fsRequest) fsBtn.textContent = "Expand view";
     fsBtn.onclick = function () {
-      if (!document.fullscreenElement) viewer.requestFullscreen();
-      else document.exitFullscreen();
+      if (document.body.classList.contains("expanded")) { setExpanded(false); return; }
+      if (fsElement()) {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        return;
+      }
+      if (fsRequest) {
+        try {
+          var p = fsRequest.call(viewer);
+          if (p && p.catch) p.catch(function () { setExpanded(true); });
+        } catch (err) { setExpanded(true); }
+      } else setExpanded(true);
     };
     function scheduleFit() {
       requestAnimationFrame(function () { requestAnimationFrame(fitBook); });
@@ -128,12 +150,12 @@
       document.getElementById("counter").textContent = label(e.data);
       fitBook();
     });
-    document.addEventListener("fullscreenchange", function () {
-      fsBtn.textContent = document.fullscreenElement ? "Exit full screen" : "Full screen";
-      scheduleFit();
-      setTimeout(fitBook, 60);
-      setTimeout(fitBook, 240);
-    });
+    function onFsChange() {
+      fsBtn.textContent = fsElement() ? "Exit full screen" : (fsRequest ? "Full screen" : "Expand view");
+      refit();
+    }
+    document.addEventListener("fullscreenchange", onFsChange);
+    document.addEventListener("webkitfullscreenchange", onFsChange);
     window.addEventListener("resize", scheduleFit);
     scheduleFit();
   </script>
