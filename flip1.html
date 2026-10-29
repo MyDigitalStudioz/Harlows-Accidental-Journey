@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Harlow's Accidental Journey — NOT FOR PRINT</title>
+<style>
+  html,body{margin:0;height:100%;background:#191919;color:#f4f1ea;font:15px/1.3 "Segoe UI",sans-serif}
+  #viewer{min-height:100%;height:100%;background:#191919;display:flex;flex-direction:column}
+  #viewer:fullscreen,#viewer:-webkit-full-screen{width:100%;height:100%;background:#191919}
+  #banner{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;background:#191919;z-index:2}
+  #tools{display:flex;align-items:center;gap:12px}
+  #counter{background:rgba(20,20,20,.55);color:#fff;border-radius:999px;padding:6px 12px}
+  #fs{background:transparent;color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:999px;padding:6px 12px;cursor:pointer;font:inherit}
+  #stage{flex:1;width:100%;min-height:0;background:#373737;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  #book{position:relative;flex:0 0 auto;align-self:center;width:min(1100px,86vw);max-width:calc(100% - 80px);height:auto;margin:0 auto;background:#373737;overflow:hidden}
+  #book .stf__wrapper{position:relative;width:100%;height:0;box-sizing:content-box}
+  #book canvas{position:absolute;left:0;top:0;width:100%;height:100%;background:#373737}
+  .arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:54px;height:84px;border:0;background:transparent;color:#fff;font-size:48px;cursor:pointer;line-height:1}
+  #prev{left:8px}#next{right:8px}
+</style></head>
+<body>
+  <div id="viewer">
+    <div id="banner"><span id="counter">Page 1 of 10</span><span id="tools"><strong id="mark">NOT FOR PRINT</strong><button id="fs" type="button">Full screen</button></span></div>
+    <div id="stage">
+      <button id="prev" class="arrow" type="button" aria-label="Previous">&#8249;</button>
+      <button id="next" class="arrow" type="button" aria-label="Next">&#8250;</button>
+      <div id="book"></div>
+    </div>
+  </div>
+  <script src="flip1/page-flip.browser.js"></script>
+  <script src="flip1/manifest.js"></script>
+  <script>
+    document.title = BOOK.title + " — " + BOOK.notForPrint;
+    document.getElementById("mark").textContent = BOOK.version + " · " + BOOK.source + " — " + BOOK.notForPrint;
+    var flip = new St.PageFlip(document.getElementById("book"), {
+      width: 700, height: 700, size: "stretch", minWidth: 280, maxWidth: 2400, maxHeight: 2400,
+      showCover: true, usePortrait: false, drawShadow: true, showPageCorners: false, flippingTime: 700
+    });
+    flip.loadFromImages(BOOK.pages);
+    function label(index) {
+      var n = BOOK.pages.length;
+      var page = index + 1;
+      if (page === 1 || page === n) return "Page " + page + " of " + n;
+      if (page % 2 === 0) return "Page " + page + "–" + (page + 1) + " of " + n;
+      return "Page " + (page - 1) + "–" + page + " of " + n;
+    }
+    flip.on("flip", function (e) { document.getElementById("counter").textContent = label(e.data); });
+    document.getElementById("next").onclick = function () { flip.flipNext(); };
+    document.getElementById("prev").onclick = function () { flip.flipPrev(); };
+    var viewer = document.getElementById("viewer");
+    var fsBtn = document.getElementById("fs");
+    var bookEl = document.getElementById("book");
+    function fitBook() {
+      var stage = document.getElementById("stage");
+      var full = !!document.fullscreenElement;
+      var availW = Math.max(320, stage.clientWidth - 80);
+      var availH = Math.max(160, stage.clientHeight - 8);
+      var width = Math.min(availW, availH * 2);
+      if (!full) width = Math.min(width, 1100, stage.clientWidth * 0.86);
+      width = Math.floor(width);
+      bookEl.style.width = width + "px";
+      bookEl.style.maxWidth = width + "px";
+      bookEl.style.height = "auto";
+      bookEl.style.minWidth = "0";
+      bookEl.style.minHeight = "0";
+      bookEl.style.marginLeft = "auto";
+      bookEl.style.marginRight = "auto";
+      flip.update();
+    }
+    fsBtn.onclick = function () {
+      if (!document.fullscreenElement) viewer.requestFullscreen();
+      else document.exitFullscreen();
+    };
+    function scheduleFit() {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(fitBook);
+      });
+    }
+    document.addEventListener("fullscreenchange", function () {
+      fsBtn.textContent = document.fullscreenElement ? "Exit full screen" : "Full screen";
+      scheduleFit();
+      setTimeout(fitBook, 60);
+      setTimeout(fitBook, 240);
+    });
+    window.addEventListener("resize", scheduleFit);
+    scheduleFit();
+  </script>
+</body></html>
