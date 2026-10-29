@@ -36,53 +36,7 @@ body.guides-on .seam-guide{display:block}
    measured off his snapshot (1317x663; proportions map 1:1 onto each card
    image): edge x .8%/99.1%, y 1.8%/98.0%; safe-left x 3.6-46.4%, safe-right
    x 53.5-96.3%, safe y 7.4-92.5%; fold x 50.0%; gutter x 46.4-53.5%.
-   Overlay divs are injected at runtime (see the Lulu script before 
-<script>
-(function(){
-  var KEY='v12marks', marks={};
-  try{ marks=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(_){ marks={}; }
-  function tagOf(row){ var fig=row.closest('figure'); var t=fig?fig.querySelector('.tag'):null; return t?t.textContent.trim():''; }
-  function tally(){
-    var k=0,r=0; for(var t in marks){ if(marks[t]==='keep')k++; else if(marks[t]==='remove')r++; }
-    var el=document.getElementById('markstally');
-    if(el) el.textContent=(k||r)?(k+' keep \u00b7 '+r+' remove'):'none yet';
-  }
-  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(marks)); }catch(_){} tally(); }
-  document.querySelectorAll('.checkrow').forEach(function(row){
-    var tag=tagOf(row); if(!tag) return;
-    var keep=row.querySelector('input[data-act="keep"]'), rem=row.querySelector('input[data-act="remove"]');
-    if(marks[tag]==='keep') keep.checked=true;
-    if(marks[tag]==='remove') rem.checked=true;
-    row.addEventListener('change', function(){
-      if(keep.checked && rem.checked){ if(document.activeElement===keep) rem.checked=false; else keep.checked=false; }
-      if(keep.checked) marks[tag]='keep'; else if(rem.checked) marks[tag]='remove'; else delete marks[tag];
-      save();
-    });
-  });
-  tally();
-  var copyBtn=document.getElementById('mbcopy');
-  if(copyBtn) copyBtn.addEventListener('click', function(){
-    var lines=['Harlow cover extras \u2014 my marks (Final Pass V12)'];
-    var any=false;
-    document.querySelectorAll('.checkrow').forEach(function(row){
-      var tag=tagOf(row);
-      if(marks[tag]){ lines.push((marks[tag]==='keep'?'KEEP':'REMOVE')+' \u2014 '+tag); any=true; }
-    });
-    if(!any) lines.push('(no marks yet)');
-    var text=lines.join('\n');
-    function show(){ var ta=document.getElementById('marksout'); ta.value=text; ta.style.display='block'; ta.focus(); ta.select(); }
-    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ copyBtn.textContent='Copied \u2014 paste it to Trinity'; setTimeout(function(){copyBtn.textContent='Copy my list';},2600); }, show); }
-    else show();
-  });
-  var clr=document.getElementById('mbclear');
-  if(clr) clr.addEventListener('click', function(){
-    marks={}; document.querySelectorAll('.checkrow input').forEach(function(i){ i.checked=false; });
-    var ta=document.getElementById('marksout'); if(ta){ ta.value=''; ta.style.display='none'; }
-    save();
-  });
-})();
-</script>
-</body>),
+   Overlay divs are injected at runtime (see the Lulu script before </body>),
    so card markup is untouched. Independent of the seam guide: body.lulu-on
    keys the card overlays, #lbfig.lulu-on keys the viewer's — either, both
    or neither guide can be on. */
@@ -811,6 +765,51 @@ document.getElementById('seamToggle').addEventListener('click',function(){var on
   upd();
   btn.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
   if(lb&&window.MutationObserver) new MutationObserver(upd).observe(lb,{attributes:true,attributeFilter:['class']});
+})();
+</script>
+
+<script>
+(function(){
+  var KEY='v12marks', marks={};
+  try{ marks=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(_){ marks={}; }
+  function tagOf(row){ var fig=row.closest('figure'); var t=fig?fig.querySelector('.tag'):null; return t?t.textContent.trim():''; }
+  function tally(){
+    var k=0,r=0; for(var t in marks){ if(marks[t]==='keep')k++; else if(marks[t]==='remove')r++; }
+    var el=document.getElementById('markstally');
+    if(el) el.textContent=(k||r)?(k+' keep \u00b7 '+r+' remove'):'none yet';
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(marks)); }catch(_){} tally(); }
+  document.querySelectorAll('.checkrow').forEach(function(row){
+    var tag=tagOf(row); if(!tag) return;
+    var keep=row.querySelector('input[data-act="keep"]'), rem=row.querySelector('input[data-act="remove"]');
+    if(marks[tag]==='keep') keep.checked=true;
+    if(marks[tag]==='remove') rem.checked=true;
+    row.addEventListener('change', function(){
+      if(keep.checked && rem.checked){ if(document.activeElement===keep) rem.checked=false; else keep.checked=false; }
+      if(keep.checked) marks[tag]='keep'; else if(rem.checked) marks[tag]='remove'; else delete marks[tag];
+      save();
+    });
+  });
+  tally();
+  var copyBtn=document.getElementById('mbcopy');
+  if(copyBtn) copyBtn.addEventListener('click', function(){
+    var lines=['Harlow cover extras \u2014 my marks (Final Pass V12)'];
+    var any=false;
+    document.querySelectorAll('.checkrow').forEach(function(row){
+      var tag=tagOf(row);
+      if(marks[tag]){ lines.push((marks[tag]==='keep'?'KEEP':'REMOVE')+' \u2014 '+tag); any=true; }
+    });
+    if(!any) lines.push('(no marks yet)');
+    var text=lines.join('\n');
+    var ta=document.getElementById('marksout'); ta.value=text; ta.style.display='block'; ta.focus(); ta.select();
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ copyBtn.textContent='Copied \u2014 paste it to Trinity'; setTimeout(function(){copyBtn.textContent='Copy my list';},2600); }, function(){}); }
+  });
+  var clr=document.getElementById('mbclear');
+  if(clr) clr.addEventListener('click', function(){
+    marks={}; document.querySelectorAll('.checkrow input').forEach(function(i){ i.checked=false; });
+    var ta=document.getElementById('marksout'); if(ta){ ta.value=''; ta.style.display='none'; }
+    save();
+  });
 })();
 </script>
 </body>
