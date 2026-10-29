@@ -160,6 +160,15 @@ header.collapsed #hdrMini{display:inline-block}
 .removed-sec .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
 figure.removed-card{opacity:.62;}
 .removed-stamp{margin:0 14px 12px;padding:5px 10px;background:#f3e2d8;border:1px solid #d8a58c;border-radius:8px;color:#8c3a26;font-size:12.5px;font-weight:700;text-align:center;}
+
+.removed-details>summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:10px 14px;background:#fff;border:1px solid #e3d5bd;border-radius:12px;box-shadow:0 2px 8px rgba(60,40,10,.08);}
+.removed-details>summary::-webkit-details-marker{display:none;}
+.removed-details>summary::before{content:"\25B8";color:#a3542f;font-size:15px;}
+.removed-details[open ]>summary::before{content:"\25BE";}
+.removed-details>summary .rsum-title{font-size:17px;font-weight:700;color:#6b5320;}
+.removed-details>summary .rsum-hint{font-size:13px;color:#8a7648;}
+.removed-details .secsub{margin-top:10px;}
+.removed-details .rgrid{margin-top:2px;}
 </style></head><body>
 <header><span id="hdrMini">Final Pass V12 — The Gold Finals</span><h1>Final Pass V12 &mdash; the City Polish experiment</h1>
 <p>These are the 24 final pictures for the book &mdash; one for every page &mdash; with the cover art down below. They include your picks from your art notes and the fixes you asked for. The beach pages (18&ndash;23) share one long sunset that deepens page by page as Harlow heads home. This is the current set.</p>
@@ -492,7 +501,7 @@ figure.removed-card{opacity:.62;}
     <textarea id="marksout" rows="7" readonly></textarea>
   </div>
 
-  <section class="removed-sec"><h2>Removed — cover extras</h2><p class="secsub">Archived from Jon’s marks list, 2026-10-28 — not deleted; any card comes back on his word.</p><div class="rgrid">
+  <section class="removed-sec"><details class="removed-details"><summary><span class="rsum-title">Removed — cover extras (7)</span><span class="rsum-hint">archived from Jon’s marks list, 2026-10-28 — tap to open</span></summary><p class="secsub">Archived from Jon’s marks list, 2026-10-28 — not deleted; any card comes back on his word.</p><div class="rgrid">
 <figure data-removed="2026-10-28" class="card v2new v6-extra">
     <div class="frame"><img src="assets/v12-extras/front-cover-daytime.jpg" alt="Front cover — daytime pass: Harlow close-up, Mustang and barn under a bright daytime sky" loading="lazy"><span class="seam"></span></div>
     <figcaption><span class="tag">EXTRA — FRONT COVER, DAYTIME PASS</span><span class="sub">The gold-style finish on a bright daytime sky</span></figcaption>
@@ -535,7 +544,7 @@ figure.removed-card{opacity:.62;}
     <div class="checkrow"><label><input type="checkbox" data-act="keep"> Keep</label><label><input type="checkbox" data-act="remove"> Remove</label></div>
     <details class="why"><summary>WHY THIS CARD</summary><p>Jon's call (2026-10-28): the first logo composite sat too big and too centered. This one matches the approved mockup — the logo smaller, up and to the left, "Journey" clearing the barn — over the depth-of-field remake art. The logo is still the real artwork composited in, never redrawn.</p></details>
   <div class="removed-stamp">REMOVED 2026-10-28 — Jon’s marks list</div></figure>
-</div></section>
+</div></details></section>
 </main>
 
 <button type="button" id="toTop" aria-label="Back to top" title="Back to top">&#8593;</button>
