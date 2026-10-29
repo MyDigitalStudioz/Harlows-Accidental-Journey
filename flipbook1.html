@@ -9,7 +9,7 @@
   #counter{background:rgba(20,20,20,.55);color:#fff;border-radius:999px;padding:6px 12px}
   #fs{background:transparent;color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:999px;padding:6px 12px;cursor:pointer;font:inherit}
   #stage{flex:1;width:100%;min-height:0;background:#373737;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-  #frame{position:relative;flex:0 0 auto;overflow:hidden;background:#373737}
+  #frame{position:absolute;left:50%;top:50%;overflow:hidden;background:#373737}
   #book{position:absolute;top:0;left:0;background:#373737}
   #book .stf__wrapper{position:absolute !important;left:0;top:0;padding:0 !important;margin:0}
   #book canvas{position:absolute;left:0;top:0;background:#373737}
@@ -17,8 +17,11 @@
   .arrow:hover,.arrow:focus,.arrow:focus-visible,.arrow:active{border:0;outline:0;box-shadow:none;background:transparent}
   #prev{left:8px}#next{right:8px}
   body.expanded #viewer{position:fixed;inset:0;height:100%;height:100dvh;z-index:50}
-  body.expanded #banner{position:absolute;top:0;left:0;right:0;background:rgba(25,25,25,.72)}
+  body.expanded #banner{position:absolute;top:0;left:0;right:0;background:transparent;justify-content:flex-end}
+  body.expanded #counter,body.expanded #mark{display:none}
   body.expanded #stage{height:100%}
+  #viewer:fullscreen #banner{position:absolute;top:0;left:0;right:0;background:transparent;justify-content:flex-end;z-index:30}
+  #viewer:fullscreen #counter,#viewer:fullscreen #mark{display:none}
 </style></head>
 <body>
   <div id="viewer">
@@ -73,25 +76,29 @@
         frame.style.transition = "none";
         bookEl.style.transition = "none";
       }
-      frame.style.width = (kind === "spread" ? bookW : page) + "px";
-      frame.style.height = bookH + "px";
-      bookEl.style.width = bookW + "px";
-      bookEl.style.height = bookH + "px";
-      bookEl.style.maxWidth = bookW + "px";
+      var S = Math.min(3, Math.max(1, Math.round(window.devicePixelRatio || 1)));
+      var bw = bookW * S;
+      var bh = bookH * S;
+      frame.style.width = (kind === "spread" ? bw : page * S) + "px";
+      frame.style.height = bh + "px";
+      frame.style.transform = "translate(-50%,-50%) scale(" + (1 / S) + ")";
+      bookEl.style.width = bw + "px";
+      bookEl.style.height = bh + "px";
+      bookEl.style.maxWidth = bw + "px";
       bookEl.style.minWidth = "0";
       bookEl.style.minHeight = "0";
-      bookEl.style.left = (kind === "cover" ? -page : 0) + "px";
+      bookEl.style.left = (kind === "cover" ? -page * S : 0) + "px";
       var wrap = bookEl.querySelector(".stf__wrapper");
       if (wrap) {
-        wrap.style.cssText = "position:absolute;left:0;top:0;padding:0;margin:0;width:" + bookW + "px;height:" + bookH + "px;";
+        wrap.style.cssText = "position:absolute;left:0;top:0;padding:0;margin:0;width:" + bw + "px;height:" + bh + "px;";
       }
       var canvas = bookEl.querySelector("canvas");
-      var resized = canvas && (canvas.width !== bookW || canvas.height !== bookH);
+      var resized = canvas && (canvas.width !== bw || canvas.height !== bh);
       if (resized) {
-        canvas.style.width = bookW + "px";
-        canvas.style.height = bookH + "px";
-        canvas.width = bookW;
-        canvas.height = bookH;
+        canvas.style.width = bw + "px";
+        canvas.style.height = bh + "px";
+        canvas.width = bw;
+        canvas.height = bh;
         flip.update();
       }
       if (!armed) {
