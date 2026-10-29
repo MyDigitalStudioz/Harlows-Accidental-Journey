@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Harlow's Accidental Journey — NOT FOR PRINT</title>
+<style>
+  html,body{margin:0;height:100%;background:#191919;color:#f4f1ea;font:15px/1.3 "Segoe UI",sans-serif}
+  #viewer{min-height:100%;height:100%;background:#191919;display:flex;flex-direction:column}
+  #viewer:fullscreen,#viewer:-webkit-full-screen{width:100%;height:100%;background:#191919}
+  #banner{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 18px;background:#191919;z-index:2}
+  #tools{display:flex;align-items:center;gap:12px}
+  #counter{background:rgba(20,20,20,.55);color:#fff;border-radius:999px;padding:6px 12px}
+  #fs{background:transparent;color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:999px;padding:6px 12px;cursor:pointer;font:inherit}
+  #stage{flex:1;width:100%;min-height:0;background:#373737;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  #frame{position:relative;flex:0 0 auto;overflow:hidden;background:#373737}
+  #book{position:absolute;top:0;left:0;background:#373737}
+  #book .stf__wrapper{position:absolute !important;left:0;top:0;padding:0 !important;margin:0}
+  #book canvas{position:absolute;left:0;top:0;background:#373737}
+  .arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:64px;height:96px;margin:0;padding:0;border:0;outline:0;box-shadow:none;background:transparent;color:#fff;font-size:52px;cursor:pointer;line-height:1;pointer-events:auto;appearance:none;-webkit-appearance:none}
+  .arrow:hover,.arrow:focus,.arrow:focus-visible,.arrow:active{border:0;outline:0;box-shadow:none;background:transparent}
+  #prev{left:8px}#next{right:8px}
+</style></head>
+<body>
+  <div id="viewer">
+    <div id="banner"><span id="counter">Page 1 of 52</span><span id="tools"><strong id="mark">NOT FOR PRINT</strong><button id="fs" type="button">Full screen</button></span></div>
+    <div id="stage">
+      <button id="prev" class="arrow" type="button" aria-label="Previous">&#8249;</button>
+      <button id="next" class="arrow" type="button" aria-label="Next">&#8250;</button>
+      <div id="frame"><div id="book"></div></div>
+    </div>
+  </div>
+  <script src="flipbook1/page-flip.browser.js"></script>
+  <script src="flipbook1/manifest.js"></script>
+  <script>
+    document.title = BOOK.title + " — " + BOOK.notForPrint;
+    document.getElementById("mark").textContent = BOOK.version + " · " + BOOK.source + " — " + BOOK.notForPrint;
+    var flip = new St.PageFlip(document.getElementById("book"), {
+      width: 700, height: 700, size: "stretch", minWidth: 280, maxWidth: 2400, maxHeight: 2400,
+      showCover: true, usePortrait: false, drawShadow: true, showPageCorners: false, flippingTime: 700
+    });
+    flip.loadFromImages(BOOK.pages);
+    function label(index) {
+      var n = BOOK.pages.length;
+      var page = index + 1;
+      if (page === 1 || page === n) return "Page " + page + " of " + n;
+      if (page % 2 === 0) return "Page " + page + "–" + (page + 1) + " of " + n;
+      return "Page " + (page - 1) + "–" + page + " of " + n;
+    }
+    var viewer = document.getElementById("viewer");
+    var fsBtn = document.getElementById("fs");
+    var frame = document.getElementById("frame");
+    var bookEl = document.getElementById("book");
+    var holdingSpread = false;
+    var armed = false;
+    function mode() {
+      var index = flip.getCurrentPageIndex();
+      var last = BOOK.pages.length - 1;
+      if (holdingSpread) return "spread";
+      if (index <= 0) return "cover";
+      if (index >= last) return "back";
+      return "spread";
+    }
+    function fitBook() {
+      var stage = document.getElementById("stage");
+      var gutter = 72;
+      var availW = Math.max(360, stage.clientWidth - gutter * 2);
+      var availH = Math.max(220, stage.clientHeight - 8);
+      var page = Math.floor(Math.min(availH, availW / 2));
+      var bookW = page * 2;
+      var bookH = page;
+      var kind = mode();
+      if (!armed) {
+        frame.style.transition = "none";
+        bookEl.style.transition = "none";
+      }
+      frame.style.width = (kind === "spread" ? bookW : page) + "px";
+      frame.style.height = bookH + "px";
+      bookEl.style.width = bookW + "px";
+      bookEl.style.height = bookH + "px";
+      bookEl.style.maxWidth = bookW + "px";
+      bookEl.style.minWidth = "0";
+      bookEl.style.minHeight = "0";
+      bookEl.style.left = (kind === "cover" ? -page : 0) + "px";
+      var wrap = bookEl.querySelector(".stf__wrapper");
+      if (wrap) {
+        wrap.style.cssText = "position:absolute;left:0;top:0;padding:0;margin:0;width:" + bookW + "px;height:" + bookH + "px;";
+      }
+      var canvas = bookEl.querySelector("canvas");
+      var resized = canvas && (canvas.width !== bookW || canvas.height !== bookH);
+      if (resized) {
+        canvas.style.width = bookW + "px";
+        canvas.style.height = bookH + "px";
+        canvas.width = bookW;
+        canvas.height = bookH;
+        flip.update();
+      }
+      if (!armed) {
+        armed = true;
+        requestAnimationFrame(function () {
+          frame.style.transition = "width .45s ease, height .45s ease";
+          bookEl.style.transition = "left .45s ease";
+        });
+      }
+    }
+    function turn(dir) {
+      if (dir < 0) flip.flipPrev();
+      else flip.flipNext();
+    }
+    document.getElementById("prev").onclick = function (e) { e.preventDefault(); e.stopPropagation(); turn(-1); };
+    document.getElementById("next").onclick = function (e) { e.preventDefault(); e.stopPropagation(); turn(1); };
+    document.addEventListener("keydown", function (e) {
+      if (e.repeat || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.key === "ArrowLeft") { e.preventDefault(); turn(-1); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); turn(1); }
+    });
+    fsBtn.onclick = function () {
+      if (!document.fullscreenElement) viewer.requestFullscreen();
+      else document.exitFullscreen();
+    };
+    function scheduleFit() {
+      requestAnimationFrame(function () { requestAnimationFrame(fitBook); });
+    }
+    flip.on("changeState", function (e) {
+      if (e.data === "flipping") {
+        holdingSpread = true;
+        fitBook();
+      }
+    });
+    flip.on("flip", function (e) {
+      holdingSpread = false;
+      document.getElementById("counter").textContent = label(e.data);
+      fitBook();
+    });
+    document.addEventListener("fullscreenchange", function () {
+      fsBtn.textContent = document.fullscreenElement ? "Exit full screen" : "Full screen";
+      scheduleFit();
+      setTimeout(fitBook, 60);
+      setTimeout(fitBook, 240);
+    });
+    window.addEventListener("resize", scheduleFit);
+    scheduleFit();
+  </script>
+</body></html>
