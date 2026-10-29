@@ -36,7 +36,53 @@ body.guides-on .seam-guide{display:block}
    measured off his snapshot (1317x663; proportions map 1:1 onto each card
    image): edge x .8%/99.1%, y 1.8%/98.0%; safe-left x 3.6-46.4%, safe-right
    x 53.5-96.3%, safe y 7.4-92.5%; fold x 50.0%; gutter x 46.4-53.5%.
-   Overlay divs are injected at runtime (see the Lulu script before </body>),
+   Overlay divs are injected at runtime (see the Lulu script before 
+<script>
+(function(){
+  var KEY='v12marks', marks={};
+  try{ marks=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(_){ marks={}; }
+  function tagOf(row){ var fig=row.closest('figure'); var t=fig?fig.querySelector('.tag'):null; return t?t.textContent.trim():''; }
+  function tally(){
+    var k=0,r=0; for(var t in marks){ if(marks[t]==='keep')k++; else if(marks[t]==='remove')r++; }
+    var el=document.getElementById('markstally');
+    if(el) el.textContent=(k||r)?(k+' keep \u00b7 '+r+' remove'):'none yet';
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(marks)); }catch(_){} tally(); }
+  document.querySelectorAll('.checkrow').forEach(function(row){
+    var tag=tagOf(row); if(!tag) return;
+    var keep=row.querySelector('input[data-act="keep"]'), rem=row.querySelector('input[data-act="remove"]');
+    if(marks[tag]==='keep') keep.checked=true;
+    if(marks[tag]==='remove') rem.checked=true;
+    row.addEventListener('change', function(){
+      if(keep.checked && rem.checked){ if(document.activeElement===keep) rem.checked=false; else keep.checked=false; }
+      if(keep.checked) marks[tag]='keep'; else if(rem.checked) marks[tag]='remove'; else delete marks[tag];
+      save();
+    });
+  });
+  tally();
+  var copyBtn=document.getElementById('mbcopy');
+  if(copyBtn) copyBtn.addEventListener('click', function(){
+    var lines=['Harlow cover extras \u2014 my marks (Final Pass V12)'];
+    var any=false;
+    document.querySelectorAll('.checkrow').forEach(function(row){
+      var tag=tagOf(row);
+      if(marks[tag]){ lines.push((marks[tag]==='keep'?'KEEP':'REMOVE')+' \u2014 '+tag); any=true; }
+    });
+    if(!any) lines.push('(no marks yet)');
+    var text=lines.join('\n');
+    function show(){ var ta=document.getElementById('marksout'); ta.value=text; ta.style.display='block'; ta.focus(); ta.select(); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ copyBtn.textContent='Copied \u2014 paste it to Trinity'; setTimeout(function(){copyBtn.textContent='Copy my list';},2600); }, show); }
+    else show();
+  });
+  var clr=document.getElementById('mbclear');
+  if(clr) clr.addEventListener('click', function(){
+    marks={}; document.querySelectorAll('.checkrow input').forEach(function(i){ i.checked=false; });
+    var ta=document.getElementById('marksout'); if(ta){ ta.value=''; ta.style.display='none'; }
+    save();
+  });
+})();
+</script>
+</body>),
    so card markup is untouched. Independent of the seam guide: body.lulu-on
    keys the card overlays, #lbfig.lulu-on keys the viewer's — either, both
    or neither guide can be on. */
@@ -140,6 +186,19 @@ header.collapsed #hdrMini{display:inline-block}
 .card details.carddetails{margin-top:7px}
 .card details.carddetails summary{cursor:pointer;color:#7a4f21;font-size:14px;padding:7px 0 3px;min-height:26px}
 .card details.carddetails .fullcap{margin:3px 0 2px;font-size:14.5px}
+
+.checkrow{display:flex;gap:8px;padding:2px 14px 13px;}
+.checkrow label{display:inline-flex;align-items:center;gap:6px;padding:5px 13px 6px;border:1px solid #d8c9a8;border-radius:999px;background:#fbf6ea;color:#5d4a26;font-size:13.5px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.checkrow input{width:15px;height:15px;margin:0;cursor:pointer;}
+.checkrow input[data-act="keep"]{accent-color:#5c8a45;}
+.checkrow input[data-act="remove"]{accent-color:#b0502f;}
+.checkrow label:has(input[data-act="keep"]:checked){background:#e7f2df;border-color:#8db877;color:#3c6128;}
+.checkrow label:has(input[data-act="remove"]:checked){background:#f9e3dc;border-color:#cf8a76;color:#8c3a26;}
+#marksbar{max-width:720px;margin:0 auto 26px;background:#fff;border:1px solid #e3d5bd;border-radius:12px;padding:12px 14px;box-shadow:0 2px 8px rgba(60,40,10,.08);font-size:14.5px;color:#4c3d22;}
+#marksbar .mb-btns{margin-top:9px;display:flex;gap:8px;}
+#marksbar button{padding:6px 14px;border:1px solid #c9b489;border-radius:999px;background:#7a4f21;color:#fff;font-size:13.5px;font-weight:600;cursor:pointer;}
+#marksbar button.ghost{background:#fbf6ea;color:#5d4a26;}
+#marksout{display:none;width:100%;margin-top:10px;font-size:13px;}
 </style></head><body>
 <header><span id="hdrMini">Final Pass V12 — The Gold Finals</span><h1>Final Pass V12 &mdash; the City Polish experiment</h1>
 <p>These are the 24 final pictures for the book &mdash; one for every page &mdash; with the cover art down below. They include your picks from your art notes and the fixes you asked for. The beach pages (18&ndash;23) share one long sunset that deepens page by page as Harlow heads home. This is the current set.</p>
@@ -436,11 +495,13 @@ header.collapsed #hdrMini{display:inline-block}
 <figure class="card v6-extra" style="max-width:720px;margin:0 auto 22px;">
 <img src="assets/v12-extras/front-cover-goldstyle.jpg" alt="Front cover gold-style pass: Harlow close-up, gleaming blue Mustang and red barn under a sculpted sunset sky in the Gold 24 finish" loading="lazy">
 <figcaption><span class="tag">EXTRA — FRONT COVER, GOLD-STYLE PASS</span> <span class="kind">Extra art &middot; The polished front cover (V9 extra) restyled to the Gold 24&rsquo;s hand &mdash; S22&rsquo;s sky and finish; the sunset and its colors kept</span><br><span class="faceline">The front cover, in the gold style.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">WHY: Jon&rsquo;s call (2026-10-28) &mdash; the V9 polished cover still read too painterly next to the locked golds: watercolor sky, flower carpets. This pass changes ONLY the finish, governed by S22 &middot; V11 SKY ALT 7 as the style authority: sculpted sunset clouds in the same orange-pink-purple palette (sunset kept, same sun position), clean cartoon-polish forms and lighting, flowers thinned down to a scattered meadow at S22&rsquo;s level. Composition, Harlow&rsquo;s face, the Mustang and the barn are the polished cover&rsquo;s own, unchanged in placement. Gate (Trinity, whole frame vs S22 and vs the original): style in the gold hand; Harlow identity PASS; flowers at S22 density. Master front-cover-goldstyle-master.png, 1169&times;1346.</p></details></figcaption>
-</figure>
+    <div class="checkrow"><label><input type="checkbox" data-act="keep"> Keep</label><label><input type="checkbox" data-act="remove"> Remove</label></div>
+  </figure>
 <figure class="card v6-extra" style="max-width:720px;margin:0 auto 22px;">
 <img src="assets/v12-extras/back-cover-goldstyle.jpg" alt="Back cover gold-style pass: Harlow from behind watching the blue Mustang drive toward the distant city under a sculpted sunset sky in the Gold 24 finish" loading="lazy">
 <figcaption><span class="tag">EXTRA — BACK COVER, GOLD-STYLE PASS</span> <span class="kind">Extra art &middot; The Reverse V2 back cover (V9 extra) restyled to the Gold 24&rsquo;s hand &mdash; S22&rsquo;s sky and finish; the sunset and its colors kept</span><br><span class="faceline">The back cover, in the gold style.</span><details class="carddetails"><summary>Details</summary><p class="fullcap">WHY: Jon&rsquo;s call (2026-10-28) &mdash; same note as the front: the Reverse V2 back cover still read too painterly next to the locked golds. Finish-only restyle governed by S22 &middot; V11 SKY ALT 7: sculpted sunset clouds in the same palette (sunset kept, same sun position), clean cartoon-polish forms, flowers thinned to a scattered meadow. Composition is Reverse V2&rsquo;s own, unchanged in placement &mdash; Harlow from behind, the Mustang rolling toward the city, the barn far right. Gate (Trinity, whole frame vs S22 and vs the original): style in the gold hand; Harlow&rsquo;s markings and plume tail PASS; city and barn hold. Master back-cover-goldstyle-master.png, 1168&times;1346.</p></details></figcaption>
-</figure>
+    <div class="checkrow"><label><input type="checkbox" data-act="keep"> Keep</label><label><input type="checkbox" data-act="remove"> Remove</label></div>
+  </figure>
 
   <figure class="card v2new v6-extra">
     <div class="frame"><img src="assets/v12-extras/front-cover-daytime.jpg" alt="Front cover — daytime pass: Harlow close-up, Mustang and barn under a bright daytime sky" loading="lazy"><span class="seam"></span></div>
@@ -499,6 +560,11 @@ header.collapsed #hdrMini{display:inline-block}
     <div class="checkrow"><label><input type="checkbox" data-act="keep"> Keep</label><label><input type="checkbox" data-act="remove"> Remove</label></div>
     <details class="why"><summary>WHY THIS CARD</summary><p>Jon's call (2026-10-28): V2's logo was still a touch big and right. For V3 the letter box was MEASURED in both images and the placement solved from the numbers — the "Harlow's" line now spans x 11.4–64.9% with its top at 7.3% (reference: 11.3–64.8%, top 7.2%), over the same depth-of-field remake art.</p></details>
   </figure>
+
+  <div id="marksbar"><strong>Cover extras — your marks:</strong> <span id="markstally">none yet</span>
+    <div class="mb-btns"><button id="mbcopy" type="button">Copy my list</button><button id="mbclear" type="button" class="ghost">Clear marks</button></div>
+    <textarea id="marksout" rows="7" readonly></textarea>
+  </div>
 </main>
 
 <button type="button" id="toTop" aria-label="Back to top" title="Back to top">&#8593;</button>
