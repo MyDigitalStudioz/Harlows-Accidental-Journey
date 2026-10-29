@@ -9,7 +9,8 @@
   #banner{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 18px;background:#191919;z-index:2}
   #tools{display:flex;align-items:center;gap:12px}
   #counter{background:rgba(20,20,20,.55);color:#fff;border-radius:999px;padding:6px 12px}
-  #fs{background:transparent;color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:999px;padding:6px 12px;cursor:pointer;font:inherit}
+  #fs{flex:0 0 auto;width:42px;height:42px;padding:0;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.07);color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:50%;cursor:pointer;font:inherit}
+  #fs svg{width:20px;height:20px;stroke:#f4f1ea;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;display:block}
   #stage{flex:1;width:100%;min-height:0;background:#373737;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
   #frame{position:absolute;left:50%;top:50%;overflow:hidden;background:#373737}
   #book{position:absolute;top:0;left:0;background:#373737}
@@ -24,10 +25,11 @@
   body.expanded #stage{height:100%}
   #viewer:fullscreen #banner{position:absolute;top:0;left:0;right:0;background:transparent;justify-content:flex-end;z-index:30}
   #viewer:fullscreen #counter,#viewer:fullscreen #mark{display:none}
+  body.expanded #fs,#viewer:fullscreen #fs{background:rgba(15,15,15,.5)}
 </style></head>
 <body>
   <div id="viewer">
-    <div id="banner"><span id="counter">Page 1 of 52</span><span id="tools"><strong id="mark">NOT FOR PRINT</strong><button id="fs" type="button">Full screen</button></span></div>
+    <div id="banner"><span id="counter">Page 1 of 52</span><span id="tools"><strong id="mark">NOT FOR PRINT</strong><button id="fs" type="button" aria-label="Full screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg></button></span></div>
     <div id="stage">
       <button id="prev" class="arrow" type="button" aria-label="Previous">&#8249;</button>
       <button id="next" class="arrow" type="button" aria-label="Next">&#8250;</button>
@@ -124,13 +126,20 @@
     });
     var fsRequest = viewer.requestFullscreen || viewer.webkitRequestFullscreen;
     var fsElement = function () { return document.fullscreenElement || document.webkitFullscreenElement; };
+    var ICON_OPEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>';
+    var ICON_CLOSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    function fsShow(close, label) {
+      fsBtn.innerHTML = close ? ICON_CLOSE : ICON_OPEN;
+      fsBtn.setAttribute("aria-label", label);
+      fsBtn.title = label;
+    }
     function refit() { scheduleFit(); setTimeout(fitBook, 60); setTimeout(fitBook, 240); }
     function setExpanded(on) {
       document.body.classList.toggle("expanded", on);
-      fsBtn.textContent = on ? "Exit expanded view" : "Expand view";
+      fsShow(on, on ? "Exit expanded view" : (fsRequest ? "Full screen" : "Expand view"));
       refit();
     }
-    if (!fsRequest) fsBtn.textContent = "Expand view";
+    if (!fsRequest) fsShow(false, "Expand view");
     fsBtn.onclick = function () {
       if (document.body.classList.contains("expanded")) { setExpanded(false); return; }
       if (fsElement()) {
@@ -160,7 +169,8 @@
       fitBook();
     });
     function onFsChange() {
-      fsBtn.textContent = fsElement() ? "Exit full screen" : (fsRequest ? "Full screen" : "Expand view");
+      var inFs = !!fsElement();
+      fsShow(inFs, inFs ? "Exit full screen" : (fsRequest ? "Full screen" : "Expand view"));
       refit();
     }
     document.addEventListener("fullscreenchange", onFsChange);
