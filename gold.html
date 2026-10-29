@@ -555,14 +555,10 @@ document.getElementById('seamToggle').addEventListener('click',function(){var on
   function jumpTo(code){
     var el=document.getElementById(code); if(!el) return;
     clearSettle();
-    alignTo(el,'smooth');
-    // Lazy images above the target keep loading and push it down; re-align
-    // a few times as the layout settles (cancelled if Jon scrolls himself).
-    [500,1200,2200].forEach(function(ms){
-      settleTimers.push(setTimeout(function(){
-        if(Math.abs(el.getBoundingClientRect().top-(chromeH()+8))>6) alignTo(el,'auto');
-      },ms));
-    });
+    // Instant jump, no animated scroll (Jon, 2026-10-28): the smooth scroll
+    // plus settle re-aligns got stuck while lazy images loaded; Covers'
+    // plain jump is the model. (2026-10-28)
+    alignTo(el,'auto');
   }
   if(nav) nav.addEventListener('click',function(e){
     if(!e.target.closest) return;
