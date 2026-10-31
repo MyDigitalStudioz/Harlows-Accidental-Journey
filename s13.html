@@ -1,84 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Spread 13 — New Art Options · Harlow's Accidental Journey</title>
 <meta property="og:title" content="Spread 13 — New Art Options">
 <meta property="og:description" content="Every version we tried for the new Spread 13, with the current gold page first.">
 <meta property="og:image" content="s13/s13-gold.jpg">
 <style>
-  :root{ --ink:#3d2b1f; --paper:#faf3e3; --card:#fffdf6; --line:#e3d3ae; --accent:#b4632a; }
-  *{ box-sizing:border-box; }
-  body{ margin:0; background:var(--paper); color:var(--ink); font-family:Georgia,'Times New Roman',serif; }
-  header{ text-align:center; padding:34px 18px 6px; }
-  .eyebrow{ letter-spacing:.22em; font-size:12px; text-transform:uppercase; color:var(--accent); margin:0 0 8px; }
-  h1{ margin:0 0 10px; font-size:34px; font-weight:normal; }
-  .intro{ max-width:680px; margin:0 auto; font-size:17px; line-height:1.55; }
-  .storytext{ max-width:680px; margin:22px auto 4px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 22px; font-size:16.5px; line-height:1.65; font-style:italic; }
-  .storytext .label{ display:block; font-style:normal; letter-spacing:.18em; font-size:11px; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
-  main{ max-width:1060px; margin:0 auto; padding:18px 16px 60px; display:grid; grid-template-columns:1fr; gap:26px; }
-  @media (min-width:760px){ main{ grid-template-columns:1fr 1fr; } .gold-card{ grid-column:1 / -1; } }
-  figure{ margin:0; background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:0 2px 10px rgba(90,60,20,.08); }
-  figure img{ width:100%; display:block; }
-  figcaption{ padding:12px 16px 14px; }
-  .cap-title{ font-size:17px; margin-bottom:4px; }
-  .cap-title .tag{ display:inline-block; background:var(--accent); color:#fff; font-size:11px; letter-spacing:.12em; padding:2px 8px; border-radius:20px; margin-right:8px; vertical-align:2px; font-family:Helvetica,Arial,sans-serif; }
-  .cap-title .tag.gold{ background:#a8862a; }
-  .cap-note{ font-size:14.5px; line-height:1.5; color:#5d4632; }
-  footer{ text-align:center; padding:0 18px 40px; font-size:14px; color:#7a6248; }
-</style>
-</head>
+body{margin:0;font-family:Georgia,serif;background:#faf6ee;color:#2b2118}
+header{position:sticky;top:0;background:linear-gradient(180deg,#7d560f,#4e3409);color:#f5e9d5;padding:12px 16px;z-index:5}
+header h1{margin:0;font-size:20px} header p{margin:4px 0 0;font-size:13.5px;opacity:.85}
+main{max-width:860px;margin:0 auto;padding:10px 10px 40px}
+.intro{font-size:16.5px;line-height:1.6;margin:14px 2px 4px}
+.storytext{background:#fffdf6;border:1px solid #e3d5bd;border-radius:12px;padding:16px 20px;font-size:16px;line-height:1.65;font-style:italic;margin:16px 0 24px;box-shadow:0 2px 8px rgba(60,40,10,.08)}
+.storytext .label{display:block;font-style:normal;letter-spacing:.18em;font-size:11px;text-transform:uppercase;color:#b4632a;margin-bottom:8px}
+.card{margin:0 0 22px;background:#fff;border:1px solid #e3d5bd;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(60,40,10,.08)}
+.card img{width:100%;display:block;cursor:zoom-in}
+.card figcaption{padding:10px 14px 12px;font-size:15.5px;line-height:1.45}
+.card.goldcard{border-color:#d9a62e;box-shadow:0 2px 10px rgba(190,140,20,.35)}
+.card.goldcard figcaption{background:linear-gradient(180deg,#f9dc8a,#f4ca5e)}
+.tag{font-weight:bold;background:#7a4f21;color:#fff;border-radius:6px;padding:2px 8px;font-size:14px;font-family:Helvetica,Arial,sans-serif}
+.tag.gold{background:#a8862a}
+.note{color:#5d4632}
+footer{text-align:center;padding:0 18px 40px;font-size:14px;color:#7a6248}
+#lb{position:fixed;inset:0;width:100%;height:100vh;height:100dvh;overflow:hidden;background:rgba(16,12,8,.97);display:none;align-items:center;justify-content:center;z-index:200;padding:14px;box-sizing:border-box}
+#lb.open{display:flex}
+#lbfig{margin:0;max-width:min(1100px,94vw);text-align:center;position:relative}
+#lbwrap{position:relative;display:inline-block;line-height:0;max-width:100%}
+#lbimg{max-width:100%;max-height:calc(100vh - 200px);max-height:calc(100dvh - 200px);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#lbcapbar{color:#f5efe2;margin-top:.9rem;font-size:1.02rem;line-height:1.45;display:flex;align-items:center;justify-content:center;gap:12px}
+#lbcapbar .t{display:flex;flex-direction:column;text-align:left}
+#lbnum{display:block;font-size:.88rem;opacity:.65;margin-top:.25rem}
+#lbcap .tag{font-size:12.5px}
+#close{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#221910 0%,#3a2d1b 55%,#5e4a24 100%);border:1px solid rgba(94,74,36,.65);color:#faf6ee;font-size:1.3rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18);line-height:1;z-index:2}
+#fs{position:absolute;bottom:14px;right:14px;width:42px;height:42px;border-radius:50%;background:#faf6ee;border:none;color:#3d3229;font-size:1.15rem;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.4);line-height:1;z-index:2}
+#lb .nav{width:38px;height:38px;border-radius:50%;cursor:pointer;flex:none;background:#faf6ee;border:none;color:#3d3229;font-size:1.5rem;font-weight:bold;box-shadow:0 3px 12px rgba(0,0,0,.4);line-height:1;padding-bottom:3px}
+.fnav,.fclose{display:none}
+#lb.zoomed{padding:0}
+#lbfig:fullscreen,#lbfig:-webkit-full-screen,#lb.zoomed #lbfig{width:100%;height:100%;max-width:none;background:#000;display:flex;align-items:center;justify-content:center}
+#lbfig:fullscreen #lbimg,#lbfig:-webkit-full-screen #lbimg,#lb.zoomed #lbimg{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;border-radius:0;box-shadow:none}
+#lbfig:fullscreen #lbcapbar,#lbfig:-webkit-full-screen #lbcapbar,#lb.zoomed #lbcapbar{display:none}
+#lbfig:fullscreen .fnav,#lbfig:-webkit-full-screen .fnav,#lb.zoomed .fnav{display:block;position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.6rem;font-weight:bold;cursor:pointer;z-index:3;line-height:1;padding-bottom:3px}
+#lbfig:fullscreen #fprev,#lbfig:-webkit-full-screen #fprev,#lb.zoomed #fprev{left:16px}
+#lbfig:fullscreen #fnext,#lbfig:-webkit-full-screen #fnext,#lb.zoomed #fnext{right:16px}
+#lbfig:fullscreen .fclose,#lbfig:-webkit-full-screen .fclose,#lb.zoomed .fclose{display:block;position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(250,246,238,.88);border:none;color:#3d3229;font-size:1.35rem;cursor:pointer;z-index:3;line-height:1}
+@media (max-width:600px){#lbimg{max-height:calc(100vh - 230px);max-height:calc(100dvh - 230px)}#lbcapbar{font-size:.93rem}}
+</style></head>
 <body>
 <header>
-  <p class="eyebrow">Harlow's Accidental Journey</p>
   <h1>Spread 13 — New Art Options</h1>
+  <p>Harlow's Accidental Journey · tap any picture to see it big</p>
+</header>
+<main>
   <p class="intro">Hi Mom — here's why this page needs new art. In your earlier words, this was Gideon's page: he swooped down, told Harlow he was a city bird who never leaves town, and pointed him toward the ballpark — and the picture we made matches those words exactly. In your new words, Gideon steps aside and a kind bus driver gives Harlow a ride instead. We love the new version — but now the old picture tells a story the words no longer tell. So we spent the evening making new pictures that fit your new words, keeping whatever we could of the old page: the same street, the ballpark at the end of it, Gideon, and Tiger the cat. The current page is first, then every version we made, in the order we made them. Tell us which ones you like!</p>
   <div class="storytext">
     <span class="label">The new words for this page</span>
-    Feeling let down, I slumped onto a bench near a bus stop. There was an older gentleman sitting there, lost in his newspaper. He peeked over it, smiled, and said, “Do you need any help, little one?” My eyes filled with excitement as I told him I was trying to get to Long Beach. The man exclaimed, “What a coincidence! I’m the bus driver, and Long Beach is my very next stop!” He smirked and said, “Hop on, and enjoy the ride!” “Oh my goodness, thank you!” I replied ecstatically. “I can’t wait to get home!”
+    Feeling let down, I slumped onto a bench near a bus stop. There was an older gentleman sitting there, lost in his newspaper. He peeked over it, smiled, and said, &ldquo;Do you need any help, little one?&rdquo; My eyes filled with excitement as I told him I was trying to get to Long Beach. The man exclaimed, &ldquo;What a coincidence! I&rsquo;m the bus driver, and Long Beach is my very next stop!&rdquo; He smirked and said, &ldquo;Hop on, and enjoy the ride!&rdquo; &ldquo;Oh my goodness, thank you!&rdquo; I replied ecstatically. &ldquo;I can&rsquo;t wait to get home!&rdquo;
   </div>
-</header>
-<main id="cards"></main>
+<figure class="card goldcard"><img src="s13/s13-gold.jpg" alt="Spread 13 — S13 · V12 GLEAM 2" loading="lazy"><figcaption><span class="faceline"><span class="tag gold">CURRENT GOLD</span> <b>S13 · V12 GLEAM 2</b><br><span class="note">The page as it stands today — Gideon points Harlow toward the ballpark. This is the one all the new versions are trying to replace.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v01.jpg" alt="Spread 13 — The Bench" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 1</span> <b>The Bench</b><br><span class="note">The very first round. The bus driver was right in the picture — Jon ruled: no people's faces in the book. So we moved on.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v02.jpg" alt="Spread 13 — Hop On!" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 2</span> <b>Hop On!</b><br><span class="note">First round, with the driver at the open door. Ruled out on faces.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v03.jpg" alt="Spread 13 — Little One" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 3</span> <b>Little One</b><br><span class="note">First round, up close, with the driver. Ruled out on faces.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v04.jpg" alt="Spread 13 — The Bench — No People" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 4</span> <b>The Bench — No People</b><br><span class="note">Second round: everybody out. Gideon and Tiger join the scene instead.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v05.jpg" alt="Spread 13 — Hop On! — No People" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 5</span> <b>Hop On! — No People</b><br><span class="note">The bus door open and lit, with nobody inside it.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v06.jpg" alt="Spread 13 — The Arrival" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 6</span> <b>The Arrival</b><br><span class="note">Gideon up on the stop sign, pointing, with the bus coming.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v07.jpg" alt="Spread 13 — Hydrant A" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 7</span> <b>Hydrant A</b><br><span class="note">Gideon back where he belongs — on the red fire hydrant, pointing down the street.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v08.jpg" alt="Spread 13 — Hydrant B" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 8</span> <b>Hydrant B</b><br><span class="note">The hydrant up close, and the bus pulling in big.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v09.jpg" alt="Spread 13 — The Newspaper Bench" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 9</span> <b>The Newspaper Bench</b><br><span class="note">The gentleman is here — but his face stays behind his newspaper, just like your words say. His driver's cap gives him away.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v10.jpg" alt="Spread 13 — The Bus Pulls Up" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 10</span> <b>The Bus Pulls Up</b><br><span class="note">The door is open and the windshield is all golden reflection — you never see the driver.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v11.jpg" alt="Spread 13 — Same Side" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 11</span> <b>Same Side</b><br><span class="note">Gideon moved over beside Harlow, so the bus can never block him from view.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v12.jpg" alt="Spread 13 — Toward the Ballpark" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 12</span> <b>Toward the Ballpark</b><br><span class="note">The bus drives to the stadium — never away from it.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v13.jpg" alt="Spread 13 — Directions, Classic" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 13</span> <b>Directions, Classic</b><br><span class="note">Harlow's worried little grin arrives: sad and disappointed, but still cute.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v14.jpg" alt="Spread 13 — Directions, Close" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 14</span> <b>Directions, Close</b><br><span class="note">The closest framing of the set — and the best worried grin.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v15.jpg" alt="Spread 13 — Directions at the Bench" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 15</span> <b>Directions at the Bench</b><br><span class="note">One flaw: the man's face peeks over the top of the newspaper on this one.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v16.jpg" alt="Spread 13 — The Point" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 16</span> <b>The Point</b><br><span class="note">The most painterly of the whole set — softest watercolor hand, biggest calm sky.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v17.jpg" alt="Spread 13 — Empty Bench" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 17</span> <b>Empty Bench</b><br><span class="note">Just the cap and the folded newspaper left behind on the bench.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v18.jpg" alt="Spread 13 — Golden Hour" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 18</span> <b>Golden Hour</b><br><span class="note">Sunset light, and Tiger is tiny, hiding in the flowers. Pretty — maybe too late in the day.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v19.jpg" alt="Spread 13 — The Sign" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 19</span> <b>The Sign</b><br><span class="note">We tried LONG BEACH lit up on the bus (it spelled it right!). Jon decided against words on the bus.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v20.jpg" alt="Spread 13 — The Sign, at the Stop" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 20</span> <b>The Sign, at the Stop</b><br><span class="note">The same idea at the stop, door open, Harlow rearing up ready to hop on.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v21.jpg" alt="Spread 13 — Eyes on the Bus" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 21</span> <b>Eyes on the Bus</b><br><span class="note">The latest round: everybody is actually looking at the bus. Harlow's whole head is turned to it.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v22.jpg" alt="Spread 13 — Watching It Go" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 22</span> <b>Watching It Go</b><br><span class="note">Both of them tracking the bus as it heads toward the stadium.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v23.jpg" alt="Spread 13 — Headlights" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 23</span> <b>Headlights</b><br><span class="note">Harlow in profile, eyes on the bus coming. Tiger is just a little face in the daisies.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v24.jpg" alt="Spread 13 — Bench, Eyes Up" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 24</span> <b>Bench, Eyes Up</b><br><span class="note">The newspaper hides the man's whole face this time — and Harlow is grinning at the bus.</span></span></figcaption></figure>
+<figure class="card "><img src="s13/s13-v25.jpg" alt="Spread 13 — Hop On — Eyes on the Door" loading="lazy"><figcaption><span class="faceline"><span class="tag">TRY 25</span> <b>Hop On — Eyes on the Door</b><br><span class="note">Mid-trot, eyes on the open door, and Gideon flying the route ahead of him.</span></span></figcaption></figure>
+</main>
 <footer>Made with love by Jon &amp; Trinity · October 30, 2026</footer>
+<div id="lb" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+  <button id="close" aria-label="Close viewer">&times;</button>
+  <div id="lbfig">
+    <div id="lbwrap"><img id="lbimg" src="" alt=""></div>
+    <button class="fnav" id="fprev" aria-label="Previous image">&#8249;</button>
+    <button class="fnav" id="fnext" aria-label="Next image">&#8250;</button>
+    <button class="fclose" id="fclose" aria-label="Exit fullscreen">&times;</button>
+    <div id="lbcapbar">
+      <button class="nav" id="prev" aria-label="Previous image">&#8249;</button>
+      <span class="t"><span id="lbcap"></span><span class="n" id="lbnum"></span></span>
+      <button class="nav" id="next" aria-label="Next image">&#8250;</button>
+    </div>
+  </div>
+  <button id="fs" aria-label="View fullscreen">&#x26F6;</button>
+</div>
 <script>
-const CARDS = [
-  ["s13-gold.jpg","CURRENT GOLD","gold","S13 · V12 GLEAM 2","The page as it stands today — Gideon points Harlow toward the ballpark. This is the one all the new versions are trying to replace."],
-  ["s13-v01.jpg","TRY 1","","The Bench","The very first round. The bus driver was right in the picture — Jon ruled: no people's faces in the book. So we moved on."],
-  ["s13-v02.jpg","TRY 2","","Hop On!","First round, with the driver at the open door. Ruled out on faces."],
-  ["s13-v03.jpg","TRY 3","","Little One","First round, up close, with the driver. Ruled out on faces."],
-  ["s13-v04.jpg","TRY 4","","The Bench — No People","Second round: everybody out. Gideon and Tiger join the scene instead."],
-  ["s13-v05.jpg","TRY 5","","Hop On! — No People","The bus door open and lit, with nobody inside it."],
-  ["s13-v06.jpg","TRY 6","","The Arrival","Gideon up on the stop sign, pointing, with the bus coming."],
-  ["s13-v07.jpg","TRY 7","","Hydrant A","Gideon back where he belongs — on the red fire hydrant, pointing down the street."],
-  ["s13-v08.jpg","TRY 8","","Hydrant B","The hydrant up close, and the bus pulling in big."],
-  ["s13-v09.jpg","TRY 9","","The Newspaper Bench","The gentleman is here — but his face stays behind his newspaper, just like your words say. His driver's cap gives him away."],
-  ["s13-v10.jpg","TRY 10","","The Bus Pulls Up","The door is open and the windshield is all golden reflection — you never see the driver."],
-  ["s13-v11.jpg","TRY 11","","Same Side","Gideon moved over beside Harlow, so the bus can never block him from view."],
-  ["s13-v12.jpg","TRY 12","","Toward the Ballpark","The bus drives to the stadium — never away from it."],
-  ["s13-v13.jpg","TRY 13","","Directions, Classic","Harlow's worried little grin arrives: sad and disappointed, but still cute."],
-  ["s13-v14.jpg","TRY 14","","Directions, Close","The closest framing of the set — and the best worried grin."],
-  ["s13-v15.jpg","TRY 15","","Directions at the Bench","One flaw: the man's face peeks over the top of the newspaper on this one."],
-  ["s13-v16.jpg","TRY 16","","The Point","The most painterly of the whole set — softest watercolor hand, biggest calm sky."],
-  ["s13-v17.jpg","TRY 17","","Empty Bench","Just the cap and the folded newspaper left behind on the bench."],
-  ["s13-v18.jpg","TRY 18","","Golden Hour","Sunset light, and Tiger is tiny, hiding in the flowers. Pretty — maybe too late in the day."],
-  ["s13-v19.jpg","TRY 19","","The Sign","We tried LONG BEACH lit up on the bus (it spelled it right!). Jon decided against words on the bus."],
-  ["s13-v20.jpg","TRY 20","","The Sign, at the Stop","The same idea at the stop, door open, Harlow rearing up ready to hop on."],
-  ["s13-v21.jpg","TRY 21","","Eyes on the Bus","The latest round: everybody is actually looking at the bus. Harlow's whole head is turned to it."],
-  ["s13-v22.jpg","TRY 22","","Watching It Go","Both of them tracking the bus as it heads toward the stadium."],
-  ["s13-v23.jpg","TRY 23","","Headlights","Harlow in profile, eyes on the bus coming. Tiger is just a little face in the daisies."],
-  ["s13-v24.jpg","TRY 24","","Bench, Eyes Up","The newspaper hides the man's whole face this time — and Harlow is grinning at the bus."],
-  ["s13-v25.jpg","TRY 25","","Hop On — Eyes on the Door","Mid-trot, eyes on the open door, and Gideon flying the route ahead of him."]
-];
-const main = document.getElementById('cards');
-for (const [img, tag, tagClass, title, note] of CARDS) {
-  const fig = document.createElement('figure');
-  if (tagClass === 'gold') fig.className = 'gold-card';
-  fig.innerHTML = `<img loading="lazy" src="s13/${img}" alt="${title}">
-    <figcaption><div class="cap-title"><span class="tag ${tagClass}">${tag}</span>${title}</div>
-    <div class="cap-note">${note}</div></figcaption>`;
-  main.appendChild(fig);
-}
+// Lightbox — same viewer as the gold page. Clicking any card image opens it.
+(function(){
+  var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'),
+      lbcap=document.getElementById('lbcap'), lbnum=document.getElementById('lbnum'),
+      lbfig=document.getElementById('lbfig');
+  var cards=[], cur=0;
+  function collect(){ cards=Array.prototype.slice.call(document.querySelectorAll('figure.card')); }
+  function show(i){
+    var n=cards.length; if(!n) return;
+    cur=((i%n)+n)%n;
+    var fig=cards[cur], img=fig.querySelector('img'), cap=fig.querySelector('figcaption');
+    lbimg.src=img.getAttribute('src'); lbimg.alt=img.getAttribute('alt')||'';
+    var fc=cap?cap.querySelector('.faceline'):null; lbcap.innerHTML=fc?fc.innerHTML:(cap?cap.innerHTML:'');
+    lbnum.textContent='Image '+(cur+1)+' of '+n;
+  }
+  function openLb(fig){
+    collect();
+    var i=cards.indexOf(fig); if(i<0) return;
+    lb.classList.add('open'); document.body.style.overflow='hidden';
+    show(i);
+  }
+  function closeLb(){
+    if(document.fullscreenElement) document.exitFullscreen();
+    lb.classList.remove('zoomed'); lb.classList.remove('open'); document.body.style.overflow='';
+  }
+  function step(d){ show(cur+d); }
+  var isIOS=/iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+  function toggleZoom(){
+    if(document.fullscreenElement){ document.exitFullscreen(); return; }
+    if(lb.classList.contains('zoomed')){ lb.classList.remove('zoomed'); return; }
+    if(isIOS){ lb.classList.add('zoomed'); return; }
+    if(lbfig.requestFullscreen){ lbfig.requestFullscreen().catch(function(){ lb.classList.add('zoomed'); }); }
+    else if(lbfig.webkitRequestFullscreen){ lbfig.webkitRequestFullscreen(); }
+    else { lb.classList.add('zoomed'); }
+  }
+  document.addEventListener('click',function(e){
+    if(!e.target.closest) return;
+    var img=e.target.closest('.card img');
+    if(img){ var fig=img.closest('figure.card'); if(fig) openLb(fig); }
+  });
+  document.getElementById('close').addEventListener('click',closeLb);
+  document.getElementById('prev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('next').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fprev').addEventListener('click',function(e){ e.stopPropagation(); step(-1); });
+  document.getElementById('fnext').addEventListener('click',function(e){ e.stopPropagation(); step(1); });
+  document.getElementById('fclose').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); });
+  document.getElementById('fs').addEventListener('click',function(e){ e.stopPropagation(); toggleZoom(); });
+  lb.addEventListener('click',function(e){ if(e.target===lb) closeLb(); });
+  lbimg.addEventListener('click',function(e){
+    if(document.fullscreenElement===lbfig||lb.classList.contains('zoomed')){ e.stopPropagation(); toggleZoom(); }
+  });
+  function fsChanged(){
+    if(document.fullscreenElement!==lbfig&&document.webkitFullscreenElement!==lbfig)
+      lb.classList.remove('zoomed');
+  }
+  document.addEventListener('fullscreenchange',fsChanged);
+  document.addEventListener('webkitfullscreenchange',fsChanged);
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape'){ if(document.fullscreenElement) return; closeLb(); }
+    if(e.key==='ArrowLeft') step(-1);
+    if(e.key==='ArrowRight') step(1);
+  });
+})();
 </script>
 </body>
 </html>
