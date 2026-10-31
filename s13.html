@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spread 13 — New Art Options · Harlow's Accidental Journey</title>
+<meta property="og:title" content="Spread 13 — New Art Options">
+<meta property="og:description" content="Every version we tried for the new Spread 13, with the current gold page first.">
+<meta property="og:image" content="s13/s13-gold.jpg">
+<style>
+  :root{ --ink:#3d2b1f; --paper:#faf3e3; --card:#fffdf6; --line:#e3d3ae; --accent:#b4632a; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:Georgia,'Times New Roman',serif; }
+  header{ text-align:center; padding:34px 18px 6px; }
+  .eyebrow{ letter-spacing:.22em; font-size:12px; text-transform:uppercase; color:var(--accent); margin:0 0 8px; }
+  h1{ margin:0 0 10px; font-size:34px; font-weight:normal; }
+  .intro{ max-width:680px; margin:0 auto; font-size:17px; line-height:1.55; }
+  .storytext{ max-width:680px; margin:22px auto 4px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 22px; font-size:16.5px; line-height:1.65; font-style:italic; }
+  .storytext .label{ display:block; font-style:normal; letter-spacing:.18em; font-size:11px; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+  main{ max-width:1060px; margin:0 auto; padding:18px 16px 60px; display:grid; grid-template-columns:1fr; gap:26px; }
+  @media (min-width:760px){ main{ grid-template-columns:1fr 1fr; } .gold-card{ grid-column:1 / -1; } }
+  figure{ margin:0; background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:0 2px 10px rgba(90,60,20,.08); }
+  figure img{ width:100%; display:block; }
+  figcaption{ padding:12px 16px 14px; }
+  .cap-title{ font-size:17px; margin-bottom:4px; }
+  .cap-title .tag{ display:inline-block; background:var(--accent); color:#fff; font-size:11px; letter-spacing:.12em; padding:2px 8px; border-radius:20px; margin-right:8px; vertical-align:2px; font-family:Helvetica,Arial,sans-serif; }
+  .cap-title .tag.gold{ background:#a8862a; }
+  .cap-note{ font-size:14.5px; line-height:1.5; color:#5d4632; }
+  footer{ text-align:center; padding:0 18px 40px; font-size:14px; color:#7a6248; }
+</style>
+</head>
+<body>
+<header>
+  <p class="eyebrow">Harlow's Accidental Journey</p>
+  <h1>Spread 13 — New Art Options</h1>
+  <p class="intro">Hi Mom — when you rewrote this page, the kind bus driver took over the scene, so we tried new art to go with your new words. The current page is first, then every version we made, in the order we made them. Tell us which ones you like!</p>
+  <div class="storytext">
+    <span class="label">The new words for this page</span>
+    Feeling let down, I slumped onto a bench near a bus stop. There was an older gentleman sitting there, lost in his newspaper. He peeked over it, smiled, and said, “Do you need any help, little one?” My eyes filled with excitement as I told him I was trying to get to Long Beach. The man exclaimed, “What a coincidence! I’m the bus driver, and Long Beach is my very next stop!” He smirked and said, “Hop on, and enjoy the ride!” “Oh my goodness, thank you!” I replied ecstatically. “I can’t wait to get home!”
+  </div>
+</header>
+<main id="cards"></main>
+<footer>Made with love by Jon &amp; Trinity · October 30, 2026</footer>
+<script>
+const CARDS = [
+  ["s13-gold.jpg","CURRENT GOLD","gold","S13 · V12 GLEAM 2","The page as it stands today — Gideon points Harlow toward the ballpark. This is the one all the new versions are trying to replace."],
+  ["s13-v01.jpg","TRY 1","","The Bench","The very first round. The bus driver was right in the picture — Jon ruled: no people's faces in the book. So we moved on."],
+  ["s13-v02.jpg","TRY 2","","Hop On!","First round, with the driver at the open door. Ruled out on faces."],
+  ["s13-v03.jpg","TRY 3","","Little One","First round, up close, with the driver. Ruled out on faces."],
+  ["s13-v04.jpg","TRY 4","","The Bench — No People","Second round: everybody out. Gideon and Tiger join the scene instead."],
+  ["s13-v05.jpg","TRY 5","","Hop On! — No People","The bus door open and lit, with nobody inside it."],
+  ["s13-v06.jpg","TRY 6","","The Arrival","Gideon up on the stop sign, pointing, with the bus coming."],
+  ["s13-v07.jpg","TRY 7","","Hydrant A","Gideon back where he belongs — on the red fire hydrant, pointing down the street."],
+  ["s13-v08.jpg","TRY 8","","Hydrant B","The hydrant up close, and the bus pulling in big."],
+  ["s13-v09.jpg","TRY 9","","The Newspaper Bench","The gentleman is here — but his face stays behind his newspaper, just like your words say. His driver's cap gives him away."],
+  ["s13-v10.jpg","TRY 10","","The Bus Pulls Up","The door is open and the windshield is all golden reflection — you never see the driver."],
+  ["s13-v11.jpg","TRY 11","","Same Side","Gideon moved over beside Harlow, so the bus can never block him from view."],
+  ["s13-v12.jpg","TRY 12","","Toward the Ballpark","The bus drives to the stadium — never away from it."],
+  ["s13-v13.jpg","TRY 13","","Directions, Classic","Harlow's worried little grin arrives: sad and disappointed, but still cute."],
+  ["s13-v14.jpg","TRY 14","","Directions, Close","The closest framing of the set — and the best worried grin."],
+  ["s13-v15.jpg","TRY 15","","Directions at the Bench","One flaw: the man's face peeks over the top of the newspaper on this one."],
+  ["s13-v16.jpg","TRY 16","","The Point","The most painterly of the whole set — softest watercolor hand, biggest calm sky."],
+  ["s13-v17.jpg","TRY 17","","Empty Bench","Just the cap and the folded newspaper left behind on the bench."],
+  ["s13-v18.jpg","TRY 18","","Golden Hour","Sunset light, and Tiger is tiny, hiding in the flowers. Pretty — maybe too late in the day."],
+  ["s13-v19.jpg","TRY 19","","The Sign","We tried LONG BEACH lit up on the bus (it spelled it right!). Jon decided against words on the bus."],
+  ["s13-v20.jpg","TRY 20","","The Sign, at the Stop","The same idea at the stop, door open, Harlow rearing up ready to hop on."],
+  ["s13-v21.jpg","TRY 21","","Eyes on the Bus","The latest round: everybody is actually looking at the bus. Harlow's whole head is turned to it."],
+  ["s13-v22.jpg","TRY 22","","Watching It Go","Both of them tracking the bus as it heads toward the stadium."],
+  ["s13-v23.jpg","TRY 23","","Headlights","Harlow in profile, eyes on the bus coming. Tiger is just a little face in the daisies."],
+  ["s13-v24.jpg","TRY 24","","Bench, Eyes Up","The newspaper hides the man's whole face this time — and Harlow is grinning at the bus."],
+  ["s13-v25.jpg","TRY 25","","Hop On — Eyes on the Door","Mid-trot, eyes on the open door, and Gideon flying the route ahead of him."]
+];
+const main = document.getElementById('cards');
+for (const [img, tag, tagClass, title, note] of CARDS) {
+  const fig = document.createElement('figure');
+  if (tagClass === 'gold') fig.className = 'gold-card';
+  fig.innerHTML = `<img loading="lazy" src="s13/${img}" alt="${title}">
+    <figcaption><div class="cap-title"><span class="tag ${tagClass}">${tag}</span>${title}</div>
+    <div class="cap-note">${note}</div></figcaption>`;
+  main.appendChild(fig);
+}
+</script>
+</body>
+</html>
