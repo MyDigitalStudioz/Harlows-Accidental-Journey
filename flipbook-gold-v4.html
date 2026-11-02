@@ -198,13 +198,15 @@
 
     function newPageImg(src) {
       var im = new Image();
+      var resolved = pageSrc(src);
       // CORS-mode loads keep the WebGL texture canvas untainted when the
       // page images are served from a different host than the page itself
       // (preview lenses, embeds): without this, texImage2D throws a
-      // SecurityError and the 3D turn disables itself. http(s) only —
-      // file:// keeps the plain load that already works there.
-      if (/^https?:$/.test(location.protocol)) im.crossOrigin = "anonymous";
-      im.src = pageSrc(src);
+      // SecurityError and the 3D turn disables itself. http(s) file URLs
+      // only — data URIs and file:// keep the plain load. Embedded pages
+      // are what makes a turn land already decoded.
+      if (/^https?:$/.test(location.protocol) && resolved.slice(0, 5) !== "data:") im.crossOrigin = "anonymous";
+      im.src = resolved;
       return im;
     }
     var pageImgs = PAGES.map(newPageImg);
@@ -1573,14 +1575,13 @@
     fit();
     document.body.dataset.flipReady = "1";
   }
-  if (location.protocol === "file:") {
-    var dataScript = document.createElement("script");
-    dataScript.src = "flipbook-gold-v4/pages-data.js";
-    dataScript.onload = function () { startFlipbook(); };
-    dataScript.onerror = function () { startFlipbook(); };
-    document.body.appendChild(dataScript);
-  } else {
-    startFlipbook();
-  }
+  // Embedded pages first, on every protocol. file:// used to be the only
+  // path that waited for pages-data.js; https skipped it and each turn
+  // fetched a JPEG, which is the flicker. A missing file still starts.
+  var dataScript = document.createElement("script");
+  dataScript.src = "flipbook-gold-v4/pages-data.js";
+  dataScript.onload = function () { startFlipbook(); };
+  dataScript.onerror = function () { startFlipbook(); };
+  document.body.appendChild(dataScript);
   </script>
 </body></html>
