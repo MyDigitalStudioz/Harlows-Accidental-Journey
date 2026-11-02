@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" href="flipbook-end-v1/favicon.png">
+<link rel="apple-touch-icon" href="flipbook-end-v1/favicon.png"><title>HAJ End-Test-Review v1</title>
+<style>
+  html,body{margin:0;height:100%;background:#191919;color:#f4f1ea;font:15px/1.3 "Segoe UI",sans-serif}
+  #viewer{position:relative;min-height:100%;height:100%;background:#191919;display:flex;flex-direction:column}
+  #viewer:fullscreen,#viewer:-webkit-full-screen{width:100%;height:100%;background:#191919}
+  #banner{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 18px;background:#191919;z-index:2}
+  #tools{display:flex;align-items:center;gap:12px}
+  #counter{background:rgba(20,20,20,.55);color:#fff;border-radius:999px;padding:6px 12px;white-space:nowrap}
+  #mark{white-space:nowrap}
+  #notice{display:none;position:absolute;left:12px;right:12px;bottom:12px;z-index:8;background:rgba(20,20,20,.88);color:#f4f1ea;border-radius:10px;padding:8px 12px;font-size:13px;pointer-events:none}
+  #folderPop{position:absolute;top:62px;right:18px;z-index:9;display:flex;flex-direction:column;gap:10px;background:#242424;color:#f4f1ea;border:1px solid rgba(244,241,234,.35);border-radius:12px;padding:12px 14px;font-size:14px}
+  #folderPop[hidden]{display:none}
+  #folderPop label{display:flex;align-items:center;gap:8px}
+  #folderGo,#pdfGo{background:#e8b34b;color:#191919;border:0;border-radius:999px;padding:8px 12px;font:inherit;cursor:pointer}
+  #pdfBtn{flex:0 0 auto;height:42px;padding:0 14px;background:rgba(255,255,255,.07);color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:999px;cursor:pointer;font:inherit;white-space:nowrap}
+  #pdfPop{position:absolute;top:62px;right:18px;z-index:9;display:flex;flex-direction:column;gap:10px;background:#242424;color:#f4f1ea;border:1px solid rgba(244,241,234,.35);border-radius:12px;padding:12px 14px;font-size:14px}
+  #pdfPop[hidden]{display:none}
+  #pdfPop label{display:flex;align-items:center;gap:8px}
+  #pdfLayout{background:#191919;color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:8px;padding:4px 8px;font:inherit}
+  #loadBar{position:absolute;left:0;right:0;top:0;height:3px;z-index:7;background:transparent}
+  #loadBar[hidden]{display:none}
+  #loadFill{height:100%;width:0;background:#e8b34b}
+  #turnLabel{display:flex;align-items:center;gap:6px;color:#f4f1ea;font-size:13px;white-space:nowrap}
+  #turnPick{background:#242424;color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:999px;padding:6px 10px;font:inherit;cursor:pointer}
+  #fs,#pagesBtn,#folderBtn,#guidesBtn{flex:0 0 auto;width:42px;height:42px;padding:0;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.07);color:#f4f1ea;border:1px solid rgba(244,241,234,.45);border-radius:50%;cursor:pointer;font:inherit}
+  #fs svg{width:20px;height:20px;stroke:#f4f1ea;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;display:block}
+  #pagesBtn svg,#folderBtn svg{width:19px;height:19px;fill:#f4f1ea;display:block}
+  #guidesBtn svg{width:19px;height:19px;stroke:#f4f1ea;fill:none;stroke-width:1.8;display:block}
+  #guidesBtn[aria-pressed="true"]{border-color:#e8b34b;background:rgba(232,179,75,.22)}
+  .guide{position:absolute;top:0;height:100%;z-index:9;pointer-events:none;display:none}
+  body.guides-on .guide{display:block}
+  .guide .gBleed{position:absolute;inset:0;border:2px solid rgba(63,169,245,.9)}
+  .guide .gTrim{position:absolute;border:2px solid rgba(255,83,71,.95)}
+  .guide .gSafe{position:absolute;border:2px dashed rgba(176,110,232,.95)}
+  .guide .gtag{position:absolute;top:2px;left:2px;font-size:9px;font-weight:700;letter-spacing:.06em;padding:1px 4px;border-radius:3px;color:#fff}
+  .guide .gtagT{background:#ff5347}
+  .guide .gtagS{background:#b06ee8}
+  #stage{flex:1;width:100%;min-height:0;background:#373737;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  #bookWrap{position:relative;z-index:1;cursor:grab;touch-action:none;will-change:transform}
+  #bookWrap.grabbing{cursor:grabbing}
+  #book{position:relative;perspective:2300px}
+  #book.single{overflow:hidden}
+  .base{position:absolute;top:0;height:100%;z-index:1;background:#2b2b2b;box-shadow:0 24px 55px rgba(0,0,0,.5)}
+  .base img{width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
+  .shade{position:absolute;top:0;height:100%;z-index:3;opacity:0;pointer-events:none}
+  #shadeL{background:linear-gradient(to left,rgba(0,0,0,.55),rgba(0,0,0,0) 75%)}
+  #shadeR{background:linear-gradient(to right,rgba(0,0,0,.55),rgba(0,0,0,0) 75%)}
+  #gl{position:absolute;z-index:5;display:none;pointer-events:none}
+  #leafFB{position:absolute;top:0;height:100%;z-index:5;display:none;transform-origin:left center;transform-style:preserve-3d;will-change:transform}
+  #leafFB .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#2b2b2b}
+  #leafFB .face img{width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
+  #leafFB .face.back{transform:rotateY(180deg)}
+  #leafFB .fshade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+  /* 5, not 8: this gutter wash must sit under the magazine sheet (#flipLayer is 6). 8 painted it across the turning leaf. It still covers the hardcover leaf because #gl and #leafFB are 5 and come first in the DOM. */
+  #spineShade{position:absolute;top:0;height:100%;z-index:5;pointer-events:none;background:linear-gradient(to right,rgba(0,0,0,0) 0%,rgba(0,0,0,.16) 38%,rgba(0,0,0,.30) 50%,rgba(0,0,0,.16) 62%,rgba(0,0,0,0) 100%)}
+  #castShade{position:absolute;top:0;height:100%;z-index:4;pointer-events:none;opacity:0;background:linear-gradient(to right,rgba(0,0,0,0) 0%,rgba(0,0,0,.85) 50%,rgba(0,0,0,0) 100%)}
+  #botLayer{position:absolute;top:0;height:100%;z-index:4;display:none;pointer-events:none;background:#2b2b2b}
+  #botLayer img{width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
+  #flipLayer{position:absolute;z-index:6;display:none;pointer-events:none;background:#2b2b2b;will-change:transform,clip-path}
+  #flipLayer img{width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
+  #shadeCv{position:absolute;left:0;top:0;z-index:7;display:none;pointer-events:none}
+  .arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:6;width:64px;height:96px;margin:0;padding:0;border:0;outline:0;box-shadow:none;background:transparent;color:#fff;font-size:52px;cursor:pointer;line-height:1;pointer-events:auto;appearance:none;-webkit-appearance:none}
+  .arrow:hover,.arrow:focus,.arrow:focus-visible,.arrow:active{border:0;outline:0;box-shadow:none;background:transparent}
+  #prev{left:8px}#next{right:8px}
+  body.expanded #viewer{position:fixed;inset:0;height:100%;height:100dvh;z-index:50}
+  body.expanded #banner{position:absolute;top:0;left:0;right:0;background:transparent;justify-content:flex-end}
+  body.expanded #counter,body.expanded #mark{display:none}
+  body.expanded #stage{height:100%}
+  #viewer:fullscreen #banner{position:absolute;top:0;left:0;right:0;background:transparent;justify-content:flex-end;z-index:30}
+  #viewer:fullscreen #counter,#viewer:fullscreen #mark{display:none}
+  body.expanded #fs,body.expanded #pagesBtn,#viewer:fullscreen #fs,#viewer:fullscreen #pagesBtn{background:rgba(15,15,15,.5)}
+  body.expanded #turnLabel,#viewer:fullscreen #turnLabel{background:rgba(15,15,15,.55);border-radius:999px;padding:4px 8px}
+  #sheet{position:absolute;left:0;right:0;bottom:0;z-index:40;background:rgba(16,16,16,.97);border-top:1px solid #4a4a4a;transform:translateY(105%);visibility:hidden;transition:transform .3s ease,visibility 0s linear .3s}
+  #sheet.open{transform:none;visibility:visible;transition:transform .3s ease}
+  #sheetBar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px 0}
+  #sheetTitle{font-weight:600;letter-spacing:.03em}
+  #sheetClose{flex:0 0 auto;width:34px;height:34px;padding:0;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);color:#f4f1ea;border:1px solid rgba(244,241,234,.4);border-radius:50%;cursor:pointer}
+  #sheetClose svg{width:15px;height:15px;stroke:#f4f1ea;fill:none;stroke-width:2.4;stroke-linecap:round;display:block}
+  #strip{display:flex;gap:10px;overflow-x:auto;padding:10px 14px 16px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#4d4d4d #101010;cursor:grab}
+  #strip.dragging{cursor:grabbing}
+  #strip::-webkit-scrollbar{height:10px}
+  #strip::-webkit-scrollbar-track{background:#101010}
+  #strip::-webkit-scrollbar-thumb{background:#4d4d4d;border-radius:6px;border:2px solid #101010}
+  #strip::-webkit-scrollbar-thumb:hover{background:#666}
+  .tcard{flex:0 0 auto;background:none;border:2px solid rgba(255,255,255,.14);border-radius:8px;padding:4px;cursor:pointer;font:inherit}
+  .tcard .timgs{display:flex;gap:2px}
+  .tcard img{height:82px;width:82px;object-fit:cover;display:block;border-radius:3px;background:#333}
+  .tcard .tcap{display:block;color:#cfc9bd;font-size:11px;text-align:center;padding-top:4px}
+  .tcard.now{border-color:#e8b34b}
+  .tcard.now .tcap{color:#e8b34b}
+  @media (max-width:560px){#banner{padding:10px 12px}#tools{gap:8px;flex-wrap:wrap;justify-content:flex-end}#mark{order:3;flex-basis:100%;text-align:right;font-size:12px;white-space:normal}#counter{padding:6px 10px}}
+</style></head>
+<body>
+  <div id="viewer">
+    <div id="loadBar" hidden><div id="loadFill"></div></div>
+    <div id="banner"><span id="counter">Page 1 of 18</span><span id="tools"><strong id="mark">HAJ End-Test-Review v1</strong><label id="turnLabel">Page turn: <select id="turnPick" aria-label="Page turn"><option value="hardcover">Hardcover</option><option value="magazine">Magazine</option></select></label><button id="folderBtn" type="button" aria-label="Open a folder of images" title="Open a folder of images"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/></svg></button><button id="pdfBtn" type="button">Open PDF</button><button id="pagesBtn" type="button" aria-label="Pages" title="Pages"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button><button id="guidesBtn" type="button" aria-label="Print guides" aria-pressed="false" title="Print guides — Lulu trim + safety"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="1"/><rect x="8" y="8" width="8" height="8" rx="0.5" stroke-dasharray="2.5 2"/></svg></button><button id="fs" type="button" aria-label="Full screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg></button></span></div>
+    <div id="stage">
+      <button id="prev" class="arrow" type="button" aria-label="Previous">&#8249;</button>
+      <button id="next" class="arrow" type="button" aria-label="Next">&#8250;</button>
+      <div id="bookWrap"><div id="glide"><div id="book">
+        <div class="base" id="baseL"><img alt=""></div>
+        <div class="base" id="baseR"><img alt=""></div>
+        <div class="guide" id="guideL"><div class="gBleed"></div><div class="gTrim"><span class="gtag gtagT">TRIM</span></div><div class="gSafe"><span class="gtag gtagS">SAFE</span></div></div>
+        <div class="guide" id="guideR"><div class="gBleed"></div><div class="gTrim"><span class="gtag gtagT">TRIM</span></div><div class="gSafe"><span class="gtag gtagS">SAFE</span></div></div>
+        <div class="shade" id="shadeL"></div>
+        <div class="shade" id="shadeR"></div>
+        <canvas id="gl"></canvas>
+        <div id="castShade"></div>
+        <div id="leafFB">
+          <div class="face front"><img alt=""><div class="fshade"></div></div>
+          <div class="face back"><img alt=""><div class="fshade"></div></div>
+        </div>
+        <div id="botLayer"><img alt=""></div>
+        <div id="flipLayer"><img alt=""></div>
+        <canvas id="shadeCv"></canvas>
+        <div id="spineShade"></div>
+      </div></div></div>
+    </div>
+    <div id="folderPop" hidden><label><input id="coverFirst" type="checkbox" checked> First image is the cover</label><button id="folderGo" type="button">Choose folder</button></div>
+    <div id="pdfPop" hidden><label><input id="pdfCover" type="checkbox" checked> First page is the cover</label><label>Pages <select id="pdfLayout" aria-label="PDF page layout"><option value="auto">Auto</option><option value="single">Single pages</option><option value="spreads">Wide spreads</option></select></label><label><input id="pdfPrint" type="checkbox" checked> NOT FOR PRINT</label><button id="pdfGo" type="button">Choose PDF</button></div>
+    <input id="folderPick" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" webkitdirectory multiple hidden>
+    <input id="pdfPick" type="file" accept="application/pdf,.pdf" hidden>
+    <div id="notice" role="status"></div>
+    <div id="sheet" aria-hidden="true">
+      <div id="sheetBar"><span id="sheetTitle">Pages — tap one to jump there</span><button id="sheetClose" type="button" aria-label="Close pages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <div id="strip"></div>
+    </div>
+  </div>
+  <script src="flipbook-end-v1/manifest.js"></script>
+  <!-- pdf.js 3.11.174 (Apache-2.0), classic scripts. The worker script is loaded on purpose so file:// uses the main-thread fake worker. -->
+  <script src="vendor/pdfjs/pdf.min.js"></script>
+  <script src="vendor/pdfjs/pdf.worker.min.js"></script>
+  <script>
+  function startFlipbook() {
+    var PAGES = BOOK.pages, N = PAGES.length, HALF = N / 2;
+    function pageSrc(src) {
+      if (typeof PAGE_DATA !== "undefined" && PAGE_DATA && PAGE_DATA[src]) return PAGE_DATA[src];
+      return src;
+    }
+    var viewer = document.getElementById("viewer");
+    var stage = document.getElementById("stage");
+    var bookWrap = document.getElementById("bookWrap");
+    var bookEl = document.getElementById("book");
+    var glideEl = document.getElementById("glide");
+    var baseL = document.getElementById("baseL"), baseR = document.getElementById("baseR");
+    var imgL = baseL.querySelector("img"), imgR = baseR.querySelector("img");
+
+    /* ---- Print guides (Lulu spec, locked 2026-10-31) ----
+       PAGE_SPEC.basis says what the loaded page images ARE:
+         "bleed" = full 8.75in page (8.5 trim + 0.125 bleed all around)
+         "trim"  = already cropped to the 8.5in trim
+       Guide insets are computed from the spec, so if a book's images turn
+       out to be trim-cropped, flipping basis to "trim" keeps the lines
+       true — change nothing else. (BEST-3 measurement pending from Cursor;
+       see CURSOR-NOTES-flipbook-v3-and-dimensions-2026-10-31.) */
+    // Basis set from Cursor's measurement (2026-10-31): the built-in book's
+    // images (and BEST-3's) are TrimBox crops — the 8.5in trim, no bleed in
+    // the picture — so basis is "trim". Flip to "bleed" only for an image
+    // set rendered WITH bleed (e.g. a future flipbook1750 set).
+    var PAGE_SPEC = { trimIn: 8.5, bleedIn: 0.125, safetyIn: 0.5, basis: "trim" };
+    var guideL = document.getElementById("guideL"), guideR = document.getElementById("guideR");
+    function paintGuides() {
+      var full = PAGE_SPEC.basis === "bleed" ? PAGE_SPEC.trimIn + 2 * PAGE_SPEC.bleedIn : PAGE_SPEC.trimIn;
+      var trimInset = PAGE_SPEC.basis === "bleed" ? PAGE_SPEC.bleedIn : 0;
+      var trimPct = 100 * trimInset / full, safePct = 100 * (trimInset + PAGE_SPEC.safetyIn) / full;
+      [guideL, guideR].forEach(function (g) {
+        var t = g.querySelector(".gTrim"), s = g.querySelector(".gSafe");
+        // Trim-basis images contain no bleed — the blue bleed outline would
+        // sit exactly on the trim line and lie about what the edge is.
+        g.querySelector(".gBleed").style.display = PAGE_SPEC.basis === "bleed" ? "" : "none";
+        t.style.left = t.style.right = t.style.top = t.style.bottom = trimPct + "%";
+        s.style.left = s.style.right = s.style.top = s.style.bottom = safePct + "%";
+      });
+    }
+    var shadeL = document.getElementById("shadeL"), shadeR = document.getElementById("shadeR");
+    var canvas = document.getElementById("gl");
+    var leafFB = document.getElementById("leafFB");
+    var fbFrontImg = leafFB.querySelector(".front img"), fbBackImg = leafFB.querySelector(".back img");
+    var fbShades = leafFB.querySelectorAll(".fshade");
+    var botLayer = document.getElementById("botLayer");
+    var flipLayer = document.getElementById("flipLayer");
+    var botImg = botLayer.querySelector("img");
+    var flipImg = flipLayer.querySelector("img");
+    var shadeCv = document.getElementById("shadeCv");
+    var shadeCtx = shadeCv.getContext("2d");
+    var turnMode = "hardcover";
+    try { if (localStorage.getItem("flipbook18-page-turn") === "magazine") turnMode = "magazine"; } catch (err) {}
+    function isMag() { return turnMode === "magazine"; }
+    var spineShade = document.getElementById("spineShade");
+    var castShade = document.getElementById("castShade");
+    var counter = document.getElementById("counter");
+    var fsBtn = document.getElementById("fs");
+    var sheet = document.getElementById("sheet");
+    var strip = document.getElementById("strip");
+
+    function newPageImg(src) {
+      var im = new Image();
+      // CORS-mode loads keep the WebGL texture canvas untainted when the
+      // page images are served from a different host than the page itself
+      // (preview lenses, embeds): without this, texImage2D throws a
+      // SecurityError and the 3D turn disables itself. http(s) only —
+      // file:// keeps the plain load that already works there.
+      if (/^https?:$/.test(location.protocol)) im.crossOrigin = "anonymous";
+      im.src = pageSrc(src);
+      return im;
+    }
+    var pageImgs = PAGES.map(newPageImg);
+    var noticeEl = document.getElementById("notice");
+    function reportNotice(text) {
+      noticeEl.textContent = text;
+      noticeEl.style.display = "block";
+    }
+
+    /* ================= WebGL leaf ================= */
+    var M = 24;                                  // strip columns (shared vertices = no seams)
+    var FLEX_RAD = 24 * Math.PI / 180;           // total tip lag at mid-turn
+    var PERSP = 2300;
+    var gl = null, glOK = false;
+    var gProg, gPosBuf, gUvBuf, gIdxBuf, gTexF = null, gTexB = null;
+    var uHalf, uWin, uP, uShadeL, uBendL, aPosL, aUvL;
+    var winW = 0, winH = 0;                      // canvas window size in CSS px
+    (function initGL() {
+      try {
+        gl = canvas.getContext("webgl", { antialias: true, alpha: true, depth: false, stencil: false, premultipliedAlpha: false });
+        if (!gl) return;
+        var vs = "attribute vec3 aPos; attribute vec2 aUv; uniform vec2 uHalf; uniform vec2 uWin; uniform float uP; varying vec2 vUv;" +
+          "void main(){ float X = aPos.x - uHalf.x; float Y = aPos.y - uHalf.y; float d = uP - aPos.z;" +
+          " float px = X * uP / d; float py = Y * uP / d;" +
+          " gl_Position = vec4(px / uWin.x, -py / uWin.y, 0.0, 1.0); vUv = aUv; }";
+        var fs = "precision mediump float; varying vec2 vUv; uniform sampler2D uFront; uniform sampler2D uBack; uniform float uShade; uniform float uBend;" +
+          "void main(){ vec4 c; if (gl_FrontFacing) { c = texture2D(uFront, vUv); } else { c = texture2D(uBack, vec2(1.0 - vUv.x, vUv.y)); }" +
+          " c.rgb *= (1.0 - uShade); c.rgb += uBend * 0.05 * smoothstep(0.93, 1.0, vUv.x); gl_FragColor = vec4(c.rgb, 1.0); }";
+        function sh(type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
+        gProg = gl.createProgram();
+        gl.attachShader(gProg, sh(gl.VERTEX_SHADER, vs));
+        gl.attachShader(gProg, sh(gl.FRAGMENT_SHADER, fs));
+        gl.linkProgram(gProg);
+        if (!gl.getProgramParameter(gProg, gl.LINK_STATUS)) { gl = null; return; }
+        gl.useProgram(gProg);
+        aPosL = gl.getAttribLocation(gProg, "aPos");
+        aUvL = gl.getAttribLocation(gProg, "aUv");
+        uHalf = gl.getUniformLocation(gProg, "uHalf");
+        uWin = gl.getUniformLocation(gProg, "uWin");
+        uP = gl.getUniformLocation(gProg, "uP");
+        uShadeL = gl.getUniformLocation(gProg, "uShade");
+        uBendL = gl.getUniformLocation(gProg, "uBend");
+        gl.uniform1i(gl.getUniformLocation(gProg, "uFront"), 0);
+        gl.uniform1i(gl.getUniformLocation(gProg, "uBack"), 1);
+        // static uv + index buffers
+        var uv = new Float32Array((M + 1) * 2 * 2);
+        var idx = [];
+        for (var i = 0; i <= M; i++) {
+          uv[(i * 2) * 2] = i / M; uv[(i * 2) * 2 + 1] = 1;
+          uv[(i * 2 + 1) * 2] = i / M; uv[(i * 2 + 1) * 2 + 1] = 0;
+          if (i < M) { var a = i * 2, b = a + 1, c = a + 2, d = a + 3; idx.push(a, b, c, b, d, c); }
+        }
+        gUvBuf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, gUvBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, uv, gl.STATIC_DRAW);
+        gIdxBuf = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gIdxBuf);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx), gl.STATIC_DRAW);
+        gPosBuf = gl.createBuffer();
+        gl.disable(gl.DEPTH_TEST);
+        gl.disable(gl.CULL_FACE);
+        glOK = true;
+      } catch (e) { gl = null; glOK = false; }
+    })();
+
+    // The sheet's texture is pre-scaled to 1024x1024 (power of two) through
+    // the browser's own high-quality 2D resampler, with mipmaps on. That
+    // makes the flying sheet's pixels land almost exactly where the flat
+    // <img> page puts them — the raw 1200px texture under plain GL LINEAR
+    // filtering resamples differently, which is what made the landing
+    // crossfade (and the old swap) visible at all.
+    var texCanvas = document.createElement("canvas");
+    texCanvas.width = 1024; texCanvas.height = 1024;
+    var texCtx = texCanvas.getContext("2d");
+    texCtx.imageSmoothingEnabled = true;
+    texCtx.imageSmoothingQuality = "high";
+    function dropGL(err) {
+      glOK = false;
+      reportNotice("3D turn is off in this browser. Flat pages still turn. " + (err && err.message ? err.message : ""));
+    }
+    function makeTex(img) {
+      try {
+        texCtx.drawImage(img, 0, 0, 1024, 1024);
+        var t = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, t);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texCanvas);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.generateMipmap(gl.TEXTURE_2D);
+        return t;
+      } catch (err) {
+        dropGL(err);
+        return null;
+      }
+    }
+
+    function drawLeafGL(thetaDeg, lagSign, shade, mx, my, bend) {
+      var W = pageSize, spineX = W;
+      var th = thetaDeg * Math.PI / 180;
+      var lag = lagSign * FLEX_RAD * Math.sin(Math.PI * Math.abs(thetaDeg) / 180);
+      var pos = new Float32Array((M + 1) * 2 * 3);
+      var step = W / M;
+      for (var i = 0; i <= M; i++) {
+        var s = i * step, x, z;
+        if (Math.abs(lag) < 1e-5) { x = spineX + s * Math.cos(th); z = -s * Math.sin(th); }
+        else {
+          var a1 = th + lag * s / W;
+          x = spineX + (W / lag) * (Math.sin(a1) - Math.sin(th));
+          z = (W / lag) * (Math.cos(a1) - Math.cos(th));
+        }
+        var o = i * 6;
+        pos[o] = x; pos[o + 1] = 0; pos[o + 2] = z;
+        pos[o + 3] = x; pos[o + 4] = W; pos[o + 5] = z;
+      }
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.useProgram(gProg);
+      gl.uniform2f(uHalf, W, W / 2);
+      gl.uniform2f(uWin, winW / 2, winH / 2);
+      gl.uniform1f(uP, PERSP);
+      gl.uniform1f(uShadeL, shade);
+      gl.uniform1f(uBendL, bend || 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gPosBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, pos, gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(aPosL);
+      gl.vertexAttribPointer(aPosL, 3, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gUvBuf);
+      gl.enableVertexAttribArray(aUvL);
+      gl.vertexAttribPointer(aUvL, 2, gl.FLOAT, false, 0, 0);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, gTexF);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, gTexB);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gIdxBuf);
+      gl.drawElements(gl.TRIANGLES, M * 6, gl.UNSIGNED_SHORT, 0);
+    }
+    /* =============== end WebGL leaf =============== */
+
+    var focusMode = false;
+    var flipped = 0;
+    var focus = 0;
+    var pageSize = 300;
+    var camX = 0, camAnim = null;
+    var animating = false;
+    var pendingBook = false;
+    var turnGen = 0;
+    var pendingDir = null;   // one-deep queue: a tap mid-flip lines up the next turn
+    var REDUCED = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var FLIP_MS = REDUCED ? 320 : 950;
+
+    function isSingle() { return stage.clientHeight > stage.clientWidth; }
+    function easeInOutSine(t) { return 0.5 - 0.5 * Math.cos(Math.PI * t); }
+    function glideFor(f) { return focusMode ? 0 : (f === 0 ? -pageSize / 2 : (f === HALF ? pageSize / 2 : 0)); }
+
+    /* ---- camera: in focus (portrait) mode the spread stays whole and the
+       view slides to frame one page at a time, like the Santa viewer ---- */
+    function setCam(x) { camX = x; bookWrap.style.transform = "translateX(" + x + "px)"; }
+    function camTargetFor(fx, foc) {
+      if (!focusMode) return 0;
+      if (fx === 0) return -pageSize / 2;
+      if (fx === HALF) return pageSize / 2;
+      return foc === 0 ? pageSize / 2 : -pageSize / 2;
+    }
+    function tweenCam(to, dur, easeFn) {
+      if (camAnim) cancelAnimationFrame(camAnim);
+      var from = camX, t0 = null; dur = dur || 500;
+      function fr(ts) {
+        if (t0 === null) t0 = ts;
+        var raw = Math.min(1, (ts - t0) / dur);
+        var e = easeFn ? easeFn(raw) : Math.sin(raw * Math.PI / 2);
+        setCam(from + (to - from) * e);
+        if (raw < 1) camAnim = requestAnimationFrame(fr); else camAnim = null;
+      }
+      camAnim = requestAnimationFrame(fr);
+    }
+    function slideTo(side) {
+      focus = side;
+      tweenCam(camTargetFor(flipped, side), REDUCED ? 180 : 500);
+      counter.textContent = label();
+    }
+
+    var blankNote = "";
+    function label() {
+      var text;
+      if (focusMode) {
+        if (flipped === 0) text = "Page 1 of " + N;
+        else if (flipped === HALF) text = "Page " + N + " of " + N;
+        else text = "Page " + (focus === 0 ? 2 * flipped : 2 * flipped + 1) + " of " + N;
+      } else if (flipped === 0) text = "Page 1 of " + N;
+      else if (flipped === HALF) text = "Page " + N + " of " + N;
+      else text = "Page " + (2 * flipped) + "–" + (2 * flipped + 1) + " of " + N;
+      return blankNote ? text + " · " + blankNote : text;
+    }
+
+    /* ---- Turn readiness: never flip a page whose image has not loaded ----
+       The preloader (pageImgs) races the reader: building a leaf texture or
+       revealing a base page from an unloaded image is what made pages flash
+       in mid-turn. Animated turns and strip jumps now wait (load bar shows,
+       1.2s cap) until the leaf's pages + the page the turn reveals are
+       decoded, and every render warms the spreads around the current one. */
+    function imgReady(im) { return !!(im && im.complete && im.naturalWidth > 0); }
+    function ensureIndices(list, cb) {
+      var need = [];
+      list.forEach(function (i) {
+        if (i >= 0 && i < N && !imgReady(pageImgs[i]) && need.indexOf(i) < 0) need.push(i);
+      });
+      if (!need.length) { cb(); return; }
+      loadBar.hidden = false;
+      var done = false;
+      function finish() { if (done) return; done = true; loadBar.hidden = true; cb(); }
+      var left = need.length;
+      need.forEach(function (i) {
+        var im = pageImgs[i], stepped = false;
+        function step() { if (stepped) return; stepped = true; if (--left <= 0) finish(); }
+        if (im.decode) im.decode().then(step, step);
+        else { im.addEventListener("load", step, { once: true }); im.addEventListener("error", step, { once: true }); }
+      });
+      setTimeout(finish, 1200);
+    }
+    function turnIndices(dir) {
+      if (dir === "next") return [2 * flipped, 2 * flipped + 1, 2 * flipped + 2];
+      return [2 * flipped - 2, 2 * flipped - 1, 2 * flipped - 3];
+    }
+    function warmAround() {
+      var c = 2 * flipped;
+      [c - 3, c - 2, c - 1, c, c + 1, c + 2, c + 3, c + 4].forEach(function (i) {
+        if (i < 0 || i >= N) return;
+        var im = pageImgs[i];
+        if (im && !imgReady(im) && im.decode) im.decode().catch(function () {});
+      });
+    }
+
+    function render() {
+      var li = flipped === 0 ? null : 2 * flipped - 1;
+      var ri = flipped === HALF ? null : 2 * flipped;
+      if (li === null) { baseL.style.display = "none"; } else { baseL.style.display = "block"; imgL.src = pageSrc(PAGES[li]); }
+      if (ri === null) { baseR.style.display = "none"; } else { baseR.style.display = "block"; imgR.src = pageSrc(PAGES[ri]); }
+      // While a leaf is flying, poseLeaf owns the glide (it interpolates to
+      // exactly this value on the final frame). Setting it here mid-flight
+      // would slam the book sideways at the swap, then step it back.
+      if (!animating) glideEl.style.transform = "translateX(" + glideFor(flipped) + "px)";
+      counter.textContent = label();
+      warmAround();
+    }
+
+    function fit() {
+      var nowFocus = isSingle();
+      if (nowFocus !== focusMode) {
+        focusMode = nowFocus;
+        if (focusMode) focus = 0;   // entering portrait: frame the left page first
+      }
+      var sw = stage.clientWidth, sh = stage.clientHeight;
+      var pad = sw < 560 ? 10 : 24;
+      if (focusMode) pageSize = Math.max(80, Math.min(sw - pad * 2, sh - pad * 2));
+      else pageSize = Math.max(80, Math.min((sw - pad * 2) / 2, sh - pad * 2));
+      var bookW = pageSize * 2;
+      bookEl.style.width = bookW + "px";
+      bookEl.style.height = pageSize + "px";
+      baseL.style.left = "0px"; baseL.style.width = pageSize + "px";
+      baseR.style.left = pageSize + "px"; baseR.style.width = pageSize + "px";
+      guideL.style.left = "0px"; guideL.style.width = pageSize + "px";
+      guideR.style.left = pageSize + "px"; guideR.style.width = pageSize + "px";
+      shadeL.style.left = "0px"; shadeL.style.width = pageSize + "px";
+      shadeR.style.left = pageSize + "px"; shadeR.style.width = pageSize + "px";
+      spineShade.style.display = "block";
+      spineShade.style.left = (pageSize - 36) + "px";
+      spineShade.style.width = "72px";
+      leafFB.style.left = pageSize + "px";
+      leafFB.style.width = pageSize + "px";
+      // WebGL canvas window: book + margins so the swinging leaf is never clipped
+      var mx = Math.round(bookW * 0.38);
+      var my = Math.round(pageSize * 0.45);
+      winW = bookW + 2 * mx; winH = pageSize + 2 * my;
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.style.left = -mx + "px";
+      canvas.style.top = -my + "px";
+      canvas.style.width = winW + "px";
+      canvas.style.height = winH + "px";
+      canvas.width = Math.round(winW * dpr);
+      canvas.height = Math.round(winH * dpr);
+      // shift the GL book origin by the margins: handled by translating positions
+      canvas.dataset.mx = mx; canvas.dataset.my = my;
+      botLayer.style.width = pageSize + "px";
+      flipLayer.style.width = pageSize + "px";
+      flipLayer.style.height = pageSize + "px";
+      shadeCv.style.width = bookW + "px";
+      shadeCv.style.height = pageSize + "px";
+      shadeCv.width = Math.round(bookW * dpr);
+      shadeCv.height = Math.round(pageSize * dpr);
+      shadeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (camAnim) { cancelAnimationFrame(camAnim); camAnim = null; }
+      setCam(camTargetFor(flipped, focus));
+      render();
+    }
+
+    function setLeafImages(frontIdx, backIdx) {
+      if (glOK) {
+        if (gTexF) gl.deleteTexture(gTexF);
+        if (gTexB) gl.deleteTexture(gTexB);
+        gTexF = makeTex(pageImgs[frontIdx]);
+        if (glOK) gTexB = makeTex(pageImgs[backIdx]);
+      }
+      if (!glOK) {
+        fbFrontImg.src = pageSrc(PAGES[frontIdx]);
+        fbBackImg.src = pageSrc(PAGES[backIdx]);
+      }
+    }
+
+    /* ================= corner-fold leaf (magazine / flipbook17) =================
+       Rigid plane on the spine corner. DOM layers and clip geometry, no
+       canvas texture, so file:// does not taint it. Spine frame: x from
+       the spine toward the turning side, y down. */
+    function limitToCircle(c, R, p) {
+      var dx = c.x - p.x, dy = c.y - p.y;
+      if (Math.sqrt(dx * dx + dy * dy) <= R) return p;
+      var ax = Math.sqrt(R * R * dx * dx / (dx * dx + dy * dy)) + c.x;
+      if (p.x < 0) ax *= -1;
+      var ay = (ax - c.x) * dy / dx + c.y;
+      if (dx + c.y === 0) ay = R;
+      return { x: ax, y: ay };
+    }
+    function calcFold(F0, corner, W, H) {
+      var F = { x: F0.x, y: F0.y }, rect = null, A = 0, valid = true;
+      function geom(p) {
+        var e = W - p.x + 1;
+        var i = corner === "bottom" ? H - p.y : p.y;
+        var s0 = 2 * Math.acos(Math.max(-1, Math.min(1, e / Math.sqrt(i * i + e * e))));
+        if (!isFinite(s0) || (Math.PI - s0 >= 0 && Math.PI - s0 < 0.003)) { valid = false; return; }
+        var sg = i < 0 ? -s0 : s0;
+        A = corner === "bottom" ? -sg : sg;
+        var base = corner === "top"
+          ? [{ x: 0, y: 0 }, { x: W, y: 0 }, { x: 0, y: H }, { x: W, y: H }]
+          : [{ x: 0, y: -H }, { x: W, y: -H }, { x: 0, y: 0 }, { x: W, y: 0 }];
+        var c = Math.cos(A), sn = Math.sin(A);
+        function rot(b) { return { x: b.x * c + b.y * sn + p.x, y: b.y * c - b.x * sn + p.y }; }
+        rect = { tl: rot(base[0]), tr: rot(base[1]), bl: rot(base[2]), br: rot(base[3]) };
+      }
+      geom(F);
+      if (!valid) return { valid: false };
+      var cPt = corner === "top" ? { x: 0, y: 0 } : { x: 0, y: H };
+      var oPt = corner === "top" ? { x: 0, y: H } : { x: 0, y: 0 };
+      var n1 = limitToCircle(cPt, W, F);
+      if (n1.x !== F.x || n1.y !== F.y) { F = n1; geom(F); if (!valid) return { valid: false }; }
+      var rr = Math.sqrt(W * W + H * H);
+      var o = rect.br, a = rect.tl;
+      if (corner === "bottom") { o = rect.tr; a = rect.bl; }
+      if (o.x <= 0) {
+        var n2 = limitToCircle(oPt, rr, a);
+        if (n2.x !== F.x || n2.y !== F.y) { F = n2; geom(F); if (!valid) return { valid: false }; }
+      }
+      function lineI(p1, p2, p3, p4) {
+        var d = (p2.x - p1.x) * (p4.y - p3.y) - (p2.y - p1.y) * (p4.x - p3.x);
+        if (!d) return null;
+        var t = ((p3.x - p1.x) * (p4.y - p3.y) - (p3.y - p1.y) * (p4.x - p3.x)) / d;
+        var x = p1.x + t * (p2.x - p1.x), y = p1.y + t * (p2.y - p1.y);
+        return (x >= -1 && x <= W + 1 && y >= -1 && y <= H + 1) ? { x: x, y: y } : null;
+      }
+      var topI = corner === "top" ? lineI(F, rect.tr, { x: 0, y: 0 }, { x: W, y: 0 }) : lineI(rect.tl, rect.tr, { x: 0, y: 0 }, { x: W, y: 0 });
+      var sideI = corner === "top" ? lineI(F, rect.bl, { x: W, y: 0 }, { x: W, y: H }) : lineI(F, rect.tl, { x: W, y: 0 }, { x: W, y: H });
+      var botI = lineI(rect.bl, rect.br, { x: 0, y: H }, { x: W, y: H });
+      var flipClip = [rect.tl], flag = false;
+      if (topI) flipClip.push(topI);
+      if (!sideI) flag = true; else { flipClip.push(sideI); if (!botI) flag = false; }
+      if (botI) flipClip.push(botI);
+      if (flag || corner === "bottom") flipClip.push(rect.bl);
+      function pdist(p, q) { return (!p || !q) ? Infinity : Math.sqrt((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y)); }
+      var botClip = [];
+      if (topI) botClip.push(topI);
+      if (corner === "top") botClip.push({ x: W, y: 0 });
+      else { if (topI) botClip.push({ x: W, y: 0 }); botClip.push({ x: W, y: H }); }
+      if (sideI) { if (pdist(sideI, topI) >= 10) botClip.push(sideI); }
+      else if (corner === "top") botClip.push({ x: W, y: H });
+      if (botI) botClip.push(botI);
+      if (topI) botClip.push(topI);
+      var shadowStart = corner === "top" ? topI : (sideI || topI);
+      var shadowEnd = shadowStart === topI ? (sideI || botI) : botI;
+      return { valid: true, F: F, A: A, rect: rect, flipClip: flipClip, botClip: botClip,
+               shadowStart: shadowStart, shadowEnd: shadowEnd,
+               progress: Math.abs((F.x - W) / (2 * W)) };
+    }
+    var MAX_SHADOW_OPACITY = 0.22;
+    var turnDir = null;
+    var turnCorner = "bottom";
+    var lastPoseP = 0;
+    function showTurn() {
+      botLayer.style.display = "block";
+      flipLayer.style.display = "block";
+      flipLayer.style.opacity = "";
+      shadeCv.style.display = "block";
+    }
+    function hideTurn() {
+      botLayer.style.display = "none";
+      flipLayer.style.display = "none";
+      flipLayer.style.opacity = "";
+      flipLayer.style.transform = "";
+      flipLayer.style.clipPath = "";
+      shadeCv.style.display = "none";
+      turnDir = null;
+    }
+    function toBook(q) {
+      return turnDir === "next" ? { x: pageSize + q.x, y: q.y } : { x: pageSize - q.x, y: q.y };
+    }
+    function polyStr(pts) {
+      return "polygon(" + pts.map(function (q) { return q.x.toFixed(1) + "px " + q.y.toFixed(1) + "px"; }).join(", ") + ")";
+    }
+    function poseTurn(F, glideNow) {
+      var W = pageSize, H = pageSize;
+      var c = calcFold(F, turnCorner, W, H);
+      if (!c.valid) return lastPoseP;
+      var p = c.progress;
+      lastPoseP = p;
+      var B = function (q) { return toBook(q); };
+      var q00, q10, q01;
+      if (turnDir === "next") { q00 = B(c.rect.tl); q10 = B(c.rect.tr); q01 = B(c.rect.bl); }
+      else { q00 = B(c.rect.tr); q10 = B(c.rect.tl); q01 = B(c.rect.br); }
+      var ma = (q10.x - q00.x) / W, mb = (q10.y - q00.y) / W;
+      var mc = (q01.x - q00.x) / H, md = (q01.y - q00.y) / H;
+      flipLayer.style.left = "0px";
+      flipLayer.style.top = "0px";
+      flipLayer.style.transformOrigin = "0 0";
+      flipLayer.style.transform = "matrix(" + ma.toFixed(5) + ", " + mb.toFixed(5) + ", " + mc.toFixed(5) + ", " + md.toFixed(5) + ", " + q00.x.toFixed(1) + ", " + q00.y.toFixed(1) + ")";
+      var det = ma * md - mb * mc;
+      flipLayer.style.clipPath = polyStr(c.flipClip.map(function (q) {
+        var qb = B(q), vx = qb.x - q00.x, vy = qb.y - q00.y;
+        return { x: (md * vx - mc * vy) / det, y: (-mb * vx + ma * vy) / det };
+      }));
+      botLayer.style.clipPath = polyStr(c.botClip.map(function (q) {
+        return turnDir === "next" ? { x: q.x, y: q.y } : { x: pageSize - q.x, y: q.y };
+      }));
+      var ctx = shadeCtx;
+      ctx.clearRect(0, 0, W * 2, H);
+      if (c.shadowStart && c.shadowEnd) {
+        var s0 = toBook(c.shadowStart), s1 = toBook(c.shadowEnd);
+        var ddx = s1.x - s0.x, ddy = s1.y - s0.y;
+        var len = Math.sqrt(ddx * ddx + ddy * ddy) || 1;
+        var ux = ddx / len, uy = ddy / len;
+        var nx = uy, ny = -ux;
+        var bcx = 0, bcy = 0;
+        c.botClip.forEach(function (q) { var b = toBook(q); bcx += b.x; bcy += b.y; });
+        bcx /= c.botClip.length; bcy /= c.botClip.length;
+        if (nx * (bcx - (s0.x + s1.x) / 2) + ny * (bcy - (s0.y + s1.y) / 2) < 0) { nx = -nx; ny = -ny; }
+        var sw = 0.75 * W * p;
+        var op = MAX_SHADOW_OPACITY * (1 - p) + 0.04 * Math.sin(Math.PI * p);
+        var ext = H * 1.3;
+        function band(sign, width, stops) {
+          var ax = s0.x - ux * ext, ay = s0.y - uy * ext;
+          var bx = s1.x + ux * ext, by = s1.y + uy * ext;
+          var g = ctx.createLinearGradient(ax, ay, ax + nx * sign * width, ay + ny * sign * width);
+          stops.forEach(function (st) { g.addColorStop(st[0], "rgba(0,0,0," + (st[1]).toFixed(3) + ")"); });
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.moveTo(ax, ay); ctx.lineTo(bx, by);
+          ctx.lineTo(bx + nx * sign * width, by + ny * sign * width);
+          ctx.lineTo(ax + nx * sign * width, ay + ny * sign * width);
+          ctx.closePath(); ctx.fill();
+        }
+        if (sw > 1 && len > 4) {
+          ctx.save();
+          ctx.beginPath();
+          c.botClip.forEach(function (q, ix) { var b = toBook(q); if (ix === 0) ctx.moveTo(b.x, b.y); else ctx.lineTo(b.x, b.y); });
+          ctx.closePath(); ctx.clip();
+          band(1, sw, [[0, op], [1, 0]]);
+          ctx.restore();
+          ctx.save();
+          ctx.beginPath();
+          c.flipClip.forEach(function (q, ix) { var b = toBook(q); if (ix === 0) ctx.moveTo(b.x, b.y); else ctx.lineTo(b.x, b.y); });
+          ctx.closePath(); ctx.clip();
+          band(-1, sw * 0.75, [[0, op], [0.15, 0.05], [0.35, op], [1, 0]]);
+          ctx.restore();
+        }
+      }
+      var s = Math.sin(Math.PI * p);
+      if (turnDir === "next") { shadeR.style.opacity = (s * 0.34).toFixed(3); shadeL.style.opacity = (s * 0.20).toFixed(3); }
+      else { shadeL.style.opacity = (s * 0.34).toFixed(3); shadeR.style.opacity = (s * 0.20).toFixed(3); }
+      if (glideNow !== null && glideNow !== undefined) glideEl.style.transform = "translateX(" + glideNow + "px)";
+      return p;
+    }
+    function turnStartF(corner) { return corner === "top" ? { x: pageSize - 10, y: 2 } : { x: pageSize - 10, y: pageSize - 2 }; }
+    function turnEndF(corner) { return corner === "top" ? { x: -pageSize, y: 2 } : { x: -pageSize, y: pageSize - 2 }; }
+    function magMs() { return REDUCED ? 320 : 700; }
+    function linearEase(t) { return t; }
+    /* =============== end corner-fold leaf =============== */
+
+    function showLeaf() {
+      if (isMag()) { showTurn(); return; }
+      var el = glOK ? canvas : leafFB;
+      el.style.opacity = "";
+      el.style.display = "block";
+    }
+    function hideLeaf() {
+      canvas.style.display = "none";
+      canvas.style.opacity = "";
+      leafFB.style.display = "none";
+      leafFB.style.opacity = "";
+      leafFB.style.transform = "";
+      shadeL.style.opacity = 0; shadeR.style.opacity = 0;
+      fbShades[0].style.opacity = 0; fbShades[1].style.opacity = 0;
+      castShade.style.opacity = 0;
+      hideTurn();
+    }
+
+    function poseLeaf(theta, lagSign, glideNow) {
+      var s = Math.sin(Math.PI * Math.abs(theta) / 180);
+      if (glOK) {
+        // translate book coords into the canvas window (margin offset)
+        var mx = parseFloat(canvas.dataset.mx || 0), my = parseFloat(canvas.dataset.my || 0);
+        drawLeafGL(theta, lagSign, s * 0.13, mx, my, s);
+      } else {
+        leafFB.style.transform = "rotateY(" + theta + "deg)";
+        var fs = (s * 0.13).toFixed(3);
+        fbShades[0].style.opacity = fs; fbShades[1].style.opacity = fs;
+      }
+      if (lagSign > 0) { shadeR.style.opacity = (s * 0.34).toFixed(3); shadeL.style.opacity = (s * 0.20).toFixed(3); }
+      else { shadeL.style.opacity = (s * 0.34).toFixed(3); shadeR.style.opacity = (s * 0.20).toFixed(3); }
+      // cast shadow: a soft band on the pages beneath, tracking the leaf tip's
+      // ground projection (same bend integral as the GL sheet), peaking mid-turn
+      var thR = theta * Math.PI / 180;
+      var lagR = lagSign * FLEX_RAD * s;
+      var tipDx;
+      if (Math.abs(lagR) < 1e-4) tipDx = pageSize * Math.cos(thR);
+      else tipDx = (pageSize / lagR) * (Math.sin(thR + lagR) - Math.sin(thR));
+      var bandW = pageSize * (0.55 + 0.55 * s);
+      castShade.style.left = (pageSize + tipDx - bandW / 2) + "px";
+      castShade.style.width = bandW + "px";
+      castShade.style.opacity = (0.32 * s).toFixed(3);
+      if (glideNow !== null && glideNow !== undefined) glideEl.style.transform = "translateX(" + glideNow + "px)";
+    }
+
+    /* Set up bases + leaf for a turn. dir: "next" | "prev". Returns false if impossible.
+       Magazine uses the peel layers. Hardcover keeps the WebGL sheet, or the flat leaf. */
+    function setupTurn(dir, corner) {
+      turnDir = dir;
+      turnCorner = corner || "bottom";
+      lastPoseP = 0;
+      if (dir === "next") {
+        if (flipped >= HALF) return false;
+        var f = flipped;
+        var nr = 2 * f + 2;
+        if (isMag()) {
+          flipImg.src = pageSrc(PAGES[2 * f + 1]);
+          botLayer.style.left = pageSize + "px";
+          if (nr < N) { botImg.src = pageSrc(PAGES[nr]); botLayer.style.visibility = "visible"; }
+          else botLayer.style.visibility = "hidden";
+        } else {
+          setLeafImages(2 * f, 2 * f + 1);
+          if (nr < N) { baseR.style.display = "block"; imgR.src = pageSrc(PAGES[nr]); } else baseR.style.display = "none";
+        }
+      } else {
+        if (flipped <= 0) return false;
+        var g = flipped;
+        var pl = 2 * g - 3;
+        if (isMag()) {
+          flipImg.src = pageSrc(PAGES[2 * g - 2]);
+          botLayer.style.left = "0px";
+          if (pl >= 0) { botImg.src = pageSrc(PAGES[pl]); botLayer.style.visibility = "visible"; }
+          else botLayer.style.visibility = "hidden";
+        } else {
+          setLeafImages(2 * g - 2, 2 * g - 1);
+          if (pl >= 0) { baseL.style.display = "block"; imgL.src = pageSrc(PAGES[pl]); } else baseL.style.display = "none";
+        }
+      }
+      return true;
+    }
+
+    function commitTurn(dir) {
+      flipped += (dir === "next" ? 1 : -1);
+    }
+
+    function stateAfter(dir) { return flipped + (dir === "next" ? 1 : -1); }
+
+    var SWAP_DEG = 10;   // landing crossfade window, degrees before touchdown
+    function animateLeaf(fromDeg, toDeg, gFrom, gTo, lagSign, dur, onSwap, onDone) {
+      var gen = ++turnGen;
+      animating = true;
+      showLeaf();
+      var t0 = null, swapped = false;
+      var leafEl = glOK ? canvas : leafFB;
+      function frame(ts) {
+        if (gen !== turnGen) return;
+        if (t0 === null) t0 = ts;
+        var raw = Math.min(1, (ts - t0) / dur);
+        var e = easeInOutSine(raw);
+        var ang = fromDeg + (toDeg - fromDeg) * e;
+        var frac = Math.abs(ang - fromDeg) / 180;
+        poseLeaf(ang, lagSign, gFrom + (gTo - gFrom) * frac);
+        // Landing handoff: within SWAP_DEG of touchdown, swap the flat base
+        // image in UNDER the still-turning sheet, then fade the sheet out
+        // over the remaining degrees so the two renderings blend instead
+        // of snapping in a single frame.
+        var remain = Math.abs(toDeg - ang);
+        if (!swapped && remain <= SWAP_DEG) {
+          swapped = true;
+          if (onSwap) onSwap();
+        }
+        if (swapped) leafEl.style.opacity = Math.pow(Math.max(0, remain / SWAP_DEG), 0.65).toFixed(3);
+        if (raw < 1) { requestAnimationFrame(frame); return; }
+        hideLeaf();
+        animating = false;
+        if (pendingBook) { pendingBook = false; render(); }
+        if (onDone) onDone();
+        if (pendingDir) {
+          var pd = pendingDir;
+          pendingDir = null;
+          if (pd === "next") flipNext(); else flipPrev();
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    var SWAP_P = 0.93;
+    function animateTurnF(dir, F0, F1, g0, g1, dur, onSwap, onDone) {
+      var gen = ++turnGen;
+      animating = true;
+      showTurn();
+      var t0 = null, swapped = false;
+      function frame(ts) {
+        if (gen !== turnGen) return;
+        if (t0 === null) t0 = ts;
+        var raw = Math.min(1, (ts - t0) / dur);
+        var F = { x: F0.x + (F1.x - F0.x) * raw, y: F0.y + (F1.y - F0.y) * raw };
+        var p = poseTurn(F, g0 + (g1 - g0) * raw);
+        if (!swapped && p >= SWAP_P) {
+          swapped = true;
+          if (onSwap) onSwap();
+        }
+        if (swapped) flipLayer.style.opacity = Math.pow(Math.max(0, (1 - p) / (1 - SWAP_P)), 0.65).toFixed(3);
+        if (raw < 1) { requestAnimationFrame(frame); return; }
+        hideLeaf();
+        animating = false;
+        if (pendingBook) { pendingBook = false; render(); }
+        if (onDone) onDone();
+        if (pendingDir) {
+          var pd = pendingDir;
+          pendingDir = null;
+          if (pd === "next") flipNext(); else flipPrev();
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function flipNext() {
+      if (drag) return;
+      if (animating) { pendingDir = "next"; return; }
+      if (focusMode && flipped > 0 && flipped < HALF && focus === 0) { slideTo(1); return; }
+      ensureIndices(turnIndices("next"), startFlipNext);
+    }
+    function startFlipNext() {
+      if (drag) return;
+      if (animating) { pendingDir = "next"; return; }
+      if (!setupTurn("next", "bottom")) return;
+      var g0 = glideFor(flipped), g1 = glideFor(flipped + 1);
+      var done = function () { commitTurn("next"); focus = 0; render(); };
+      if (isMag()) {
+        showLeaf();
+        poseTurn(turnStartF("bottom"), g0);
+        tweenCam(camTargetFor(flipped + 1, 0), magMs(), linearEase);
+        animateTurnF("next", turnStartF("bottom"), turnEndF("bottom"), g0, g1, magMs(), done, null);
+      } else {
+        showLeaf(); poseLeaf(0, 1, g0);   // cover the swapped base in this same task — no bare incoming-page frame
+        tweenCam(camTargetFor(flipped + 1, 0), FLIP_MS, easeInOutSine);
+        animateLeaf(0, -180, g0, g1, 1, FLIP_MS, done, null);
+      }
+    }
+
+    function flipPrev() {
+      if (drag) return;
+      if (animating) { pendingDir = "prev"; return; }
+      if (focusMode && flipped > 0 && flipped < HALF && focus === 1) { slideTo(0); return; }
+      ensureIndices(turnIndices("prev"), startFlipPrev);
+    }
+    function startFlipPrev() {
+      if (drag) return;
+      if (animating) { pendingDir = "prev"; return; }
+      if (!setupTurn("prev", "bottom")) return;
+      var g0 = glideFor(flipped), g1 = glideFor(flipped - 1);
+      var done = function () { commitTurn("prev"); focus = 1; render(); };
+      if (isMag()) {
+        showLeaf();
+        poseTurn(turnStartF("bottom"), g0);
+        tweenCam(camTargetFor(flipped - 1, 1), magMs(), linearEase);
+        animateTurnF("prev", turnStartF("bottom"), turnEndF("bottom"), g0, g1, magMs(), done, null);
+      } else {
+        showLeaf(); poseLeaf(-180, -1, g0);   // same-task cover, prev side
+        tweenCam(camTargetFor(flipped - 1, 1), FLIP_MS, easeInOutSine);
+        animateLeaf(-180, 0, g0, g1, -1, FLIP_MS, done, null);
+      }
+    }
+
+    function goTo(firstIdx) {
+      turnGen++;
+      animating = false;
+      pendingDir = null;
+      hideLeaf();
+      if (focusMode) {
+        var p = firstIdx;
+        if (p <= 0) { flipped = 0; focus = 0; }
+        else if (p >= N - 1) { flipped = HALF; focus = 1; }
+        else { flipped = (p + 1) >> 1; focus = (p % 2 === 1) ? 0 : 1; }
+        if (camAnim) { cancelAnimationFrame(camAnim); camAnim = null; }
+        setCam(camTargetFor(flipped, focus));
+      } else {
+        // Floor + clamp: an even (right-hand) target used to leave flipped
+        // fractional (e.g. 1.5), pointing PAGES[] at fractional indices and
+        // blanking every page. Any caller may now pass any page index.
+        flipped = firstIdx === 0 ? 0 : Math.floor((firstIdx + 1) / 2);
+        if (flipped < 0) flipped = 0; else if (flipped > HALF) flipped = HALF;
+      }
+      render();
+    }
+
+    document.getElementById("prev").onclick = function (e) { e.preventDefault(); e.stopPropagation(); flipPrev(); };
+    document.getElementById("next").onclick = function (e) { e.preventDefault(); e.stopPropagation(); flipNext(); };
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && sheet.classList.contains("open")) { closeSheet(); return; }
+      if (e.repeat || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.key === "ArrowLeft") { e.preventDefault(); flipPrev(); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); flipNext(); }
+      else if (e.key === "Home") { e.preventDefault(); goTo(0); }
+      else if (e.key === "End") { e.preventDefault(); goTo(N - 1); }
+    });
+
+    /* ---- drag the page ---- */
+    var drag = null;
+    function dragTheta(d) {
+      var dx = d.dx;
+      if (d.dir === "next") return Math.max(-180, Math.min(0, 180 * dx / pageSize));
+      return Math.max(-180, Math.min(0, -180 + 180 * dx / pageSize));
+    }
+    function dragF(d, clientX, clientY) {
+      var r = bookEl.getBoundingClientRect();
+      var spineX = r.left + pageSize;
+      var u = d.dir === "next" ? (clientX - spineX) : (spineX - clientX);
+      u = Math.max(-pageSize, Math.min(pageSize, u));
+      var v = Math.max(-pageSize, Math.min(2 * pageSize, clientY - r.top));
+      return { x: u, y: v };
+    }
+    function grabCorner(clientY) {
+      var r = bookEl.getBoundingClientRect();
+      return (clientY - r.top) < pageSize / 2 ? "top" : "bottom";
+    }
+    bookWrap.addEventListener("pointerdown", function (e) {
+      if (drag) return;
+      if (e.target.closest("button") || e.target.closest("select") || e.target.closest("label") || sheet.classList.contains("open")) return;
+      // During a flip a press can't peel, but it can still be a tap (the
+      // flip functions queue it). tapOnly drags never activate.
+      drag = { x0: e.clientX, y0: e.clientY, dx: 0, dir: null, corner: "bottom", active: false, tapOnly: animating, t0: performance.now(), id: e.pointerId, samples: [{ t: performance.now(), dx: 0 }] };
+      try { bookWrap.setPointerCapture(e.pointerId); } catch (err) {}
+      warmAround();   // a drag can't wait at grab time — start decoding both turns' pages now
+    });
+    bookWrap.addEventListener("pointermove", function (e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      drag.dx = e.clientX - drag.x0;
+      if (drag.tapOnly) return;
+      drag.samples.push({ t: performance.now(), dx: drag.dx });
+      if (drag.samples.length > 12) drag.samples.shift();
+      if (!drag.active) {
+        if (Math.abs(drag.dx) < 8) return;
+        if (focusMode) {
+          var intent = drag.dx < 0 ? "next" : "prev";
+          var canSlide = flipped > 0 && flipped < HALF &&
+            ((intent === "next" && focus === 0) || (intent === "prev" && focus === 1));
+          if (canSlide) {
+            if (camAnim) { cancelAnimationFrame(camAnim); camAnim = null; }
+            drag.kind = "slide";
+            drag.slideTarget = intent === "next" ? 1 : 0;
+            drag.camFrom = camX;
+            drag.camTo = camTargetFor(flipped, drag.slideTarget);
+            drag.active = true;
+            bookWrap.classList.add("grabbing");
+          } else {
+            drag.corner = isMag() ? grabCorner(drag.y0) : "bottom";
+            if (!setupTurn(intent, drag.corner)) { drag = null; return; }
+            drag.kind = "flip";
+            drag.dir = intent;
+            drag.active = true;
+            drag.g0 = glideFor(flipped);
+            drag.g1 = glideFor(stateAfter(intent));
+            showLeaf();
+            bookWrap.classList.add("grabbing");
+          }
+        } else {
+          var dir;
+          var r = bookEl.getBoundingClientRect();
+          var spineX = r.left + pageSize;
+          if (e.clientX - drag.dx < spineX) dir = "prev"; else dir = "next";
+          if ((dir === "next" && flipped >= HALF) || (dir === "prev" && flipped <= 0)) dir = drag.dx < 0 ? "next" : "prev";
+          drag.corner = isMag() ? grabCorner(drag.y0) : "bottom";
+          if (!setupTurn(dir, drag.corner)) { drag = null; return; }
+          drag.kind = "flip";
+          drag.dir = dir;
+          drag.active = true;
+          drag.g0 = glideFor(flipped);
+          drag.g1 = glideFor(stateAfter(dir));
+          showLeaf();
+          bookWrap.classList.add("grabbing");
+        }
+      }
+      if (drag.kind === "slide") {
+        var lo = Math.min(drag.camFrom, drag.camTo), hi = Math.max(drag.camFrom, drag.camTo);
+        setCam(Math.max(lo, Math.min(hi, drag.camFrom + drag.dx)));
+        return;
+      }
+      if (isMag()) {
+        var F = dragF(drag, e.clientX, e.clientY);
+        drag.F = F;
+        var pNow = poseTurn(F, null);
+        drag.p = pNow;
+        glideEl.style.transform = "translateX(" + (drag.g0 + (drag.g1 - drag.g0) * pNow) + "px)";
+        return;
+      }
+      var th = dragTheta(drag);
+      drag.theta = th;
+      var frac = Math.abs(th - (drag.dir === "next" ? 0 : -180)) / 180;
+      poseLeaf(th, drag.dir === "next" ? 1 : -1, drag.g0 + (drag.g1 - drag.g0) * frac);
+    });
+    function endDrag(cancelled) {
+      if (!drag) return;
+      var d = drag; drag = null;
+      bookWrap.classList.remove("grabbing");
+      if (!d.active) {
+        // A press that never became a peel is a tap: flip by side, like the
+        // original viewer. In focus mode a tap simply advances.
+        if (!cancelled && Math.abs(d.dx) < 8 && performance.now() - d.t0 <= 800) {
+          if (focusMode) flipNext();
+          else {
+            var r = bookEl.getBoundingClientRect();
+            if (d.x0 < r.left + pageSize) flipPrev(); else flipNext();
+          }
+        }
+        return;
+      }
+      var now = performance.now(), vel = 0, s0 = d.samples[0];
+      for (var i = d.samples.length - 1; i >= 0; i--) {
+        if (now - d.samples[i].t > 90) { s0 = d.samples[i]; break; }
+      }
+      if (s0 && now > s0.t) vel = (d.dx - s0.dx) / (now - s0.t);
+      if (d.kind === "slide") {
+        var prog = Math.abs(camX - d.camFrom) / pageSize;
+        var sflick = d.slideTarget === 1 ? vel < -0.45 : vel > 0.45;
+        if (prog > 0.4 || sflick) {
+          focus = d.slideTarget;
+          tweenCam(d.camTo, REDUCED ? 120 : 260);
+          counter.textContent = label();
+        } else {
+          tweenCam(d.camFrom, REDUCED ? 120 : 260);
+        }
+        return;
+      }
+      var gNow = parseFloat((glideEl.style.transform || "").replace(/[^0-9.\-]/g, "")) || 0;
+      var landFocus = d.dir === "next" ? 0 : 1;
+      var flick = d.dir === "next" ? vel < -0.45 : vel > 0.45;
+      if (isMag()) {
+        var Fcur = d.F || turnStartF(d.corner || "bottom");
+        var progF = (pageSize - Fcur.x) / (2 * pageSize);
+        var completeM = flick || progF >= 0.78 || (Fcur.x <= 0 && Math.abs(d.dx) >= 40);
+        var targetF = completeM ? turnEndF(d.corner || "bottom") : turnStartF(d.corner || "bottom");
+        var durM = Math.max(120, magMs() * Math.abs(targetF.x - Fcur.x) / (2 * pageSize));
+        var gEndM = completeM ? d.g1 : d.g0;
+        if (completeM) tweenCam(camTargetFor(stateAfter(d.dir), landFocus), durM, linearEase);
+        animateTurnF(d.dir, Fcur, targetF, gNow, gEndM, durM, function () {
+          if (completeM) { commitTurn(d.dir); focus = landFocus; }
+          render();
+        }, null);
+        return;
+      }
+      var th = d.theta || (d.dir === "next" ? 0 : -180);
+      var complete = d.dir === "next" ? (th <= -65 || flick) : (th >= -115 || flick);
+      var target = d.dir === "next" ? (complete ? -180 : 0) : (complete ? 0 : -180);
+      var dur = Math.max(140, FLIP_MS * Math.abs(target - th) / 180);
+      var gEnd = complete ? d.g1 : d.g0;
+      if (complete) tweenCam(camTargetFor(stateAfter(d.dir), landFocus), dur, easeInOutSine);
+      animateLeaf(th, target, gNow, gEnd, d.dir === "next" ? 1 : -1, dur, function () {
+        if (complete) { commitTurn(d.dir); focus = landFocus; }
+        render();
+      }, null);
+    }
+    bookWrap.addEventListener("pointerup", function () { endDrag(false); });
+    bookWrap.addEventListener("pointercancel", function () { endDrag(true); });
+
+    /* ---- Pages sheet ---- */
+    function pageGroups() {
+      var out = [];
+      if (focusMode) { for (var i = 0; i < N; i++) out.push([i]); return out; }
+      out.push([0]);
+      for (var j = 1; j < N - 1; j += 2) out.push([j, j + 1]);
+      if ((N - 1) % 2 === 1) out.push([N - 1]);
+      return out;
+    }
+    function currentFirst() {
+      if (focusMode) {
+        if (flipped === 0) return 0;
+        if (flipped === HALF) return N - 1;
+        return focus === 0 ? 2 * flipped - 1 : 2 * flipped;
+      }
+      return flipped === 0 ? 0 : 2 * flipped - 1;
+    }
+    function buildStrip() {
+      var cur = currentFirst();
+      strip.innerHTML = "";
+      pageGroups().forEach(function (g) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "tcard" + (g.indexOf(cur) >= 0 ? " now" : "");
+        var imgs = g.map(function (ix) { return '<img loading="lazy" alt="" src="' + pageSrc(PAGES[ix]) + '">'; }).join("");
+        var cap = g.length === 2 ? (g[0] + 1) + "–" + (g[1] + 1) : "" + (g[0] + 1);
+        b.innerHTML = '<span class="timgs">' + imgs + '</span><span class="tcap">' + cap + "</span>";
+        b.setAttribute("aria-label", "Go to page " + cap);
+        b.onclick = function () { closeSheet(); ensureIndices([g[0], g[0] + 1], function () { goTo(g[0]); }); };
+        strip.appendChild(b);
+      });
+      var now = strip.querySelector(".tcard.now");
+      if (now) strip.scrollLeft = Math.max(0, now.offsetLeft - strip.clientWidth / 2 + now.clientWidth / 2);
+    }
+    function openSheet() { buildStrip(); sheet.classList.add("open"); sheet.setAttribute("aria-hidden", "false"); }
+    function closeSheet() { sheet.classList.remove("open"); sheet.setAttribute("aria-hidden", "true"); }
+    document.getElementById("pagesBtn").onclick = function () {
+      if (sheet.classList.contains("open")) closeSheet(); else openSheet();
+    };
+    document.getElementById("sheetClose").onclick = closeSheet;
+
+    /* ---- Pages strip: click-hold and drag to scroll (mouse; touch keeps
+       its native swipe). A drag past a few px swallows the click that
+       follows, so dragging across a card never jumps by accident. ---- */
+    (function () {
+      var sdrag = null, smoved = false;
+      strip.addEventListener("pointerdown", function (e) {
+        if (e.pointerType !== "mouse" || e.button !== 0) return;
+        sdrag = { x: e.clientX, sl: strip.scrollLeft, id: e.pointerId };
+        smoved = false;
+      });
+      strip.addEventListener("pointermove", function (e) {
+        if (!sdrag) return;
+        var dx = e.clientX - sdrag.x;
+        if (!smoved && Math.abs(dx) > 4) {
+          smoved = true;
+          strip.classList.add("dragging");
+          // Capture ONLY once this is really a drag: capturing on pointerdown
+          // retargets the release click to the strip and starves card buttons.
+          try { strip.setPointerCapture(sdrag.id); } catch (err) {}
+        }
+        if (smoved) strip.scrollLeft = sdrag.sl - dx;
+      });
+      function endSDrag() { sdrag = null; strip.classList.remove("dragging"); }
+      strip.addEventListener("pointerup", endSDrag);
+      strip.addEventListener("pointercancel", endSDrag);
+      strip.addEventListener("click", function (e) {
+        if (smoved) { e.preventDefault(); e.stopPropagation(); smoved = false; }
+      }, true);
+      strip.addEventListener("dragstart", function (e) { e.preventDefault(); });
+    })();
+
+    /* ---- Print guides toggle ---- */
+    var guidesBtn = document.getElementById("guidesBtn");
+    function setGuides(on) {
+      document.body.classList.toggle("guides-on", on);
+      guidesBtn.setAttribute("aria-pressed", on ? "true" : "false");
+      try { localStorage.setItem("fb-guides", on ? "1" : "0"); } catch (err) {}
+    }
+    guidesBtn.onclick = function () { setGuides(!document.body.classList.contains("guides-on")); };
+    paintGuides();
+    try { if (localStorage.getItem("fb-guides") === "1") setGuides(true); } catch (err) {}
+
+    /* ---- Fullscreen / expand (same behavior as flipbook5) ---- */
+    var fsRequest = viewer.requestFullscreen || viewer.webkitRequestFullscreen;
+    var fsElement = function () { return document.fullscreenElement || document.webkitFullscreenElement; };
+    var ICON_OPEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>';
+    var ICON_CLOSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    function fsShow(close, label) {
+      fsBtn.innerHTML = close ? ICON_CLOSE : ICON_OPEN;
+      fsBtn.setAttribute("aria-label", label);
+      fsBtn.title = label;
+    }
+    function scheduleFit() { requestAnimationFrame(function () { requestAnimationFrame(fit); }); }
+    function refit() { scheduleFit(); setTimeout(fit, 60); setTimeout(fit, 240); }
+    function setExpanded(on) {
+      document.body.classList.toggle("expanded", on);
+      fsShow(on, on ? "Exit expanded view" : (fsRequest ? "Full screen" : "Expand view"));
+      refit();
+    }
+    if (!fsRequest) fsShow(false, "Expand view");
+    fsBtn.onclick = function () {
+      if (document.body.classList.contains("expanded")) { setExpanded(false); return; }
+      if (fsElement()) {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        return;
+      }
+      if (fsRequest) {
+        try {
+          var p = fsRequest.call(viewer);
+          if (p && p.catch) p.catch(function () { setExpanded(true); });
+        } catch (err) { setExpanded(true); }
+      } else setExpanded(true);
+    };
+    function onFsChange() {
+      var inFs = !!fsElement();
+      fsShow(inFs, inFs ? "Exit full screen" : (fsRequest ? "Full screen" : "Expand view"));
+      refit();
+    }
+    document.addEventListener("fullscreenchange", onFsChange);
+    document.addEventListener("webkitfullscreenchange", onFsChange);
+    window.addEventListener("resize", function () {
+      scheduleFit();
+      if (sheet.classList.contains("open")) setTimeout(buildStrip, 260);
+    });
+
+    /* Folder of images. The manifest book stays the default until a folder arrives. */
+    var blankCanvas = document.createElement("canvas");
+    blankCanvas.width = 8; blankCanvas.height = 8;
+    var blankCtx = blankCanvas.getContext("2d");
+    blankCtx.fillStyle = "#f4f1ea";
+    blankCtx.fillRect(0, 0, 8, 8);
+    var BLANK = blankCanvas.toDataURL("image/jpeg", 0.8);
+    var folderBtn = document.getElementById("folderBtn");
+    var folderPop = document.getElementById("folderPop");
+    var folderPick = document.getElementById("folderPick");
+    var loadBar = document.getElementById("loadBar");
+    var loadFill = document.getElementById("loadFill");
+    var folderGen = 0;
+    var pdfGen = 0;
+    var livePdf = null;
+    var pdfName = "";
+    var tempBlank = false;
+    var coverOpened = false;
+    var markEl = document.getElementById("mark");
+    var markHome = markEl.textContent;
+    var pdfBtn = document.getElementById("pdfBtn");
+    var pdfPop = document.getElementById("pdfPop");
+    var pdfPick = document.getElementById("pdfPick");
+    folderBtn.onclick = function () { pdfPop.hidden = true; folderPop.hidden = !folderPop.hidden; };
+    pdfBtn.onclick = function () { folderPop.hidden = true; pdfPop.hidden = !pdfPop.hidden; };
+    document.getElementById("pdfGo").onclick = function () { pdfPick.click(); };
+    pdfPick.onchange = function () {
+      pdfPop.hidden = true;
+      if (pdfPick.files && pdfPick.files[0]) takePdf(pdfPick.files[0]);
+      pdfPick.value = "";
+    };
+    document.getElementById("pdfPrint").addEventListener("change", function () {
+      if (!pdfName) return;
+      markEl.textContent = document.getElementById("pdfPrint").checked ? pdfName + " — NOT FOR PRINT" : pdfName;
+    });
+    document.getElementById("folderGo").onclick = function () { folderPick.click(); };
+    folderPick.onchange = function () {
+      folderPop.hidden = true;
+      if (folderPick.files && folderPick.files.length) takeFiles(folderPick.files);
+      folderPick.value = "";
+    };
+    viewer.addEventListener("dragover", function (e) { e.preventDefault(); });
+    viewer.addEventListener("drop", function (e) {
+      e.preventDefault();
+      folderPop.hidden = true;
+      pdfPop.hidden = true;
+      var items = e.dataTransfer && e.dataTransfer.items;
+      var incoming = (!items || !items.length)
+        ? Promise.resolve([].slice.call(e.dataTransfer.files || []))
+        : Promise.all([].map.call(items, readDropItem)).then(function (groups) {
+          var flat = [];
+          groups.forEach(function (g) { flat = flat.concat(g); });
+          return flat;
+        });
+      incoming.then(function (flat) {
+        var pdf = null;
+        for (var i = 0; i < flat.length; i++) if (isPdfFile(flat[i])) { pdf = flat[i]; break; }
+        if (pdf) takePdf(pdf);
+        else takeFiles(flat);
+      });
+    });
+    function readDropItem(item) {
+      return new Promise(function (resolve) {
+        var entry = item.webkitGetAsEntry && item.webkitGetAsEntry();
+        if (!entry) { var one = item.getAsFile && item.getAsFile(); resolve(one ? [one] : []); return; }
+        if (entry.isFile) { entry.file(function (f) { resolve([f]); }, function () { resolve([]); }); return; }
+        var reader = entry.createReader();
+        var all = [];
+        function batch() {
+          reader.readEntries(function (entries) {
+            if (!entries.length) { resolve(all); return; }
+            var pending = entries.length;
+            entries.forEach(function (ent) {
+              if (!ent.isFile) { if (--pending === 0) batch(); return; }
+              ent.file(function (f) { all.push(f); if (--pending === 0) batch(); }, function () { if (--pending === 0) batch(); });
+            });
+          }, function () { resolve(all); });
+        }
+        batch();
+      });
+    }
+    function isPageFile(file) {
+      var name = (file.name || "").toLowerCase();
+      if (name === "thumbs.db" || name === ".ds_store" || name === "desktop.ini") return false;
+      var rel = file.webkitRelativePath || "";
+      if (rel && rel.split("/").length > 2) return false;
+      return /\.(jpe?g|png|webp)$/.test(name);
+    }
+    function firstNumber(name) { var m = String(name).match(/\d+/); return m ? parseInt(m[0], 10) : null; }
+    function sortFiles(files) {
+      return files.slice().sort(function (a, b) {
+        var na = firstNumber(a.name), nb = firstNumber(b.name);
+        if (na !== null && nb !== null && na !== nb) return na - nb;
+        if (na !== null && nb === null) return -1;
+        if (na === null && nb !== null) return 1;
+        return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" });
+      });
+    }
+    function gapWarnings(files) {
+      var seen = {}, dups = {}, nums = [];
+      files.forEach(function (f) {
+        var n = firstNumber(f.name);
+        if (n === null) return;
+        if (seen[n]) dups[n] = true;
+        seen[n] = true;
+        nums.push(n);
+      });
+      nums.sort(function (a, b) { return a - b; });
+      var missing = [];
+      if (nums.length) {
+        for (var n = nums[0]; n < nums[nums.length - 1]; n++) if (!seen[n]) missing.push(n);
+      }
+      var out = [];
+      var start = null, prev = null;
+      function flush() {
+        if (start === null) return;
+        out.push(start === prev ? "No page " + start + " found." : "No pages " + start + "–" + prev + " found.");
+        start = prev = null;
+      }
+      missing.forEach(function (n) {
+        if (start === null) { start = prev = n; return; }
+        if (n === prev + 1) { prev = n; return; }
+        flush();
+        start = prev = n;
+      });
+      flush();
+      Object.keys(dups).forEach(function (n) { out.push("Two files numbered " + n + "."); });
+      return out;
+    }
+    function paintSlice(im, sx, sy, sw, sh) {
+      var maxSide = 1600;
+      var scale = Math.min(1, maxSide / Math.max(sw, sh));
+      var c = document.createElement("canvas");
+      c.width = Math.max(1, Math.round(sw * scale));
+      c.height = Math.max(1, Math.round(sh * scale));
+      c.getContext("2d").drawImage(im, sx, sy, sw, sh, 0, 0, c.width, c.height);
+      return c.toDataURL("image/jpeg", 0.85);
+    }
+    function fileToPages(file) {
+      return new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onerror = function () { reject(new Error("read")); };
+        reader.onload = function () {
+          var im = new Image();
+          im.onload = function () {
+            var w = im.naturalWidth, h = im.naturalHeight;
+            if (w / h >= 1.45) resolve([paintSlice(im, 0, 0, w / 2, h), paintSlice(im, w / 2, 0, w / 2, h)]);
+            else resolve([paintSlice(im, 0, 0, w, h)]);
+          };
+          im.onerror = function () { reject(new Error("image")); };
+          im.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+    function pushPage(src) {
+      PAGES.push(src);
+      pageImgs.push(newPageImg(src));
+    }
+    function dropTempBlank() {
+      if (!tempBlank) return;
+      PAGES.pop();
+      pageImgs.pop();
+      tempBlank = false;
+    }
+    function ensureEven() {
+      if (PAGES.length % 2 === 0) return;
+      pushPage(BLANK);
+      tempBlank = true;
+    }
+    function showBook(reset, coverOn) {
+      N = PAGES.length;
+      HALF = N / 2;
+      if (!coverOn && !coverOpened && flipped === 0 && N >= 4) { flipped = 1; focus = 0; coverOpened = true; }
+      if (reset) {
+        flipped = (!coverOn && N >= 4) ? 1 : 0;
+        focus = 0;
+        animating = false;
+        hideLeaf();
+        render();
+        fit();
+      } else if (animating) pendingBook = true;
+      else {
+        if (flipped > HALF) flipped = HALF;
+        render();
+      }
+      if (sheet.classList.contains("open")) buildStrip();
+    }
+    function isPdfFile(file) {
+      var name = (file.name || "").toLowerCase();
+      return file.type === "application/pdf" || /\.pdf$/.test(name);
+    }
+    function stopPdf() {
+      pdfGen++;
+      if (livePdf) { try { livePdf.destroy(); } catch (err) {} livePdf = null; }
+    }
+    function paintPdf(page, layout) {
+      var base = page.getViewport({ scale: 1 });
+      var split = layout === "spreads" ? true : layout === "single" ? false : (base.width / base.height) >= 1.45;
+      var longTarget = 1600;
+      var scale = split
+        ? longTarget / Math.max(base.width / 2, base.height)
+        : longTarget / Math.max(base.width, base.height);
+      var vp = page.getViewport({ scale: scale });
+      var canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(vp.width));
+      canvas.height = Math.max(1, Math.round(vp.height));
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      return page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () {
+        if (!split) return [canvas.toDataURL("image/jpeg", 0.92)];
+        var w = Math.floor(canvas.width / 2);
+        function half(x) {
+          var c = document.createElement("canvas");
+          c.width = w;
+          c.height = canvas.height;
+          c.getContext("2d").drawImage(canvas, x, 0, w, canvas.height, 0, 0, w, canvas.height);
+          return c.toDataURL("image/jpeg", 0.92);
+        }
+        return [half(0), half(w)];
+      });
+    }
+    function takePdf(file) {
+      var gen = ++pdfGen;
+      folderGen++;
+      if (livePdf) { try { livePdf.destroy(); } catch (err) {} livePdf = null; }
+      pdfName = file.name || "PDF";
+      markEl.textContent = document.getElementById("pdfPrint").checked ? pdfName + " — NOT FOR PRINT" : pdfName;
+      var layout = document.getElementById("pdfLayout").value;
+      var coverOn = document.getElementById("pdfCover").checked;
+      var reader = new FileReader();
+      reader.onerror = function () { if (gen === pdfGen) reportNotice("Could not read that PDF."); };
+      reader.onload = function () {
+        if (gen !== pdfGen || typeof pdfjsLib === "undefined") return;
+        var data = new Uint8Array(reader.result);
+        pdfjsLib.getDocument({ data: data, useSystemFonts: true }).promise.then(function (doc) {
+          if (gen !== pdfGen) { doc.destroy(); return; }
+          livePdf = doc;
+          blankNote = "";
+          tempBlank = false;
+          coverOpened = false;
+          PAGES = [];
+          pageImgs = [];
+          if (!coverOn) pushPage(BLANK);
+          var opened = false;
+          var total = doc.numPages;
+          loadBar.hidden = false;
+          loadFill.style.width = "0%";
+          function finish() {
+            if (gen !== pdfGen) return;
+            dropTempBlank();
+            if (PAGES.length % 2) { pushPage(BLANK); blankNote = "blank page added"; }
+            showBook(!opened, coverOn);
+            loadBar.hidden = true;
+            if (!PAGES.length) reportNotice("That PDF has no pages.");
+            else { noticeEl.textContent = ""; noticeEl.style.display = "none"; }
+          }
+          function step(n) {
+            if (gen !== pdfGen) return;
+            if (n > total) { finish(); return; }
+            reportNotice("Loading page " + n + " of " + total);
+            doc.getPage(n).then(function (page) {
+              return paintPdf(page, layout);
+            }).then(function (parts) {
+              if (gen !== pdfGen) return;
+              dropTempBlank();
+              parts.forEach(pushPage);
+              ensureEven();
+              showBook(!opened, coverOn);
+              opened = true;
+              loadFill.style.width = Math.round((n / total) * 100) + "%";
+              step(n + 1);
+            }).catch(function () {
+              if (gen !== pdfGen) return;
+              reportNotice("Could not read page " + n + " of " + pdfName + ".");
+              step(n + 1);
+            });
+          }
+          step(1);
+        }).catch(function () {
+          if (gen === pdfGen) reportNotice("Could not open " + pdfName + ".");
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    }
+    function takeFiles(fileList) {
+      var gen = ++folderGen;
+      stopPdf();
+      pdfName = "";
+      markEl.textContent = markHome;
+      var files = [];
+      for (var i = 0; i < fileList.length; i++) if (isPageFile(fileList[i])) files.push(fileList[i]);
+      if (!files.length) { reportNotice("No page images in that folder."); return; }
+      files = sortFiles(files);
+      var warnings = gapWarnings(files);
+      var coverOn = document.getElementById("coverFirst").checked;
+      blankNote = "";
+      tempBlank = false;
+      coverOpened = false;
+      PAGES = [];
+      pageImgs = [];
+      if (!coverOn) pushPage(BLANK);
+      var opened = false;
+      loadBar.hidden = false;
+      loadFill.style.width = "0%";
+      function say() {
+        var parts = warnings.slice();
+        if (blankNote) parts.push("A blank page was added so the last opening has a facing page.");
+        if (parts.length) reportNotice(parts.join(" "));
+        else { noticeEl.textContent = ""; noticeEl.style.display = "none"; }
+      }
+      function step(i) {
+        if (gen !== folderGen) return;
+        if (i >= files.length) {
+          dropTempBlank();
+          if (PAGES.length % 2) { pushPage(BLANK); blankNote = "blank page added"; }
+          showBook(!opened, coverOn);
+          opened = true;
+          loadBar.hidden = true;
+          say();
+          return;
+        }
+        fileToPages(files[i]).then(function (parts) {
+          if (gen !== folderGen) return;
+          dropTempBlank();
+          parts.forEach(pushPage);
+          ensureEven();
+          showBook(!opened, coverOn);
+          opened = true;
+          loadFill.style.width = Math.round(((i + 1) / files.length) * 100) + "%";
+          step(i + 1);
+        }).catch(function () {
+          warnings.push("Could not read " + files[i].name + ".");
+          step(i + 1);
+        });
+      }
+      step(0);
+    }
+
+    var turnPick = document.getElementById("turnPick");
+    turnPick.value = turnMode;
+    turnPick.addEventListener("change", function () {
+      var mode = turnPick.value === "magazine" ? "magazine" : "hardcover";
+      var spread = flipped;
+      turnGen++;
+      animating = false;
+      pendingDir = null;
+      drag = null;
+      bookWrap.classList.remove("grabbing");
+      hideLeaf();
+      turnMode = mode;
+      flipped = spread;
+      try { localStorage.setItem("flipbook18-page-turn", mode); } catch (err) {}
+      render();
+    });
+
+    fit();
+    document.body.dataset.flipReady = "1";
+  }
+  if (location.protocol === "file:") {
+    var dataScript = document.createElement("script");
+    dataScript.src = "flipbook-end-v1/pages-data.js";
+    dataScript.onload = function () { startFlipbook(); };
+    dataScript.onerror = function () { startFlipbook(); };
+    document.body.appendChild(dataScript);
+  } else {
+    startFlipbook();
+  }
+  </script>
+</body></html>
